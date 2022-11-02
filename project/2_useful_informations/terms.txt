@@ -1,0 +1,6 @@
+commit = un fel de salvare a stadiului unui proiect c++/java/etc la un anumit moment. astfel, ca, la fiecare commit al proiectului,
+starea la care se afla proiectul la momentul commitului va fi salvata. in acest fel, se poate vedea cum a evoluat proiectul de-a
+lungul timpului. e ca si cum ai face poze unui copil in fiecare an si ai vedea cum creste. :))
+
+repo ( repository ) = este depozitul in care se afla cea mai recenta starea a proiectului. adica, dupa fiecare commit, repository-ul
+se modifica si in el vom regasi proiectul in cea mai actuala stare a lui.
