@@ -2,7 +2,7 @@
 
 Region::Region()
 {
-	m_score = 100;
+	m_score = kInitialScore;
 }
 
 Region::Region(unsigned int score)
@@ -17,12 +17,12 @@ unsigned Region::getScore() const
 
 void Region::IncrementScore()
 {
-	m_score += 100;
+	m_score += kStepValue;
 }
 
 void Region::DecrementScore()
 {
-	if (m_score == 100)
+	if (m_score == kInitialScore)
 		return;
-	m_score -= 100;
+	m_score -= kStepValue;
 }
