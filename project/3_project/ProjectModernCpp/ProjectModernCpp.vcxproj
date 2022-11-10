@@ -127,11 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ForTest.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="MultipleChoiceQuestions.txt" />
     <Text Include="NumericallyAnsweredQuestions.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ForTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
