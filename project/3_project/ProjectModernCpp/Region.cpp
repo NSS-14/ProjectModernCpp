@@ -26,3 +26,8 @@ void Region::DecrementScore()
 		return;
 	m_score -= kStepValue;
 }
+
+std::ostream& operator<<(std::ostream& out, const Region& region)
+{
+	return out << region.m_score;
+}
