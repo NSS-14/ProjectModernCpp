@@ -33,8 +33,9 @@ std::ostream& operator<<(std::ostream& out, const Map& map)
 			}
 			else
 			{
-				out << 0;
+				out << "000";
 			}
+			out << ' ';
 		}
 		out << std::endl;
 	}
