@@ -21,23 +21,5 @@ std::optional<Region>& Map::operator[](Position position)
 
 std::ostream& operator<<(std::ostream& out, const Map& map)
 {
-	std::pair<uint8_t, uint8_t> position;
-	auto& [line, column] = position;
-	for (line = 0; line < map.m_height; line++)
-	{
-		for (column = 0; column < map.m_width; column++)
-		{
-			if (map[position])
-			{
-				out << *map[position];
-			}
-			else
-			{
-				out << "000";
-			}
-			out << ' ';
-		}
-		out << std::endl;
-	}
-	return out;
+	
 }
