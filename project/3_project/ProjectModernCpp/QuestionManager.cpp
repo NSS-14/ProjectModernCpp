@@ -1,8 +1,5 @@
 #include "QuestionManager.h"
 
-QuestionManager::QuestionManager()
-{
-}
 
 QuestionManager::QuestionManager(std::ifstream& in)
 {
@@ -19,6 +16,8 @@ void QuestionManager::ReadFile(std::ifstream& in)
 	while (!in.eof())
 	{
 		in >> type;
+		in.ignore(1,'/n');
+
 		std::getline(in, questionString);
 		in >> numberOfAnswers;
 		for (int i = 0; i < numberOfAnswers; i++)

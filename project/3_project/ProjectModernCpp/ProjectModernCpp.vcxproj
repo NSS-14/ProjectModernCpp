@@ -133,12 +133,14 @@
   <ItemGroup>
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Question.cpp" />
+    <ClCompile Include="QuestionManager.cpp" />
     <ClCompile Include="Region.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map.h" />
     <ClInclude Include="Question.h" />
+    <ClInclude Include="QuestionManager.h" />
     <ClInclude Include="Region.h" />
   </ItemGroup>
   <ItemGroup>

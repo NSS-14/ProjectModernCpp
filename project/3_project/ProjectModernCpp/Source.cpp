@@ -1,9 +1,10 @@
 #include <iostream>
-#include "Question.h"
+#include "QuestionManager.h"
 
 int main()
 {
-	
+	std::ifstream in("Questions.txt");
+	QuestionManager qm(in);
 	
 	return 0;
 }

@@ -2,11 +2,12 @@
 #include<list>
 #include"Question.h"
 #include<fstream>
+#include<iostream>
 
 class QuestionManager
 {
 public:
-	QuestionManager();
+	QuestionManager()=default;
 	QuestionManager(std::ifstream& in);
 
 public:
