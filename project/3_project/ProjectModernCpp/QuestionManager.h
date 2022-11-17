@@ -2,7 +2,6 @@
 #include<list>
 #include"Question.h"
 #include<fstream>
-#include<iostream>
 
 class QuestionManager
 {
@@ -11,8 +10,8 @@ public:
 	QuestionManager(std::ifstream& in);
 
 public:
-	const Question& GetNumericalQuestion();
-	const Question& GetGridQuestion();
+	Question GetNumericalQuestion();
+	Question GetGridQuestion();
 
 public:
 	void ReadFile(std::ifstream& in);

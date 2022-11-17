@@ -6,7 +6,7 @@ QuestionManager::QuestionManager(std::ifstream& in)
 	ReadFile(in);
 }
 
-const Question& QuestionManager::GetNumericalQuestion()
+Question QuestionManager::GetNumericalQuestion()
 {
 	unsigned int randomPosition = rand() % m_numericalQuestions.size();
 	std::list<Question>::const_iterator it = m_numericalQuestions.begin();
@@ -17,7 +17,7 @@ const Question& QuestionManager::GetNumericalQuestion()
 	return tmp;
 }
 
-const Question& QuestionManager::GetGridQuestion()
+Question QuestionManager::GetGridQuestion()
 {
 	unsigned int randomPosition = rand() % m_gridQuestions.size();
 	std::list<Question>::const_iterator it = m_gridQuestions.begin();

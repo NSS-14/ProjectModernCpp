@@ -1,5 +1,11 @@
 #include "Question.h"
 
+Question::Question(const Question& question)
+{
+	m_question = question.m_question;
+	m_answers = question.m_answers;
+}
+
 Question::Question(const std::string& question, const std::vector<std::string>& answers)
 	:m_question(question)
 	,m_answers(answers)
@@ -49,4 +55,15 @@ void Question::GenerateRandomIndexes(std::vector<int>& vector) const
 		vector.push_back(element);
 	}
 	vector[rand() % 4] = 0;
+}
+
+std::ostream& operator<<(std::ostream& out, const Question& question)
+{
+	out << question.m_question << "\n";
+	std::vector<std::string> answers = question.GetAnswers();
+	for (int i = 0; i < 4; ++i) {
+		out << answers[i] << " ";
+	}
+	out << "\n";
+	return out;
 }
