@@ -1,5 +1,42 @@
-type 1/0
-int
+0
+Cine a inventat becul?
+r1
+r2
+r3
+r4
+r5
+r6
+r7
+
+----
+bool <- false (0)
+string <- "Cine a inventat becul?"
+vector<string> <- [r1, r2, ..., r7]
+
+Question currentQuestion(string, vector<string>)
+
+if(bool == false)
+{
+	g.push_back(question)
+}
+else
+{
+	n.push_back(question)
+}
+----
+
+1
+In ce an s-a nascut Vlad Tepes?
+r1
+r2
+r3
+r4
+r5
+r6
+r7
+
+0
+Cu ce se preprara tiramisu?
 r1
 r2
 r3

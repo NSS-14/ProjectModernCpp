@@ -17,7 +17,7 @@ const std::string& Question::GetAnswer() const
 	return m_answers[0];
 }
 
-const std::vector<std::string>& Question::GetAnswers()
+std::vector<std::string> Question::GetAnswers()
 {
 	std::vector<int> indexes;
 	GenerateRandomIndexes(indexes);
@@ -49,5 +49,4 @@ void Question::GenerateRandomIndexes(std::vector<int>& vector)
 		vector.push_back(element);
 	}
 	vector[rand() % 4] = 0;
-
 }
