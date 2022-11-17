@@ -17,6 +17,17 @@ const Question& QuestionManager::GetNumericalQuestion()
 	return tmp;
 }
 
+const Question& QuestionManager::GetGridQuestion()
+{
+	unsigned int randomPosition = rand() % m_gridQuestions.size();
+	std::list<Question>::const_iterator it = m_gridQuestions.begin();
+	std::advance(it, randomPosition);
+
+	Question tmp(*it);
+	m_gridQuestions.erase(it);
+	return tmp;
+}
+
 void QuestionManager::ReadFile(std::ifstream& in)
 {
 	bool type;
