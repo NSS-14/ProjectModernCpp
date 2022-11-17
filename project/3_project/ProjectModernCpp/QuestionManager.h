@@ -11,6 +11,10 @@ public:
 	QuestionManager(std::ifstream& in);
 
 public:
+	const Question& GetNumericalQuestion();
+	const Question& GetGridQuestion();
+
+public:
 	void ReadFile(std::ifstream& in);
 
 

@@ -6,6 +6,17 @@ QuestionManager::QuestionManager(std::ifstream& in)
 	ReadFile(in);
 }
 
+const Question& QuestionManager::GetNumericalQuestion()
+{
+	unsigned int randomPosition = rand() % m_numericalQuestions.size();
+	std::list<Question>::const_iterator it = m_numericalQuestions.begin();
+	std::advance(it, randomPosition);
+
+	Question tmp(*it);
+	m_numericalQuestions.erase(it);
+	return tmp;
+}
+
 void QuestionManager::ReadFile(std::ifstream& in)
 {
 	bool type;

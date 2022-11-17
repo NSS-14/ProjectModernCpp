@@ -17,7 +17,7 @@ const std::string& Question::GetAnswer() const
 	return m_answers[0];
 }
 
-std::vector<std::string> Question::GetAnswers()
+std::vector<std::string> Question::GetAnswers() const
 {
 	std::vector<int> indexes;
 	GenerateRandomIndexes(indexes);
@@ -30,7 +30,7 @@ std::vector<std::string> Question::GetAnswers()
 	return fourAnswers;
 }
 
-void Question::GenerateRandomIndexes(std::vector<int>& vector)
+void Question::GenerateRandomIndexes(std::vector<int>& vector) const
 {
 	vector.reserve(4);
 	std::set<int> set;
