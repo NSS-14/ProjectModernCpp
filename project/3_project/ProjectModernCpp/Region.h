@@ -1,19 +1,24 @@
 #pragma once
 
 #include <iostream>
+#include <cstdint>
 
 class Region
 {
+public:
+	using Coordinates = std::pair<uint8_t, uint8_t>;
+
 public:
 	static const unsigned int kInitialScore = 100;
 	static const unsigned int kStepValue = 100;
 
 public:
 	Region();
-	Region(unsigned int score);
+	Region(unsigned int score, const Coordinates& coordinates);
 
 public:
 	unsigned getScore() const;
+	Coordinates getCoordinates() const;
 
 public:
 	void IncrementScore();
@@ -22,5 +27,6 @@ public:
 
 private:
 	unsigned int m_score;
+	Coordinates m_coordinates;
 };
 
