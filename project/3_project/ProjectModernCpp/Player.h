@@ -7,17 +7,16 @@ class Player
 public:
 	Player(std::string name, std::string password);
 	
-	Region GetBase();
-	void SetBase(const Region& region);
-
+	const Region& GetBaseRegion();
 	const std::string& GetName() const;
-	void SetName(std::string& name);
-
 	const std::string& GetPassword() const;
-	void SetPassword(std::string& password);
+
+	void SetBaseRegion(const Region& region);
+	void SetName(const std::string& name);
+	void SetPassword(const std::string& password);
 
 	void InsertRegion(const Region& region);
-	Region ExtractRegion(Region::Coordinates coordinates);
+	Region& ExtractRegion(const Region::Coordinates& coordinates);
 
 private:
 	Region m_baseRegion;
