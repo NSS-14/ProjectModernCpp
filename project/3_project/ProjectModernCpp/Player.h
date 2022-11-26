@@ -16,7 +16,7 @@ public:
 	void SetPassword(const std::string& password);
 
 	void InsertRegion(const Region& region);
-	Region& ExtractRegion(const Region::Coordinates& coordinates);
+	Region ExtractRegion(const Region::Coordinates& coordinates);
 
 private:
 	Region m_baseRegion;

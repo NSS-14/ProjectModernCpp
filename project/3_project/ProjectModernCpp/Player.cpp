@@ -38,9 +38,12 @@ void Player::InsertRegion(const Region& region)
 {
     m_ownedRegions.insert(std::make_pair(region.getCoordinates(),region));
 }
-Region& Player::ExtractRegion(const Region::Coordinates& coordinates)
+
+Region Player::ExtractRegion(const Region::Coordinates& coordinates)
 {
-    if (coordinates == m_baseRegion.getCoordinates())
-        return m_baseRegion;
-    return m_ownedRegions[coordinates];
+    auto region = m_ownedRegions.extract(coordinates);
+
+    if (region)
+        return std::move(region.mapped());
+    throw "Region not found.";
 }

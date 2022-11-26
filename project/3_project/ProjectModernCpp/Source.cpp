@@ -1,13 +1,10 @@
 #include <iostream>
-#include "QuestionManager.h"
-#include <ctime>
+#include "Player.h"
+
 int main()
 {
-	srand(time(0));
-	std::ifstream in("Questions.txt");
-	QuestionManager qm(in);
-	
-	Question q1(qm.GetGridQuestion());
-	std::cout << q1;
+	Player p1("eduard", "parola");
+	std::cout << p1.GetName();
+
 	return 0;
 }
