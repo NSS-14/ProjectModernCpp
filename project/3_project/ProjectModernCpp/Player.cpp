@@ -4,7 +4,7 @@ Player::Player(std::string name, std::string password)
     : m_name(name)
     , m_password(password)
 {
-    /* EMPTY */
+    m_advantages.fill(true);
 }
 
 const Region& Player::GetBaseRegion()
@@ -17,7 +17,7 @@ const std::string& Player::GetName() const
 }
 const std::string& Player::GetPassword() const
 {
-    return m_password ;
+    return m_password;
 }
 
 const Region& Player::GetRegion(const Region::Coordinates& coordinates)
@@ -57,4 +57,19 @@ Region Player::ExtractRegion(const Region::Coordinates& coordinates)
     if (region)
         return std::move(region.mapped());
     throw "Region not found.";
+}
+
+bool Player::UseAdvantage(uint8_t advantageIndex)
+{
+    if (!m_advantages[advantageIndex])
+        return false;
+    
+    for (const std::pair<Region::Coordinates, Region>& regionPair : m_ownedRegions) {
+        if (regionPair.second.getScore() >= 200) {
+            m_advantages[advantageIndex] = false;
+            return true;
+        }
+    }
+
+    return false;
 }
