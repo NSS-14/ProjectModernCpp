@@ -17,4 +17,25 @@ Game::Game(uint8_t numberOfPlayers)
 		break;
 	}
 	m_players.reserve(numberOfPlayers);
+
+	srand(time(0));
+}
+
+void Game::Update()
+{
+	std::cout << m_map;
+}
+
+void Game::AddPlayer(const Player& player)
+{
+	m_players.push_back(player);
+}
+
+void Game::GiveNumericalQuestionToAll()
+{
+}
+
+uint8_t Game::GetRandomPlayerIndex()
+{
+	return rand() % m_players.size();
 }

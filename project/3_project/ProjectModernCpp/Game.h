@@ -9,8 +9,17 @@ public:
 	Game(uint8_t numberOfPlayers);
 
 public:
+	void AddPlayer(const Player& player);
+	void Start();
 
+private:
+	uint8_t GetRandomPlayerIndex();
 
+private:
+	void GiveNumericalQuestionToAll();
+	void ChooseBase();
+	void Update();
+	void FillMap();
 
 private:
 	Map m_map;

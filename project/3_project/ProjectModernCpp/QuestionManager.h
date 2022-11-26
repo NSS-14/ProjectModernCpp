@@ -8,6 +8,8 @@ class QuestionManager
 public:
 	QuestionManager()=default;
 	QuestionManager(std::ifstream& in);
+	QuestionManager(std::string path);
+
 
 public:
 	Question GetNumericalQuestion();
