@@ -11,6 +11,7 @@ public:
 
 public:
 	Map(size_t height, size_t width);
+	Map() = default;
 
 public:
 	const std::optional<Region>& operator [](Position position) const; //getter

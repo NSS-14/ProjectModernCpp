@@ -6,6 +6,12 @@ QuestionManager::QuestionManager(std::ifstream& in)
 	ReadFile(in);
 }
 
+QuestionManager::QuestionManager(std::string path)
+{
+	std::ifstream in(path);
+	ReadFile(in);
+}
+
 Question QuestionManager::GetNumericalQuestion()
 {
 	unsigned int randomPosition = rand() % m_numericalQuestions.size();
@@ -55,5 +61,5 @@ void QuestionManager::ReadFile(std::ifstream& in)
 		else
 			m_gridQuestions.push_back(question);
 	}
-
+	in.close();
 }
