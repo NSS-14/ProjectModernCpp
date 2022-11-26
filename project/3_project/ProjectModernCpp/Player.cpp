@@ -20,6 +20,11 @@ const std::string& Player::GetPassword() const
     return m_password ;
 }
 
+const Region& Player::GetRegion(const Region::Coordinates& coordinates)
+{
+    return m_ownedRegions[coordinates];
+}
+
 void Player::SetBaseRegion(const Region& region)
 {
     m_baseRegion = region;
@@ -33,10 +38,16 @@ void Player::SetPassword(const std::string& password)
     m_password = password;
 }
 
-
 void Player::InsertRegion(const Region& region)
 {
     m_ownedRegions.insert(std::make_pair(region.getCoordinates(),region));
+}
+
+bool Player::HasRegion(const Region::Coordinates& coordinates)
+{
+    if (m_ownedRegions.count(coordinates))
+        return true;
+    return false;
 }
 
 Region Player::ExtractRegion(const Region::Coordinates& coordinates)
