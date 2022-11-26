@@ -26,6 +26,7 @@ public:
 	const std::string& GetName() const;
 	const std::string& GetPassword() const;
 	const Region& GetRegion(const Region::Coordinates& coordinates);
+	unsigned int GetScore() const;
 
 public:
 	void SetBaseRegion(const Region& region);

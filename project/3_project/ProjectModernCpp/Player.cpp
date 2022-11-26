@@ -25,6 +25,19 @@ const Region& Player::GetRegion(const Region::Coordinates& coordinates)
     return m_ownedRegions[coordinates];
 }
 
+unsigned int Player::GetScore() const
+{
+    unsigned int totalScore = 0;
+
+    totalScore += m_baseRegion.getScore();
+
+    for (const auto& element : m_ownedRegions)
+    {
+        totalScore += element.second.getScore();
+    }
+    return totalScore;
+}
+
 void Player::SetBaseRegion(const Region& region)
 {
     m_baseRegion = region;

@@ -2,7 +2,6 @@
 
 Game::Game(uint8_t numberOfPlayers)
 	: m_qm("Questions.txt")
-
 {
 	switch (numberOfPlayers)
 	{
