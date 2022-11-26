@@ -13,13 +13,12 @@ public:
 	void AddPlayer(const Player& player);
 	void Start();
 	Ranking GiveNumericalQuestionToAll();
-	void ChooseBase(const Ranking& rank);
 
 private:
 	uint8_t GetRandomPlayerIndex();
 
 private:
-	void ChooseBase();
+	void ChooseBase(Ranking rank);
 	void Update();
 	void FillMap();
 
