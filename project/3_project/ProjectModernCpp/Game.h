@@ -12,15 +12,18 @@ public:
 public:
 	void AddPlayer(const Player& player);
 	void Start();
+	Ranking GiveNumericalQuestionToAll();
 
 private:
 	uint8_t GetRandomPlayerIndex();
 
 private:
-	Ranking GiveNumericalQuestionToAll();
 	void ChooseBase();
 	void Update();
 	void FillMap();
+
+private:
+
 
 private:
 	Map m_map;

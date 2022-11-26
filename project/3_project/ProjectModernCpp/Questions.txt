@@ -12,8 +12,8 @@ r7
 1
 Ce inaltime are muntele everest?
 5
-r1
-r2
-r3
-r4
-r5
+8400
+2134
+5324
+7032
+9000
