@@ -30,6 +30,18 @@ void Game::AddPlayer(const Player& player)
 	m_players.push_back(player);
 }
 
+void Game::Start()
+{
+	if (m_players.capacity() == m_players.size())
+	{
+		return;
+	}
+	Ranking currentRank;
+	currentRank = GiveNumericalQuestionToAll();
+
+	GiveNumericalQuestionToAll();
+}
+
 Ranking Game::GiveNumericalQuestionToAll()
 {
 	Ranking currentRanking;
@@ -59,6 +71,14 @@ Ranking Game::GiveNumericalQuestionToAll()
 	}
 
 	return currentRanking;
+}
+
+void Game::ChooseBase(const Ranking& rank)
+{
+	for (int i = 0; i < m_players.size(); ++i)
+	{
+	}
+
 }
 
 uint8_t Game::GetRandomPlayerIndex()

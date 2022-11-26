@@ -18,7 +18,7 @@ const std::string& Question::GetQuestion() const
 	return m_question;
 }
 
-const std::string& Question::GetAnswer() const
+std::string Question::GetAnswer() const
 {
 	return m_answers[0];
 }

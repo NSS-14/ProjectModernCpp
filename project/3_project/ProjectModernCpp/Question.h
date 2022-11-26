@@ -11,7 +11,7 @@ public:
 	Question(const Question& question);
 	Question(const std::string& question, const std::vector<std::string>& answers);
 	const std::string& GetQuestion() const;
-	const std::string& GetAnswer() const;
+	std::string GetAnswer() const;
 	std::vector<std::string> GetAnswers() const;
 	friend std::ostream& operator << (std::ostream& out, const Question& question);
 
