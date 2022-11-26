@@ -1,7 +1,8 @@
 #pragma once
 #include "Map.h"
-#include"QuestionManager.h"
-#include"Player.h"
+#include "QuestionManager.h"
+#include "Player.h"
+#include "Ranking.h"
 
 class Game
 {
@@ -16,7 +17,7 @@ private:
 	uint8_t GetRandomPlayerIndex();
 
 private:
-	void GiveNumericalQuestionToAll();
+	Ranking GiveNumericalQuestionToAll();
 	void ChooseBase();
 	void Update();
 	void FillMap();

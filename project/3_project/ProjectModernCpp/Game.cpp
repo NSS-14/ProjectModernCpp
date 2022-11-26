@@ -30,8 +30,16 @@ void Game::AddPlayer(const Player& player)
 	m_players.push_back(player);
 }
 
-void Game::GiveNumericalQuestionToAll()
+Ranking Game::GiveNumericalQuestionToAll()
 {
+	Ranking currentRanking;
+	Question numericalQuestion;
+
+	numericalQuestion = m_qm.GetNumericalQuestion();
+
+	std::cout << numericalQuestion.GetQuestion();
+	std::cout << std::endl;
+	return Ranking();
 }
 
 uint8_t Game::GetRandomPlayerIndex()

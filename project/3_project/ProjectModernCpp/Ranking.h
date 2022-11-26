@@ -7,7 +7,7 @@ public:
 	Ranking() = default;
 
 public:
-	using QueueItem = std::pair<uint8_t, float>;
+	using QueueItem = std::tuple<uint8_t, float, float>;
 
 public:
 	struct Compare {
@@ -15,7 +15,7 @@ public:
 	};
 
 public:
-	void Push(uint8_t playerIndex, float score);
+	void Push(uint8_t playerIndex, float distanceFromAnswer, float time);
 	uint8_t Pop();
 
 private:
