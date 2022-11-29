@@ -29,12 +29,13 @@ std::ostream& operator<<(std::ostream& out, const Map& map)
 		{
 			if (map[position])
 			{
-				out << *map[position] << ' ';
+				out << *map[position];
 			}
 			else
 			{
 				out << "000";
 			}
+			out << ' ';
 		}
 		out << std::endl;
 	}

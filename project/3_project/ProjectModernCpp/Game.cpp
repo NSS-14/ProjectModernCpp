@@ -86,9 +86,11 @@ void Game::ChooseBase(Ranking rank)
 	for (int i = 0; i < m_players.size(); ++i)
 	{
 		playerToChoose = rank.Pop();
-		std::cout << 'P' << playerToChoose << ':' << std::endl;
+		std::cout << 'P' << static_cast<int>(playerToChoose) << ':' << std::endl;
 		std::cin >> input.first;
 		std::cin >> input.second;
+		input.first -= 48;
+		input.second -= 48;
 
 		m_map[input] = Region(300, input);
 		m_players[playerToChoose].SetBaseRegion(*m_map[input]);
