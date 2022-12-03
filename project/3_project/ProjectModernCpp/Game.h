@@ -7,6 +7,9 @@
 class Game
 {
 public:
+	static const unsigned int kBaseScore = 300;
+
+public:
 	Game(uint8_t numberOfPlayers);
 
 public:

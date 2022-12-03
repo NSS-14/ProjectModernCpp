@@ -14,7 +14,7 @@ public:
 
 public:
 	Region();
-	Region(unsigned int score, const Coordinates& coordinates);
+	Region(const Coordinates& coordinates, unsigned int score = kInitialScore);
 
 public:
 	unsigned getScore() const;

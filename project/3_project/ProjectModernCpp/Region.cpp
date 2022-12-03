@@ -1,15 +1,17 @@
 #include "Region.h"
 
 Region::Region()
+	: m_coordinates()
+	, m_score(kInitialScore)
 {
-	m_score = kInitialScore;
-	m_coordinates = Coordinates(200, 200);
+	/*EMPTY*/
 }
 
-Region::Region(unsigned int score, const Coordinates& coordinates)
+Region::Region(const Coordinates& coordinates, unsigned int score)
+	: m_coordinates(coordinates)
+	, m_score(score)
 {
-	m_score = score;
-	m_coordinates = coordinates;
+	/*EMPTY*/
 }
 
 unsigned Region::getScore() const

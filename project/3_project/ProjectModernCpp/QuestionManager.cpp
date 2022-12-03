@@ -44,14 +44,15 @@ void QuestionManager::ReadFile(std::ifstream& in)
 	while (!in.eof())
 	{
 		in >> type;
-		in.ignore(1,'/n');
-
+		std::getline(in,questionString);
 		std::getline(in, questionString);
+		std::string str;
 		in >> numberOfAnswers;
+		std::getline(in, str);
 		for (int i = 0; i < numberOfAnswers; i++)
 		{
 			std::string answer;
-			in >> answer;
+			std::getline(in,answer);
 			answers.push_back(answer);
 		}
 		Question question(questionString, answers);

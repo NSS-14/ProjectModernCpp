@@ -25,6 +25,10 @@ void Game::Update()
 	std::cout << m_map;
 }
 
+void Game::FillMap()
+{
+}
+
 void Game::AddPlayer(const Player& player)
 {
 	m_players.push_back(player);
@@ -93,7 +97,7 @@ void Game::ChooseBase(Ranking rank)
 		input.second -= 48;
 
 		m_map[input] =playerToChoose+1;
-		m_players[playerToChoose].SetBaseRegion(Region(300,input));
+		m_players[playerToChoose].SetBaseRegion(Region(input,kBaseScore));
 	}
 }
 
