@@ -9,10 +9,10 @@ Game::Game(uint8_t numberOfPlayers)
 		m_map = Map(3, 3);
 		break;
 	case 3:
-		m_map = Map(5, 3);
+		m_map = Map(3, 5);
 		break;
 	case 4:
-		m_map = Map(6, 4);
+		m_map = Map(4, 6);
 		break;
 	}
 	m_players.reserve(numberOfPlayers);
@@ -38,11 +38,11 @@ void Game::Start()
 		return;
 	}
 	*/
-	Ranking currentRank;
-	currentRank = GiveNumericalQuestionToAll();
+	Ranking currentrank;
+	currentrank = GiveNumericalQuestionToAll();
 
 	Update();
-	ChooseBase(currentRank);
+	ChooseBase(currentrank);
 	Update();
 }
 
@@ -92,8 +92,8 @@ void Game::ChooseBase(Ranking rank)
 		input.first -= 48;
 		input.second -= 48;
 
-		m_map[input] = Region(300, input);
-		m_players[playerToChoose].SetBaseRegion(*m_map[input]);
+		m_map[input] =playerToChoose+1;
+		m_players[playerToChoose].SetBaseRegion(Region(300,input));
 	}
 }
 

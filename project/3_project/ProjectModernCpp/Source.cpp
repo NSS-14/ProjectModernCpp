@@ -1,21 +1,20 @@
 #include <iostream>
-#include "Game.h"
+#include"Game.h"
 
 int main()
 {
-	Game g(4);
+	Game g1(4);
+	Player p1("Ana", "1234");
+	Player p2("Ion", "wuheerer");
+	Player p3("Oana", "cjcjc");
+	Player p4("Andrei", "09404");
 
-	Player player1("George", "ananas");
-	Player player2("Ge21orge", "an1221anas");
-	Player player3("Geo4124rge", "an1221anas");
-	Player player4("Geo124rge", "anan1241as");
+	g1.AddPlayer(p1);
+	g1.AddPlayer(p2);
+	g1.AddPlayer(p3);
+	g1.AddPlayer(p4);
 
-	g.AddPlayer(player1);
-	g.AddPlayer(player2);
-	g.AddPlayer(player3);
-	g.AddPlayer(player4);
-
-	g.Start();
+	g1.Start();
 
 	return 0;
 }

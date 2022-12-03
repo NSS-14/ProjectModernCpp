@@ -4,16 +4,16 @@ Map::Map(size_t height, size_t width)
 	: m_height(height)
 	, m_width(width)
 {
-	m_regions.resize(height * width);
+	m_regions.resize(height * width, 0);
 }
 
-const std::optional<Region>& Map::operator[](Position position) const
+uint8_t Map::operator[](Position position) const
 {
 	const auto& [line, column] = position;
 	return m_regions[line * m_width + column];
 }
 
-std::optional<Region>& Map::operator[](Position position)
+uint8_t& Map::operator[](Position position)
 {
 	const auto& [line, column] = position;
 	return m_regions[line * m_width + column];
@@ -29,11 +29,11 @@ std::ostream& operator<<(std::ostream& out, const Map& map)
 		{
 			if (map[position])
 			{
-				out << *map[position];
+				out << static_cast <int>(map[position]);
 			}
 			else
 			{
-				out << "000";
+				out << '-';
 			}
 			out << ' ';
 		}

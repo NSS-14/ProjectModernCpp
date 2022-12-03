@@ -1,7 +1,6 @@
 #pragma once
 #include<vector>
 #include<cstdint>
-#include<optional>
 #include"Region.h"
 
 class Map
@@ -14,14 +13,14 @@ public:
 	Map() = default;
 
 public:
-	const std::optional<Region>& operator [](Position position) const; //getter
-	std::optional<Region>& operator [](Position position); //setter
+	uint8_t operator [](Position position) const; //getter
+	uint8_t& operator [](Position position); //setter
 
 public:
 	friend std::ostream& operator <<(std::ostream& out, const Map& map);
 
 private:
-	std::vector<std::optional<Region>> m_regions;
+	std::vector<uint8_t> m_regions;
 	std::size_t m_height;
 	std::size_t m_width;
 
