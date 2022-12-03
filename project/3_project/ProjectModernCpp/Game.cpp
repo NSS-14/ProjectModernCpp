@@ -76,10 +76,36 @@ void Game::StartDuels()
 		uint8_t duelPlayerIndex, winner;
 
 		for (int j = 0; j < randomPlayerOrder.size(); ++j) {
-			std::cout << 'P' << static_cast<int>(randomPlayerOrder[j]) << "chooses duel with: ";
+			std::vector<Region::Coordinates> neighbours=m_map.Neighbours(randomPlayerOrder[j]);
+			for (int k = 0; k < neighbours.size(); ++k)
+			{
+				std::cout << "(" << neighbours[k].first << "," << neighbours[k].second << ")" << ";";
 
-			std::cin >> duelPlayerIndex;
-			winner = GiveQuestionToTwo(randomPlayerOrder[j], duelPlayerIndex);
+				std::cout << std::endl;
+				std::cout << 'P' << static_cast<int>(randomPlayerOrder[j]) << "chooses duel with: ";
+
+				Region::Coordinates duelRegion;
+
+				std::cin >> duelRegion.first >> duelRegion.second;
+
+				winner = GiveQuestionToTwo(randomPlayerOrder[j], m_map[duelRegion]);
+				if (winner == randomPlayerOrder[j])
+				{
+					if (m_players[m_map[duelRegion]].GetRegion(duelRegion).getScore() == 100)
+					{
+						m_players[randomPlayerOrder[j]].InsertRegion(m_players[m_map[duelRegion]].ExtractRegion(duelRegion));
+						m_map[duelRegion] = randomPlayerOrder[j];
+					}
+					else
+					{
+						m_players[m_map[duelRegion]].GetRegion(duelRegion).DecrementScore();
+					}
+				}
+				else
+				{
+					m_players[m_map[duelRegion]].GetRegion(duelRegion).IncrementScore();
+				}
+			}
 		}
 	}
 }
@@ -104,6 +130,7 @@ void Game::Start()
 	ChooseBase(currentrank);
 	Update();
 	FillMap();
+	StartDuels();
 	Update();
 }
 

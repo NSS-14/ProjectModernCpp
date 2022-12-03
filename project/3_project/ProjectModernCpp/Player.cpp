@@ -20,9 +20,9 @@ const std::string& Player::GetPassword() const
     return m_password;
 }
 
-const Region& Player::GetRegion(const Region::Coordinates& coordinates)
+const Region& Player::GetRegion( Region::Coordinates& coordinates) const
 {
-    return m_ownedRegions[coordinates];
+    return m_ownedRegions.value[coordinates];
 }
 
 unsigned int Player::GetScore() const
@@ -49,6 +49,11 @@ void Player::SetName(const std::string& name)
 void Player::SetPassword(const std::string& password)
 {
     m_password = password;
+}
+
+Region& Player::GetRegion( Region::Coordinates& coordinates)
+{
+    return m_ownedRegions[coordinates];
 }
 
 void Player::InsertRegion(const Region& region)
