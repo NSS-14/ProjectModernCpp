@@ -19,6 +19,11 @@ uint8_t& Map::operator[](Position position)
 	return m_regions[line * m_width + column];
 }
 
+std::size_t Map::Size()
+{
+	return m_regions.size();
+}
+
 std::ostream& operator<<(std::ostream& out, const Map& map)
 {
 	std::pair<uint8_t, uint8_t> position;

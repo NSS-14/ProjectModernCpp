@@ -27,6 +27,33 @@ void Game::Update()
 
 void Game::FillMap()
 {
+	uint8_t freeSpaces=m_map.Size()-m_players.size();
+	Ranking currentRank;
+	uint8_t playerToChoose;
+	Region::Coordinates inputCoordinate;
+
+	while (freeSpaces)
+	{
+		currentRank=GiveNumericalQuestionToAll();
+		for (uint8_t i = m_players.size() - 1; i > 0; i--)
+		{
+			playerToChoose = currentRank.Pop();
+			for (uint8_t j = 0; j < i; j++)
+			{
+				std::cout << 'P' << static_cast <int> (playerToChoose) << " choose region: ";
+				std::cin >> inputCoordinate.first >> inputCoordinate.second;
+				inputCoordinate.first -= 48;
+				inputCoordinate.second -= 48;
+
+				m_map[inputCoordinate] = playerToChoose + 1;
+				m_players[playerToChoose].SetBaseRegion(Region(inputCoordinate));
+				freeSpaces--;
+			}
+			Update();
+		}
+		
+	}
+	
 }
 
 void Game::AddPlayer(const Player& player)
@@ -47,6 +74,8 @@ void Game::Start()
 
 	Update();
 	ChooseBase(currentrank);
+	Update();
+	FillMap();
 	Update();
 }
 

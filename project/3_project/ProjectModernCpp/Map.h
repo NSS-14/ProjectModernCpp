@@ -15,6 +15,8 @@ public:
 public:
 	uint8_t operator [](Position position) const; //getter
 	uint8_t& operator [](Position position); //setter
+public:
+	std::size_t Size();
 
 public:
 	friend std::ostream& operator <<(std::ostream& out, const Map& map);
