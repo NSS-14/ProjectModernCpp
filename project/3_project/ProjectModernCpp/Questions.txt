@@ -1,19 +1,109 @@
 0
 Cine a inventat becul?
 7
-r1
-r2
-r3
-r4
-r5
-r6
-r7
+Thomas Edison
+Nikola Tesla
+Albert Einstein
+Stephen Hawking
+Galileo Galilei
+Michael Faraday
+Charles Darwin
 
 1
 Ce inaltime are muntele everest?
-5
-8400
+7
+8849
 2134
 5324
 7032
 9000
+8000
+2498
+
+1
+Cati ani a domnit Stefan cel Mare?
+7
+47
+3
+29
+37
+42
+9
+17
+
+0
+Care este capitala Kazakhstanului?
+7
+Astana
+Kabul
+Teheran
+Ankara
+Bagdad
+Cairo
+Lagos
+
+1
+Cate judete are Romania?
+7
+41
+37
+29
+1
+49
+9
+17
+
+1
+In ce an a avut loc Batalia de la Valea Alba?
+7
+1476
+1320
+1589
+1326
+972
+1848
+1923
+
+0
+Cine a scris romanul Anna Karenina?
+7
+Lev Tolstoi
+Mark Twain
+Feodor Dostoievski
+Alexander Pushkin
+Herman Melville
+James Joyce
+Hermann Hesse
+
+0
+Cine a regizat filmul Goodfellas?
+7
+Martin Scorsese
+Steven Spielberg
+Quentin Tarantino
+Alfred Hitchcock
+Ridley Scott
+Christopher Nolan
+Spike Lee
+
+0
+Citatul "Noi suntem, sau am fost, unul din putinele neamuri europene care am experimentat contemplatia in suferinta" ii este atribuit lui:
+7
+Mircea Eliade
+Mihai Eminescu
+Mircea Cărtărescu
+Ana Blandiana
+Ion Creangă
+Tudor Arghezi
+Emil Cioran
+
+1
+In ce an a murit Nicolae Labis?
+7
+1956
+2014
+1984
+1886
+1972
+1848
+1923
