@@ -68,7 +68,6 @@ Alexander Pushkin
 Herman Melville
 James Joyce
 Hermann Hesse
-
 0
 Cine a regizat filmul Goodfellas?
 7
@@ -99,3 +98,41 @@ In ce an a murit Nicolae Labis?
 1972
 1848
 1923
+0
+Care este cea mai apropiata planeta de soare?
+7
+Mercur
+Pamant
+Marte
+Venus
+Jupiter
+Uranus
+Neptun
+0
+În ce țară au avut loc primele Jocuri Olimpice?
+7
+Grecia
+Japonia
+Italia
+Franta
+Danemarca
+Olanda
+Rusia
+1
+În ce an a fost semnată Declarația de independență a Statelor Unite?
+1776
+1676
+1678
+1770
+1680
+1750
+0
+Cine a scris romanul To Kill a Mockingbird, publicat în 1960?
+7
+Harper Lee
+Robert Frost
+John Steinbeck
+JD Salinger
+Timothy Leary
+Donna Leon
+Denise Levertov
