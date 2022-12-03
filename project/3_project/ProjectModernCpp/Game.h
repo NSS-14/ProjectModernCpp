@@ -15,6 +15,7 @@ public:
 public:
 	void AddPlayer(const Player& player);
 	void Start();
+	uint8_t GiveQuestionToTwo(uint8_t player1, uint8_t player2);
 	Ranking GiveNumericalQuestionToAll();
 
 private:
@@ -24,7 +25,8 @@ private:
 	void ChooseBase(Ranking rank);
 	void Update();
 	void FillMap();
-
+	void StartDuels();
+	
 
 private:
 	Map m_map;

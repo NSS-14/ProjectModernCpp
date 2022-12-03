@@ -79,6 +79,69 @@ void Game::Start()
 	Update();
 }
 
+uint8_t Game::GiveQuestionToTwo(uint8_t player1, uint8_t player2)
+{
+	std::vector<uint8_t> duelPlayers = {player1, player2};
+
+	Ranking currentRanking;
+	Question question;
+	float correctAnswer;
+	std::string correctAnswerString;
+
+	question = m_qm.GetGridQuestion();
+	correctAnswerString = question.GetAnswer();
+
+	std::cout << question.GetQuestion();
+	std::cout << std::endl;
+
+	std::vector<std::string> answersFromPlayers;
+	std::string answerFromPlayer;
+
+	for (int i = 0; i < 2; ++i)
+	{
+		std::cout << 'P' << static_cast<int>(duelPlayers[i]) << ": ";
+		
+		std::cin >> answerFromPlayer;
+		answersFromPlayers.push_back(answerFromPlayer);
+	}
+
+	if (answersFromPlayers[0] == answersFromPlayers[1]) {
+		if (answersFromPlayers[0] == correctAnswerString) {
+			question = m_qm.GetNumericalQuestion();
+			correctAnswerString = question.GetAnswer();
+			correctAnswer = std::stof(correctAnswerString);
+
+			std::cout << question.GetQuestion();
+			std::cout << std::endl;
+
+			float floatAnswerFromPlayer;
+			for (int i = 0; i < 2; ++i)
+			{
+				std::cout << 'P' << static_cast<int>(duelPlayers[i]) << ": ";
+				time_t beforeQuestionTime = time(0);
+				std::cin >> floatAnswerFromPlayer;
+				currentRanking.Push
+				(
+					i,
+					std::abs(correctAnswer - floatAnswerFromPlayer),
+					time(0) - beforeQuestionTime
+				);
+			}
+
+			return currentRanking.Pop();
+		}
+
+		return m_players.size() + 1;
+	}
+
+	if (answersFromPlayers[0] == correctAnswerString)
+		return duelPlayers[0];
+	else if (answersFromPlayers[1] == correctAnswerString)
+		return duelPlayers[1];
+
+	return m_players.size() + 1;
+}
+
 Ranking Game::GiveNumericalQuestionToAll()
 {
 	Ranking currentRanking;
