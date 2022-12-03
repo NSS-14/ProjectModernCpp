@@ -60,6 +60,35 @@ std::vector<Region::Coordinates> Map::Neighbours(Region::Coordinates coordonates
 
 }
 
+std::vector<Region::Coordinates> Map::Neighbours(uint8_t playerIndex)
+{
+	std::unordered_set<Region::Coordinates > neighbours;
+	Region::Coordinates iterator;
+	auto& [line, column] = iterator;
+	for (line = 0; line < m_height; ++line)
+	{
+		for (column = 0; column < m_width; ++column)
+		{
+			if ((*this)[iterator] == playerIndex)
+			{
+				std::vector<Region::Coordinates> currentNeighbours;
+				currentNeighbours = Neighbours(iterator);
+				for (const Region::Coordinates& coordinates : currentNeighbours)
+				{
+					neighbours.insert(coordinates);
+				}
+			}
+		}
+	}
+	std::vector<Region::Coordinates > result;
+	result.reserve(neighbours.size());
+	for (const Region::Coordinates& coordinates : neighbours)
+	{
+		result.push_back(coordinates);
+	}
+	return result;
+}
+
 std::ostream& operator<<(std::ostream& out, const Map& map)
 {
 	std::pair<uint8_t, uint8_t> position;

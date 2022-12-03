@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdint>
 #include "Region.h"
+#include<unordered_set>
 
 class Map
 {
@@ -16,7 +17,7 @@ public:
 public:
 	std::size_t Size();
 	std::vector<Region::Coordinates> Neighbours(Region::Coordinates coordonates);
-
+	std::vector<Region::Coordinates> Neighbours(uint8_t playerIndex);
 public:
 	friend std::ostream& operator <<(std::ostream& out, const Map& map);
 
