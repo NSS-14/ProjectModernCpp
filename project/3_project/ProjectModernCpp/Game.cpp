@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <unordered_set>
 
 Game::Game(uint8_t numberOfPlayers)
 	: m_qm("Questions.txt")
@@ -54,6 +55,33 @@ void Game::FillMap()
 		
 	}
 	
+}
+
+void Game::StartDuels()
+{
+	for (int i = 0; i < m_players.size() + 1; ++i) {
+		std::vector<Region::Coordinates> neighbours;
+		std::vector<uint8_t> randomPlayerOrder;
+		randomPlayerOrder.reserve(m_players.size());
+		std::unordered_set<uint8_t> uSet;
+		
+		while (uSet.size() == m_players.size()) {
+			uSet.insert(GetRandomPlayerIndex());
+		}
+
+		for (uint8_t index : uSet) {
+			randomPlayerOrder.push_back(index);
+		}
+
+		uint8_t duelPlayerIndex, winner;
+
+		for (int j = 0; j < randomPlayerOrder.size(); ++j) {
+			std::cout << 'P' << static_cast<int>(randomPlayerOrder[j]) << "chooses duel with: ";
+
+			std::cin >> duelPlayerIndex;
+			winner = GiveQuestionToTwo(randomPlayerOrder[j], duelPlayerIndex);
+		}
+	}
 }
 
 void Game::AddPlayer(const Player& player)

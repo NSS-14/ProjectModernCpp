@@ -1,22 +1,21 @@
 #pragma once
-#include<vector>
-#include<cstdint>
-#include"Region.h"
+#include <vector>
+#include <cstdint>
+#include "Region.h"
 
 class Map
 {
-public:
-	using Position = std::pair<uint8_t, uint8_t>;
-
 public:
 	Map(size_t height, size_t width);
 	Map() = default;
 
 public:
-	uint8_t operator [](Position position) const; //getter
-	uint8_t& operator [](Position position); //setter
+	uint8_t operator [](Region::Coordinates position) const; //getter
+	uint8_t& operator [](Region::Coordinates position); //setter
+
 public:
 	std::size_t Size();
+	std::vector<Region::Coordinates> Neighbours(Region::Coordinates coordonates);
 
 public:
 	friend std::ostream& operator <<(std::ostream& out, const Map& map);
