@@ -25,14 +25,14 @@ public:
 	const Region& GetBaseRegion();
 	const std::string& GetName() const;
 	const std::string& GetPassword() const;
-	const Region& GetRegion( Region::Coordinates& coordinates) const;
+	const Region& GetRegion(const Region::Coordinates& coordinates) const;
 	unsigned int GetScore() const;
 
 public:
 	void SetBaseRegion(const Region& region);
 	void SetName(const std::string& name);
 	void SetPassword(const std::string& password);
-	Region& GetRegion( Region::Coordinates& coordinates);
+	Region& GetRegion(const Region::Coordinates& coordinates);
 
 public:
 	void InsertRegion(const Region& region);
