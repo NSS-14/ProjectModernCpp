@@ -28,14 +28,14 @@ void Game::Update()
 
 void Game::FillMap()
 {
-	uint8_t freeSpaces=m_map.Size()-m_players.size();
+	uint8_t freeSpaces = m_map.Size() - m_players.size();
 	Ranking currentRank;
 	uint8_t playerToChoose;
 	Region::Coordinates inputCoordinate;
 
 	while (freeSpaces)
 	{
-		currentRank=GiveNumericalQuestionToAll();
+		currentRank = GiveNumericalQuestionToAll();
 		for (uint8_t i = m_players.size() - 1; i > 0; i--)
 		{
 			playerToChoose = currentRank.Pop();
@@ -47,14 +47,14 @@ void Game::FillMap()
 				inputCoordinate.second -= 48;
 
 				m_map[inputCoordinate] = playerToChoose + 1;
-				m_players[playerToChoose].SetBaseRegion(Region(inputCoordinate));
+				m_players[playerToChoose].InsertRegion(Region(inputCoordinate));
 				freeSpaces--;
 			}
 			Update();
 		}
-		
+
 	}
-	
+
 }
 
 void Game::StartDuels()
@@ -64,8 +64,8 @@ void Game::StartDuels()
 		std::vector<uint8_t> randomPlayerOrder;
 		randomPlayerOrder.reserve(m_players.size());
 		std::unordered_set<uint8_t> uSet;
-		
-		while (uSet.size() == m_players.size()) {
+
+		while (uSet.size() != m_players.size()) {
 			uSet.insert(GetRandomPlayerIndex());
 		}
 
@@ -76,36 +76,38 @@ void Game::StartDuels()
 		uint8_t duelPlayerIndex, winner;
 
 		for (int j = 0; j < randomPlayerOrder.size(); ++j) {
-			std::vector<Region::Coordinates> neighbours=m_map.Neighbours(randomPlayerOrder[j]);
+			std::vector<Region::Coordinates> neighbours = m_map.Neighbours(randomPlayerOrder[j] + 1);
 			for (int k = 0; k < neighbours.size(); ++k)
 			{
-				std::cout << "(" << neighbours[k].first << "," << neighbours[k].second << ")" << ";";
+				std::cout << "(" << static_cast<int>(neighbours[k].first) << "," << static_cast<int>(neighbours[k].second) << ")" << ";";
+			}
+			std::cout << std::endl;
+			std::cout << 'P' << static_cast<int>(randomPlayerOrder[j] + 1) << "chooses duel with: ";
 
-				std::cout << std::endl;
-				std::cout << 'P' << static_cast<int>(randomPlayerOrder[j]) << "chooses duel with: ";
+			Region::Coordinates duelRegion;
 
-				Region::Coordinates duelRegion;
-
-				std::cin >> duelRegion.first >> duelRegion.second;
-
-				winner = GiveQuestionToTwo(randomPlayerOrder[j], m_map[duelRegion]);
-				if (winner == randomPlayerOrder[j])
+			std::cin >> duelRegion.first >> duelRegion.second;
+			duelRegion.first -= 48;
+			duelRegion.second -= 48;
+			winner = GiveQuestionToTwo(randomPlayerOrder[j] + 1, m_map[duelRegion]);
+			if (winner == randomPlayerOrder[j] + 1)
+			{
+				if (m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).getScore() == 100)
 				{
-					if (m_players[m_map[duelRegion]].GetRegion(duelRegion).getScore() == 100)
-					{
-						m_players[randomPlayerOrder[j]].InsertRegion(m_players[m_map[duelRegion]].ExtractRegion(duelRegion));
-						m_map[duelRegion] = randomPlayerOrder[j];
-					}
-					else
-					{
-						m_players[m_map[duelRegion]].GetRegion(duelRegion).DecrementScore();
-					}
+					m_players[randomPlayerOrder[j]].InsertRegion(m_players[m_map[duelRegion] - 1].ExtractRegion(duelRegion));
+					m_map[duelRegion] = randomPlayerOrder[j] + 1;
 				}
 				else
 				{
-					m_players[m_map[duelRegion]].GetRegion(duelRegion).IncrementScore();
+					m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).DecrementScore();
 				}
 			}
+			if (winner == m_players.size() + 1)
+			{
+				continue;
+			}
+			m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).IncrementScore();
+			Update();
 		}
 	}
 }
@@ -136,7 +138,7 @@ void Game::Start()
 
 uint8_t Game::GiveQuestionToTwo(uint8_t player1, uint8_t player2)
 {
-	std::vector<uint8_t> duelPlayers = {player1, player2};
+	std::vector<uint8_t> duelPlayers = { player1, player2 };
 
 	Ranking currentRanking;
 	Question question;
@@ -152,11 +154,16 @@ uint8_t Game::GiveQuestionToTwo(uint8_t player1, uint8_t player2)
 	std::vector<std::string> answersFromPlayers;
 	std::string answerFromPlayer;
 
+	std::cin.get();
 	for (int i = 0; i < 2; ++i)
 	{
+		std::vector<std::string> variants = question.GetAnswers();
+		for (int j = 0; j < variants.size(); ++j)
+		{
+			std::cout << j + 1 << ". " << variants[j];
+		}
 		std::cout << 'P' << static_cast<int>(duelPlayers[i]) << ": ";
-		
-		std::cin >> answerFromPlayer;
+		std::getline(std::cin, answerFromPlayer);
 		answersFromPlayers.push_back(answerFromPlayer);
 	}
 
@@ -177,13 +184,13 @@ uint8_t Game::GiveQuestionToTwo(uint8_t player1, uint8_t player2)
 				std::cin >> floatAnswerFromPlayer;
 				currentRanking.Push
 				(
-					i,
+					duelPlayers[i] - 1,
 					std::abs(correctAnswer - floatAnswerFromPlayer),
 					time(0) - beforeQuestionTime
 				);
 			}
 
-			return currentRanking.Pop();
+			return currentRanking.Pop() + 1;
 		}
 
 		return m_players.size() + 1;
@@ -243,8 +250,8 @@ void Game::ChooseBase(Ranking rank)
 		input.first -= 48;
 		input.second -= 48;
 
-		m_map[input] =playerToChoose+1;
-		m_players[playerToChoose].SetBaseRegion(Region(input,kBaseScore));
+		m_map[input] = playerToChoose + 1;
+		m_players[playerToChoose].SetBaseRegion(Region(input, kBaseScore));
 	}
 }
 

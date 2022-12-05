@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="PairHash.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="QuestionManager.h" />

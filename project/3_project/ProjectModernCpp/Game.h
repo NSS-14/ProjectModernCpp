@@ -27,10 +27,8 @@ private:
 	void FillMap();
 	void StartDuels();
 	
-
 private:
 	Map m_map;
 	QuestionManager m_qm;
 	std::vector<Player> m_players;
 };
-

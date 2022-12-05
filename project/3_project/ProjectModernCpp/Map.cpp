@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "PairHash.h"
 
 Map::Map(size_t height, size_t width)
 	: m_height(height)
@@ -31,7 +32,7 @@ std::vector<Region::Coordinates> Map::Neighbours(Region::Coordinates coordonates
 	neighbour.first = coordonates.first;
 	neighbour.second = coordonates.second - 1;
 
-	if (neighbour.second >= 0)
+	if (neighbour.second < m_width)
 		if ((*this)[coordonates] != (*this)[neighbour])
 			neighbours.push_back(neighbour);
 
@@ -45,7 +46,7 @@ std::vector<Region::Coordinates> Map::Neighbours(Region::Coordinates coordonates
 	neighbour.first = coordonates.first - 1;
 	neighbour.second = coordonates.second;
 
-	if (neighbour.first >= 0)
+	if (neighbour.first < m_height)
 		if ((*this)[coordonates] != (*this)[neighbour])
 			neighbours.push_back(neighbour);
 
@@ -57,12 +58,11 @@ std::vector<Region::Coordinates> Map::Neighbours(Region::Coordinates coordonates
 			neighbours.push_back(neighbour);
 
 	return neighbours;
-
 }
 
 std::vector<Region::Coordinates> Map::Neighbours(uint8_t playerIndex)
 {
-	std::unordered_set<Region::Coordinates > neighbours;
+	std::unordered_set<Region::Coordinates, PairHash::Hash> neighbours;
 	Region::Coordinates iterator;
 	auto& [line, column] = iterator;
 	for (line = 0; line < m_height; ++line)

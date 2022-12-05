@@ -62,6 +62,9 @@
     <ClInclude Include="Ranking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PairHash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Questions.txt">

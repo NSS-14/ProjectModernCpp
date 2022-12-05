@@ -120,6 +120,7 @@ Olanda
 Rusia
 1
 În ce an a fost semnată Declarația de independență a Statelor Unite?
+6
 1776
 1676
 1678
@@ -146,3 +147,31 @@ Cezar Spintecatorul
 Razvan Setea
 Setila Gigantul
 Flamanzila Gigantul
+1
+Cat face 3 + 3 x 3?
+4
+12
+18
+9
+6
+1
+Cat face 7 x 7 + 3 + 3 x 4?
+4
+64
+220
+55
+54
+1
+Suma primelor 5 numere naturale nenule este:
+4
+15
+4
+10
+20
+1
+Cate secunde are o ora?
+4
+3600
+60
+6000
+100
