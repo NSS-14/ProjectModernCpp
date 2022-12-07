@@ -15,13 +15,17 @@ int main()
 
 	crow::SimpleApp app;
 	
-	CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request & req, const std::string & name, const std::string & password)
+	/*CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request & req, const std::string & name, const std::string & password)
 	{
 		User user(name, password);
 		db.replace(user);
 
 		return crow::response(200);
-	});
+	});*/
+
+	auto& loginPut = CROW_ROUTE(app, "/login")
+		.methods(crow::HTTPMethod::PUT);
+	loginPut(LoginHandler(db));
 
 	app.port(18080).multithreaded().run();
 

@@ -130,10 +130,12 @@
     <ClCompile Include="DBBehaviour.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DBBehaviour.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="UtilityFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
