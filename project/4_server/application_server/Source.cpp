@@ -14,18 +14,22 @@ int main()
 	db.sync_schema();
 
 	crow::SimpleApp app;
-	
-	/*CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request & req, const std::string & name, const std::string & password)
-	{
-		User user(name, password);
-		db.replace(user);
 
-		return crow::response(200);
-	});*/
+	CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request& req, const std::string& name, const std::string& password) {
+		using namespace sqlite_orm;
+		User user(1, name, password);
 
+		auto rows = db.select(&User::GetName, sql::where(sql::c(&User::GetName) == name));
+		if(rows.empty())
+			db.insert(user);
+
+	    return crow::response(200);
+	});
+
+	/*
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(LoginHandler(db));
+	loginPut(LoginHandler(db));*/
 
 	app.port(18080).multithreaded().run();
 
