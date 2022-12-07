@@ -36,6 +36,21 @@ std::vector<std::string> Question::GetAnswers() const
 	return fourAnswers;
 }
 
+void Question::SetQuestion(const std::string& question)
+{
+	m_question = question;
+}
+
+void Question::SetAnswers(const std::vector<std::string>& answers)
+{
+	m_answers = answers;
+}
+
+void Question::SetAnswer(const std::string& answer)
+{
+	m_answers[0] = answer;
+}
+
 void Question::GenerateRandomIndexes(std::vector<int>& vector) const
 {
 	vector.reserve(4);
