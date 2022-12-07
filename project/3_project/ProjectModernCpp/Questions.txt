@@ -175,3 +175,73 @@ Cate secunde are o ora?
 60
 6000
 100
+0
+Cine a scris romanul Moby-Dick?
+7
+Herman Melville
+Lewis Carroll
+Ernest Hemingway
+James Joyce
+Hermann Hesse
+Jane Austen
+John Steinbeck
+0
+Cine a pictat interiorul Capelei Sixtine?
+7
+Michelangelo Buonarroti
+Vincent van Gogh
+Leonardo da Vinci
+Rembrandt
+Jackson Pollock
+Salvador Dali
+Sandro Botticelli
+0
+Cine a realizat sculptura David?
+7
+Michelangelo Buonarroti
+Constantin Brancusi
+Louise Bourgeois
+Antonio Canova
+Donatello
+Pablo Picasso
+Leonardo da Vinci
+0
+Cine a regizat filmul Apocalypse Now?
+7
+Francis Ford Coppola
+Quentin Tarantino
+Martin Scorsese
+Steven Spielberg
+David Fincher
+Ridley Scott
+James Cameron
+1
+Cate strofe are Luceafarul de Mihai Eminescu?
+7
+98
+94
+92
+84
+76
+89
+100
+0
+Cui ii este atribuit citatul "Ne-am pierdut curajul de prea multa singuratate si am uitat sa traim, gandind prea mult viata"?
+7
+Emil Cioran
+Lucian Blaga
+Petre Tutea
+Friedrich Nietzsche
+Jean-Paul Sartre
+Albert Camus
+Michel Foucault
+0
+In ce film apare replica "Mana intinsa care nu spune o poveste nu primeste pomana. Fii profesionist, ce dracu'!"?
+7
+Filantropica
+Dacii
+Asphalt Tango
+Restul e tacere
+Moartea domnului Lazarescu
+Oglinda
+Balanta
