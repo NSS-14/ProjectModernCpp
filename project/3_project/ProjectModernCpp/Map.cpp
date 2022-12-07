@@ -82,9 +82,9 @@ std::vector<Region::Coordinates> Map::Neighbours(uint8_t playerIndex)
 	}
 	std::vector<Region::Coordinates > result;
 	result.reserve(neighbours.size());
-	for (const Region::Coordinates& coordinates : neighbours)
+	for (const Region::Coordinates& coordinate : neighbours)
 	{
-		result.push_back(coordinates);
+		result.push_back(coordinate);
 	}
 	return result;
 }

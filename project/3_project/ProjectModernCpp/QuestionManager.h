@@ -10,7 +10,6 @@ public:
 	QuestionManager(std::ifstream& in);
 	QuestionManager(std::string path);
 
-
 public:
 	Question GetNumericalQuestion();
 	Question GetGridQuestion();
