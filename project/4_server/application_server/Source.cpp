@@ -26,10 +26,9 @@ int main()
 	    return crow::response(200);
 	});
 
-	/*
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(LoginHandler(db));*/
+	loginPut(LoginHandler(db));
 
 	app.port(18080).multithreaded().run();
 
