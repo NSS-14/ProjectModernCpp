@@ -109,7 +109,8 @@ void QuestionManager::PopulateDataBase(Storage& db)
 	for (const auto& question : m_numericalQuestions)
 	{
 		db.insert(question);
-		for (const auto& wrongAnswer : question.GetWrongAnswers())
+		std::vector<std::string> wrongAnswers = question.GetWrongAnswers();
+		for (const auto& wrongAnswer : wrongAnswers)
 		{
 			WrongAnswer wa(1, counter, wrongAnswer);
 			db.insert(wa);
