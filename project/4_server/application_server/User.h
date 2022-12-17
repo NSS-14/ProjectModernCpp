@@ -1,5 +1,15 @@
 #pragma once
 #include <string>
+
+class WrongAnswer {
+public:
+	WrongAnswer();
+
+private:
+	std::string m_answer;
+	unsigned int m_id;
+};
+
 class User
 {
 public:
@@ -12,8 +22,6 @@ public:
 	void SetName(const std::string &name);
 	void SetPassword(const std::string& password);
 	
-
-
 private:
 	unsigned int m_id;
 	std::string m_name;

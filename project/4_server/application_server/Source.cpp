@@ -9,13 +9,14 @@ namespace sql = sqlite_orm;
 
 int main()
 {
+	using namespace sqlite_orm;
 	const std::string dbFile = "database.sqlite";
 	Storage db = CreateStorage(dbFile);
 	db.sync_schema();
 
-	crow::SimpleApp app;
+	//crow::SimpleApp app;
 
-	CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request& req, const std::string& name, const std::string& password) {
+	/*CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request& req, const std::string& name, const std::string& password) {
 		using namespace sqlite_orm;
 		User user(1, name, password);
 
@@ -28,9 +29,15 @@ int main()
 
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(LoginHandler(db));
+	loginPut(LoginHandler(db));*/
 
-	app.port(18080).multithreaded().run();
+	std::vector<std::string> answ = {"abc", "1234"};
+	Question q("ABC??", answ);
+	db.replace(q);
+	auto rows = db.select(&Question::GetAnswer, sql::where(sql::c(&Question::GetQuestion) == "ABC??"));
+	std::string answ2 = rows[0];
+	std::cout << answ2 << "\n";
+	//app.port(18080).multithreaded().run();
 
 	return 0;
 }
