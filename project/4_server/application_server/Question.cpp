@@ -6,16 +6,20 @@ Question::Question(const Question& question)
 	m_answers = question.m_answers;
 }
 
-Question::Question(unsigned int id, const std::string& question, const std::string& answer)
-	:m_id(id), m_question(question), m_answers(1)
+Question::Question(unsigned int id, const std::string& question, const std::string& answer, bool type)
+	:m_id(id)
+	,m_question(question)
+	,m_answers(1)
+	,m_type(type)
 {
 	SetAnswer(answer);
 }
 
-Question::Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers)
+Question::Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers, bool type)
 	:m_id(id)
 	,m_question(question)
 	,m_answers(answers)
+	,m_type(type)
 {
 	//empty
 }
@@ -67,6 +71,11 @@ void Question::SetAnswer(const std::string& answer)
 void Question::AddWrongAnswer(const std::string& wrongAnswer)
 {
 	m_answers.push_back(wrongAnswer);
+}
+
+void Question::AppendWrongAnswers(const std::vector<std::string>& wrongAnswers)
+{
+	m_answers.insert(std::end(m_answers), std::begin(wrongAnswers), std::end(wrongAnswers));
 }
 
 void Question::SetId(unsigned int id)
@@ -145,6 +154,11 @@ const std::string& WrongAnswer::GetWrongAnswer() const
 	return m_wrongAnswer;
 }
 
+bool Question::GetType() const
+{
+	return m_type;
+}
+
 void WrongAnswer::SetId(unsigned int id)
 {
 	m_id = id;
@@ -158,4 +172,9 @@ void WrongAnswer::SetQuestionId(unsigned int id)
 void WrongAnswer::SetWrongAnswer(const std::string& wrongAnswer)
 {
 	m_wrongAnswer = wrongAnswer;
+}
+
+void Question::SetType(bool type)
+{
+	m_type = type;
 }

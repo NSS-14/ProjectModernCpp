@@ -55,7 +55,7 @@ void QuestionManager::ReadFile(std::ifstream& in)
 			std::getline(in,answer);
 			answers.push_back(answer);
 		}
-		Question question(1, questionString, answers);
+		Question question(1, questionString, answers, type);
 		answers.clear();
 		if (type)
 			m_numericalQuestions.push_back(question);
@@ -63,4 +63,26 @@ void QuestionManager::ReadFile(std::ifstream& in)
 			m_gridQuestions.push_back(question);
 	}
 	in.close();
+}
+
+void QuestionManager::ReadDataBase(Storage& db)
+{
+	using namespace sqlite_orm;
+
+	int totalNumberOfQuestionsFromDB = db.count<Question>();
+	for (int i = 1; i <= totalNumberOfQuestionsFromDB; ++i)
+	{
+		auto rows1= db.select(sql::columns(&Question::GetQuestion, &Question::GetAnswer, &Question::GetType), sql::where(sql::c(&Question::GetId)==i));
+		const auto& tuple = rows1[0];
+
+		Question q(i,std::get<0>(tuple),std::get<1>(tuple), std::get<2>(tuple));
+		
+		auto rows2 = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == i));
+		q.AppendWrongAnswers(rows2);
+
+		if (q.GetType())
+			m_numericalQuestions.push_back(q);
+		else
+			m_gridQuestions.push_back(q);
+	}
 }
