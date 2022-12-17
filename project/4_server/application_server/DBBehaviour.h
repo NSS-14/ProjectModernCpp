@@ -20,8 +20,16 @@ inline auto CreateStorage(const std::string& filename)
 		),
 		sql::make_table(
 			"Question",
-			sql::make_column("question", &Question::GetQuestion, &Question::SetQuestion, sql::primary_key()),
+			sql::make_column("id", &Question::GetId, &Question::SetId, sql::autoincrement(), sql::primary_key()),
+			sql::make_column("question", &Question::GetQuestion, &Question::SetQuestion),
 			sql::make_column("answer", &Question::GetAnswer, &Question::SetAnswer)
+		),
+		sql::make_table(
+			"WrongAnswer",
+			sql::make_column("id", &WrongAnswer::GetId, &WrongAnswer::SetId, sql::autoincrement(), sql::primary_key()),
+			sql::make_column("questionId", &WrongAnswer::GetQuestionId, &WrongAnswer::SetQuestionId),
+			sql::make_column("wrongAnswer", &WrongAnswer::GetWrongAnswer, &WrongAnswer::SetWrongAnswer)
+
 		)
 		);
 }
