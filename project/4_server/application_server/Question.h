@@ -42,7 +42,8 @@ public:
 	const std::string& GetQuestion() const;
 	std::string GetAnswer() const;
 	std::vector<std::string> GetAnswers() const;
-
+	
+	void AddWrongAnswer(const std::string& wrongAnswer);
 	void SetId(unsigned int id);
 	void SetQuestion(const std::string& question);
 	void SetAnswers(const std::vector <std::string>& answers);

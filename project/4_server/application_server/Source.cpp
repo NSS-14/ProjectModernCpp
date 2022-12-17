@@ -32,11 +32,20 @@ int main()
 	loginPut(LoginHandler(db));*/
 
 	std::vector<std::string> answ = {"abc", "1234"};
-	Question q("ABC??", answ);
-	db.replace(q);
-	auto rows = db.select(&Question::GetAnswer, sql::where(sql::c(&Question::GetQuestion) == "ABC??"));
-	std::string answ2 = rows[0];
-	std::cout << answ2 << "\n";
+	Question q(1, "ABC??", answ);
+	db.insert(q);
+
+	for (const auto& answer : answ) {
+		WrongAnswer wrAns(1, 1, answer);
+		db.insert(wrAns);
+	}
+
+	auto rows = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == 1));
+
+	for (const auto& answer : rows) {
+		std::cout << answer << "\n";
+	}
+
 	//app.port(18080).multithreaded().run();
 
 	return 0;

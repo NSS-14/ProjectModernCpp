@@ -1,15 +1,6 @@
 #pragma once
 #include <string>
 
-class WrongAnswer {
-public:
-	WrongAnswer();
-
-private:
-	std::string m_answer;
-	unsigned int m_id;
-};
-
 class User
 {
 public:

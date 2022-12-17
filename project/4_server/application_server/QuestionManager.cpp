@@ -55,7 +55,7 @@ void QuestionManager::ReadFile(std::ifstream& in)
 			std::getline(in,answer);
 			answers.push_back(answer);
 		}
-		Question question(questionString, answers);
+		Question question(1, questionString, answers);
 		answers.clear();
 		if (type)
 			m_numericalQuestions.push_back(question);

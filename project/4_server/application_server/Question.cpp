@@ -64,6 +64,11 @@ void Question::SetAnswer(const std::string& answer)
 	m_answers[0] = answer;
 }
 
+void Question::AddWrongAnswer(const std::string& wrongAnswer)
+{
+	m_answers.push_back(wrongAnswer);
+}
+
 void Question::SetId(unsigned int id)
 {
 	m_id = id;
@@ -117,6 +122,7 @@ WrongAnswer& WrongAnswer::operator=(const WrongAnswer& wrongAnswer)
 	m_id = wrongAnswer.m_id;
 	m_questionId = wrongAnswer.m_questionId;
 	m_wrongAnswer = wrongAnswer.m_wrongAnswer;
+	return *this;
 }
 
 bool WrongAnswer::operator==(const WrongAnswer& wrongAnswer)
