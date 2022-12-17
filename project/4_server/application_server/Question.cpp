@@ -48,6 +48,16 @@ std::vector<std::string> Question::GetAnswers() const
 	return fourAnswers;
 }
 
+std::vector<std::string> Question::GetWrongAnswers() const
+{
+	std::vector<std::string> result;
+	for (int i = 1; i < m_answers.size(); i++)
+	{
+		result.push_back(m_answers.at(i));
+	}
+	return result;
+}
+
 unsigned int Question::GetId() const
 {
 	return m_id;

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 #include"DBBehaviour.h"
+#include"QuestionManager.h"
 #include <crow.h>
 #include <sqlite_orm/sqlite_orm.h>
 namespace sql = sqlite_orm;
@@ -31,20 +32,10 @@ int main()
 		.methods(crow::HTTPMethod::PUT);
 	loginPut(LoginHandler(db));*/
 
-	std::vector<std::string> answ = {"abc", "1234"};
-	Question q(1, "ABC??", answ);
-	db.insert(q);
-
-	for (const auto& answer : answ) {
-		WrongAnswer wrAns(1, 1, answer);
-		db.insert(wrAns);
-	}
-
-	auto rows = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == 1));
-
-	for (const auto& answer : rows) {
-		std::cout << answer << "\n";
-	}
+	std::ifstream in("Questions.txt");
+	QuestionManager qm;
+	qm.ReadFile(in);
+	qm.PopulateDataBase(db);
 
 	//app.port(18080).multithreaded().run();
 

@@ -86,3 +86,34 @@ void QuestionManager::ReadDataBase(Storage& db)
 			m_gridQuestions.push_back(q);
 	}
 }
+
+void QuestionManager::PopulateDataBase(Storage& db)
+{
+	bool type;
+	std::string questionString;
+	int numberOfAnswers;
+	std::vector<std::string> answers;
+	unsigned int counter = 1;
+	
+	for (const auto& question : m_gridQuestions)
+	{
+		db.insert(question);
+		std::vector<std::string> wrongAnswers = question.GetWrongAnswers();
+		for (const auto& wrongAnswer : wrongAnswers)
+		{
+			WrongAnswer wa(1, counter, wrongAnswer);
+			db.insert(wa);
+		}
+		counter++;
+	}
+	for (const auto& question : m_numericalQuestions)
+	{
+		db.insert(question);
+		for (const auto& wrongAnswer : question.GetWrongAnswers())
+		{
+			WrongAnswer wa(1, counter, wrongAnswer);
+			db.insert(wa);
+		}
+		counter++;
+	}
+}

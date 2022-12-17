@@ -43,6 +43,7 @@ public:
 	const std::string& GetQuestion() const;
 	std::string GetAnswer() const;
 	std::vector<std::string> GetAnswers() const;
+	std::vector<std::string> GetWrongAnswers() const;
 	bool GetType() const;
 	
 	void AddWrongAnswer(const std::string& wrongAnswer);

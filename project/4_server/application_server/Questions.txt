@@ -1,0 +1,404 @@
+0
+Cine a inventat becul?
+7
+Thomas Edison
+Nikola Tesla
+Albert Einstein
+Stephen Hawking
+Galileo Galilei
+Michael Faraday
+Charles Darwin
+1
+Ce inaltime are muntele everest?
+7
+8849
+2134
+5324
+7032
+9000
+8000
+2498
+1
+Cati ani a domnit Stefan cel Mare?
+7
+47
+3
+29
+37
+42
+9
+17
+0
+Care este capitala Kazakhstanului?
+7
+Astana
+Kabul
+Teheran
+Ankara
+Bagdad
+Cairo
+Lagos
+1
+Cate judete are Romania?
+7
+41
+37
+29
+1
+49
+9
+17
+1
+In ce an a avut loc Batalia de la Valea Alba?
+7
+1476
+1320
+1589
+1326
+972
+1848
+1923
+0
+Cine a scris romanul Anna Karenina?
+7
+Lev Tolstoi
+Mark Twain
+Feodor Dostoievski
+Alexander Pushkin
+Herman Melville
+James Joyce
+Hermann Hesse
+0
+Cine a regizat filmul Goodfellas?
+7
+Martin Scorsese
+Steven Spielberg
+Quentin Tarantino
+Alfred Hitchcock
+Ridley Scott
+Christopher Nolan
+Spike Lee
+0
+Citatul "Noi suntem, sau am fost, unul din putinele neamuri europene care am experimentat contemplatia in suferinta" ii este atribuit lui:
+7
+Mircea Eliade
+Mihai Eminescu
+Mircea Cărtărescu
+Ana Blandiana
+Ion Creangă
+Tudor Arghezi
+Emil Cioran
+1
+In ce an a murit Nicolae Labis?
+7
+1956
+2014
+1984
+1886
+1972
+1848
+1923
+0
+Care este cea mai apropiata planeta de soare?
+7
+Mercur
+Pamant
+Marte
+Venus
+Jupiter
+Uranus
+Neptun
+0
+În ce țară au avut loc primele Jocuri Olimpice?
+7
+Grecia
+Japonia
+Italia
+Franta
+Danemarca
+Olanda
+Rusia
+1
+În ce an a fost semnată Declarația de independență a Statelor Unite?
+6
+1776
+1676
+1678
+1770
+1680
+1750
+0
+Cine a scris romanul To Kill a Mockingbird, publicat în 1960?
+7
+Harper Lee
+Robert Frost
+John Steinbeck
+JD Salinger
+Timothy Leary
+Donna Leon
+Denise Levertov
+0
+Care dintre urmatoarele nume de personaje este al unui protagonist dintr-un basm scris de Ion Creanga?
+7
+Harap-Alb
+Ion Pilat
+Lica Samadaoul
+Cezar Spintecatorul
+Razvan Setea
+Setila Gigantul
+Flamanzila Gigantul
+1
+Cat face 3 + 3 x 3?
+4
+12
+18
+9
+6
+1
+Cat face 7 x 7 + 3 + 3 x 4?
+4
+64
+220
+55
+54
+1
+Suma primelor 5 numere naturale nenule este:
+4
+15
+4
+10
+20
+1
+Cate secunde are o ora?
+4
+3600
+60
+6000
+100
+0
+Cine a scris romanul Moby-Dick?
+7
+Herman Melville
+Lewis Carroll
+Ernest Hemingway
+James Joyce
+Hermann Hesse
+Jane Austen
+John Steinbeck
+0
+Cine a pictat interiorul Capelei Sixtine?
+7
+Michelangelo Buonarroti
+Vincent van Gogh
+Leonardo da Vinci
+Rembrandt
+Jackson Pollock
+Salvador Dali
+Sandro Botticelli
+0
+Cine a realizat sculptura David?
+7
+Michelangelo Buonarroti
+Constantin Brancusi
+Louise Bourgeois
+Antonio Canova
+Donatello
+Pablo Picasso
+Leonardo da Vinci
+0
+Cine a regizat filmul Apocalypse Now?
+7
+Francis Ford Coppola
+Quentin Tarantino
+Martin Scorsese
+Steven Spielberg
+David Fincher
+Ridley Scott
+James Cameron
+1
+Cate strofe are Luceafarul de Mihai Eminescu?
+7
+98
+94
+92
+84
+76
+89
+100
+0
+Cui ii este atribuit citatul "Ne-am pierdut curajul de prea multa singuratate si am uitat sa traim, gandind prea mult viata"?
+7
+Emil Cioran
+Lucian Blaga
+Petre Tutea
+Friedrich Nietzsche
+Jean-Paul Sartre
+Albert Camus
+Michel Foucault
+0
+In ce film apare replica "Mana intinsa care nu spune o poveste nu primeste pomana. Fii profesionist, ce dracu'!"?
+7
+Filantropica
+Dacii
+Asphalt Tango
+Restul e tacere
+Moartea domnului Lazarescu
+Oglinda
+Balanta
+1
+Ce capacitate are Arena Nationala din Bucuresti?
+7
+55635
+30000
+25700
+45390
+25065
+37890
+12500
+0
+In ce localitate este situata fabrica Dacia?
+7
+Mioveni
+Ploiesti
+Vaslui
+Bucuresti
+Cluj
+Iasi
+Pitesi
+0
+Care este judetul cu cel mai mic PIP pe cap de locuitor?
+7
+Vaslui
+Timisoara
+Cluj
+Suceava
+Harghita
+Tulcea
+Calarasi
+0
+Carui politician ii apartine citatul "Cineva, la un moment dat, voia sa vina sa-mi numere gainile. I-am sugerat mai bine sa-mi numere ouale"?
+7
+Adrian Nastase
+Traian Basescu
+Donald Trump
+Ion Iliescu
+Victor Ponta
+Liviu Dragnea
+Igor Dodon
+1
+Cand a aderat Romania la NATO?
+7
+2004
+2012
+1990
+1989
+1995
+2014
+2009
+1
+Cate goluri a inscris Gheorghe Hagi pentru nationala Romaniei?
+7
+35
+49
+214
+19
+103
+65
+73
+1
+In ce an a concertat Michael Jackson in Romania?
+7
+1992
+1989
+1998
+2004
+2012
+2009
+1984
+1
+In ce an a inceput Razboiul din Transnistria?
+7
+1990
+1989
+1998
+2004
+2012
+2009
+2022
+1
+Cand a devenit Nicolae Ceausescu Presedintele Romaniei?
+7
+1974
+1989
+1945
+1965
+1982
+1956
+1970
+1
+Cati romani au murit in al doilea Razboi Mondial?
+7
+500000
+300000
+200000
+1000000
+365000
+450000
+475600
+0
+Cine a fost prima sotie a regelui Carol la II-lea al Romaniei?
+4
+Ioana Zizi Lambrino
+Elena Lupescu
+Maria a Romaniei
+Regina mama Elena
+0
+Care este tara cu cea mai mare suprafata din Uniunea Europeana?
+7
+Franta
+Rusia
+Ucraina
+Suedia
+Germania
+Polonia
+Spania
+1
+Cate tari membre are Uniunea Europeana?
+7
+27
+32
+5
+19
+28
+25
+13
+1
+Cate tari strabate Dunarea?
+7
+10
+7
+5
+27
+3
+9
+13
+0
+Cine a scris Hronicul vechimei a romano-moldo-vlahilor?
+7
+Dimitrie Cantemir
+Nicolae Balcescu
+Mihail Kogalniceanu
+Vasile Alecsandri
+Avram Iancu
+Simion Barnutiu
+Stefan cel Mare
+0
+Care este municipiul judetului Brasov?
+7
+Brasov
+Predeal
+Sinaia
+Busteni
+Bran
+Azuga
+Sibiu
