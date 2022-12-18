@@ -2,9 +2,10 @@
 #include "Region.h"
 #include <unordered_map>
 #include <array>
+#include"User.h"
 #include <boost/functional/hash.hpp>
 
-class Player
+class Player : public User
 {
 public:
 	struct HashPair {
@@ -18,20 +19,22 @@ public:
 			return hash1;
 		}
 	};
-
+	Player();
 	Player(std::string name, std::string password);
+	Player(const Player& player);
+	Player(const User& user);
 	
 public:
+	Player& operator =(const Player& player);
+	bool operator ==(const Player& player);
+
+public:
 	const Region& GetBaseRegion();
-	const std::string& GetName() const;
-	const std::string& GetPassword() const;
 	const Region& GetRegion(const Region::Coordinates& coordinates) const;
 	unsigned int GetScore() const;
 
 public:
 	void SetBaseRegion(const Region& region);
-	void SetName(const std::string& name);
-	void SetPassword(const std::string& password);
 	Region& GetRegion(const Region::Coordinates& coordinates);
 
 public:
@@ -45,8 +48,6 @@ private:
 	Region m_baseRegion;
 	std::unordered_map<Region::Coordinates, Region, HashPair> m_ownedRegions;
 	std::array<bool, 3> m_advantages;
-	std::string m_name;
-	std::string m_password;
 
 };
 

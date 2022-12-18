@@ -17,13 +17,16 @@ public:
 	Region(const Coordinates& coordinates, unsigned int score = kInitialScore);
 
 public:
+	bool operator ==(const Region& region);
+	friend std::ostream& operator <<(std::ostream& out, const Region& region);
+
+public:
 	unsigned getScore() const;
 	Coordinates getCoordinates() const;
 
 public:
 	void IncrementScore();
 	void DecrementScore();
-	friend std::ostream& operator <<(std::ostream& out, const Region& region);
 
 private:
 	unsigned int m_score;

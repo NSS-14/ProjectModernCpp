@@ -1,24 +1,63 @@
 #include "Player.h"
 
-Player::Player(std::string name, std::string password)
-    : m_name(name)
-    , m_password(password)
+Player::Player()
+    : m_advantages()
+    , m_baseRegion()
+    , m_ownedRegions()
 {
     m_advantages.fill(true);
+}
+
+Player::Player(std::string name, std::string password)
+    : User(1,name,password)
+    , m_advantages()
+    , m_baseRegion()
+    , m_ownedRegions()
+{
+    m_advantages.fill(true);
+}
+
+Player::Player(const Player& player)
+{
+    *this = player;
+}
+
+Player::Player(const User& user)
+    : User(user)
+    , m_advantages()
+    , m_baseRegion()
+    , m_ownedRegions()
+{
+    m_advantages.fill(true);
+}
+
+Player& Player::operator=(const Player& player)
+{
+    m_advantages = player.m_advantages;
+    m_baseRegion = player.m_baseRegion;
+    m_ownedRegions = player.m_ownedRegions;
+    m_id = player.m_id;
+    m_name = player.m_name;
+    m_password = player.m_password;
+
+    return *this;
+}
+
+bool Player::operator==(const Player& player)
+{
+    return m_advantages==player.m_advantages
+        && m_baseRegion==player.m_baseRegion
+        && m_ownedRegions== player.m_ownedRegions
+        && m_id==player.m_id
+        && m_name==player.m_name
+        && m_password==player.m_password;
 }
 
 const Region& Player::GetBaseRegion()
 {
     return m_baseRegion;
 }
-const std::string& Player::GetName() const
-{
-    return m_name;
-}
-const std::string& Player::GetPassword() const
-{
-    return m_password;
-}
+
 
 const Region& Player::GetRegion(const Region::Coordinates& coordinates) const
 {
@@ -42,14 +81,7 @@ void Player::SetBaseRegion(const Region& region)
 {
     m_baseRegion = region;
 }
-void Player::SetName(const std::string& name)
-{
-    m_name = name;
-}
-void Player::SetPassword(const std::string& password)
-{
-    m_password = password;
-}
+
 
 Region& Player::GetRegion(const Region::Coordinates& coordinates)
 {

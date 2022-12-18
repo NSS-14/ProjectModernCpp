@@ -14,6 +14,12 @@ Region::Region(const Coordinates& coordinates, unsigned int score)
 	/*EMPTY*/
 }
 
+bool Region::operator==(const Region& region)
+{
+	return m_coordinates == region.m_coordinates
+		&& m_score == region.m_score;
+}
+
 unsigned Region::getScore() const
 {
 	return m_score;

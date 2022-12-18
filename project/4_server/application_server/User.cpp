@@ -1,7 +1,30 @@
 #include "User.h"
 
-User::User(unsigned int id, const std::string& name, const std::string& password) : m_id(id), m_name(name), m_password(password)
+User::User(unsigned int id, const std::string& name, const std::string& password) 
+	: m_id(id)
+	, m_name(name)
+	, m_password(password)
 {
+}
+
+User::User(const User& user)
+{
+	*this = user;
+}
+
+User& User::operator=(const User& user)
+{
+	m_id = user.m_id;
+	m_name = user.m_name;
+	m_password = user.m_password;
+	return *this;
+}
+
+bool User::operator==(const User& user)
+{
+	return m_id == user.m_id
+		&& m_name == user.m_name
+		&& m_password == user.m_password;
 }
 
 const std::string& User::GetName() const
