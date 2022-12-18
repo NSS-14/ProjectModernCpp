@@ -32,10 +32,12 @@ public:
 	const Region& GetBaseRegion();
 	const Region& GetRegion(const Region::Coordinates& coordinates) const;
 	unsigned int GetScore() const;
+	const std::array<bool, 3>& GetAdvantages() const;
 
 public:
 	void SetBaseRegion(const Region& region);
-	Region& GetRegion(const Region::Coordinates& coordinates);
+	Region& SetRegion(const Region::Coordinates& coordinates);
+	void SetAdvantages(const std::array<bool, 3>& advantages);
 
 public:
 	void InsertRegion(const Region& region);

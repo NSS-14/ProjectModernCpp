@@ -61,6 +61,10 @@ const Region& Player::GetBaseRegion()
 
 const Region& Player::GetRegion(const Region::Coordinates& coordinates) const
 {
+    if (m_baseRegion.GetCoordinates() == coordinates)
+    {
+        return m_baseRegion;
+    }
     return m_ownedRegions.at(coordinates);
 }
 
@@ -68,13 +72,18 @@ unsigned int Player::GetScore() const
 {
     unsigned int totalScore = 0;
 
-    totalScore += m_baseRegion.getScore();
+    totalScore += m_baseRegion.GetScore();
 
     for (const auto& element : m_ownedRegions)
     {
-        totalScore += element.second.getScore();
+        totalScore += element.second.GetScore();
     }
     return totalScore;
+}
+
+const std::array<bool, 3>& Player::GetAdvantages() const
+{
+    return m_advantages;
 }
 
 void Player::SetBaseRegion(const Region& region)
@@ -83,14 +92,23 @@ void Player::SetBaseRegion(const Region& region)
 }
 
 
-Region& Player::GetRegion(const Region::Coordinates& coordinates)
+Region& Player::SetRegion(const Region::Coordinates& coordinates)
 {
+    if (m_baseRegion.GetCoordinates() == coordinates)
+    {
+        return m_baseRegion;
+    }
     return m_ownedRegions[coordinates];
+}
+
+void Player::SetAdvantages(const std::array<bool, 3>& advantages)
+{
+    m_advantages = advantages;
 }
 
 void Player::InsertRegion(const Region& region)
 {
-    m_ownedRegions.insert(std::make_pair(region.getCoordinates(),region));
+    m_ownedRegions.insert(std::make_pair(region.GetCoordinates(),region));
 }
 
 bool Player::HasRegion(const Region::Coordinates& coordinates)
@@ -115,7 +133,7 @@ bool Player::UseAdvantage(uint8_t advantageIndex)
         return false;
     
     for (const std::pair<Region::Coordinates, Region>& regionPair : m_ownedRegions) {
-        if (regionPair.second.getScore() >= 200) {
+        if (regionPair.second.GetScore() >= 200) {
             m_advantages[advantageIndex] = false;
             return true;
         }

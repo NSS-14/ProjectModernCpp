@@ -8,6 +8,26 @@ Map::Map(size_t height, size_t width)
 	m_regions.resize(height * width, 0);
 }
 
+Map::Map(const Map& map)
+{
+	*this = map;
+}
+
+Map& Map::operator=(const Map& map)
+{
+	m_regions = map.m_regions;
+	m_height = map.m_height;
+	m_width = map.m_width;
+	return *this;
+}
+
+bool Map::operator==(const Map& map)
+{
+	return m_regions == map.m_regions
+		&& m_height == map.m_height
+		&& m_width == map.m_width;
+}
+
 uint8_t Map::operator[](Region::Coordinates position) const
 {
 	const auto& [line, column] = position;
@@ -18,6 +38,26 @@ uint8_t& Map::operator[](Region::Coordinates position)
 {
 	const auto& [line, column] = position;
 	return m_regions[line * m_width + column];
+}
+
+std::size_t Map::GetHeight() const
+{
+	return m_height;
+}
+
+std::size_t Map::GetWidth() const
+{
+	return m_width;
+}
+
+void Map::SetHeight(std::size_t height)
+{
+	m_height = height;
+}
+
+void Map::SetWidth(std::size_t width)
+{
+	m_width = width;
 }
 
 std::size_t Map::Size()

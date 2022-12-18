@@ -9,10 +9,21 @@ class Map
 public:
 	Map(size_t height, size_t width);
 	Map() = default;
+	Map(const Map& map);
 
 public:
+	Map& operator =(const Map& map);
+	bool operator ==(const Map& map);
 	uint8_t operator [](Region::Coordinates position) const; //getter
 	uint8_t& operator [](Region::Coordinates position); //setter
+
+public:
+	std::size_t GetHeight() const;
+	std::size_t GetWidth() const;
+
+public:
+	void SetHeight(std::size_t height);
+	void SetWidth(std::size_t width);
 
 public:
 	std::size_t Size();
