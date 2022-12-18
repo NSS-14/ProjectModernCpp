@@ -7,11 +7,23 @@ Region::Region()
 	/*EMPTY*/
 }
 
+Region::Region(const Region& region)
+{
+	*this = region;
+}
+
 Region::Region(const Coordinates& coordinates, unsigned int score)
 	: m_coordinates(coordinates)
 	, m_score(score)
 {
 	/*EMPTY*/
+}
+
+Region& Region::operator=(const Region& region)
+{
+	m_coordinates = region.m_coordinates;
+	m_score = region.m_score;
+	return *this;
 }
 
 bool Region::operator==(const Region& region)
@@ -20,14 +32,24 @@ bool Region::operator==(const Region& region)
 		&& m_score == region.m_score;
 }
 
-unsigned Region::getScore() const
+unsigned Region::GetScore() const
 {
 	return m_score;
 }
 
-Region::Coordinates Region::getCoordinates() const
+const Region::Coordinates& Region::GetCoordinates() const
 {
 	return m_coordinates;
+}
+
+void Region::SetScore(unsigned int score)
+{
+	m_score = score;
+}
+
+void Region::SetCoordinates(const Coordinates& coordinates)
+{
+	m_coordinates = coordinates;
 }
 
 void Region::IncrementScore()
