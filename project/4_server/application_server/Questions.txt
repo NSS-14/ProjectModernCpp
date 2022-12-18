@@ -402,3 +402,13 @@ Busteni
 Bran
 Azuga
 Sibiu
+1
+Daca unui rezervor de apa ii va lua 3 ore ca sa se umple, cu ajutorul unui anumit debit constant de apa, cate ore va dura umplerea a 4 rezervoare, cu acelasi debit constant de apa, daca nu exista surse de apa individuale pentru fiecare rezervor in parte?
+7
+12
+10
+11
+9
+14
+15
+13

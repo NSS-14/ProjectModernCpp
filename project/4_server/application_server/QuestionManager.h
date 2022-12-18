@@ -23,8 +23,8 @@ public:
 
 public:
 	void ReadFile(std::ifstream& in);
-	void ReadDataBase( Storage& db);
-	void PopulateDataBase(Storage& db);
+	void ReadDataBase(Storage& db);
+	void PopulateDataBase(Storage& db) const;
 
 private:
 	std::list<Question> m_numericalQuestions;

@@ -99,14 +99,14 @@ void Game::StartDuels()
 				}
 				else
 				{
-					m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).DecrementScore();
+					m_players[m_map[duelRegion] - 1].SetRegion(duelRegion).DecrementScore();
 				}
 			}
 			if (winner == m_players.size() + 1)
 			{
 				continue;
 			}
-			m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).IncrementScore();
+			m_players[m_map[duelRegion] - 1].SetRegion(duelRegion).IncrementScore();
 			Update();
 		}
 	}

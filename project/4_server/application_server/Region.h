@@ -15,10 +15,12 @@ public:
 public:
 	Region();
 	Region(const Region& region);
+	Region(Region&& region) noexcept;
 	Region(const Coordinates& coordinates, unsigned int score = kInitialScore);
 
 public:
 	Region& operator =(const Region& region);
+	Region& operator =(Region&& region) noexcept;
 	bool operator ==(const Region& region);
 	friend std::ostream& operator <<(std::ostream& out, const Region& region);
 

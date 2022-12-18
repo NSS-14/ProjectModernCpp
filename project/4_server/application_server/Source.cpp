@@ -1,12 +1,13 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
-#include"DBBehaviour.h"
-#include"QuestionManager.h"
 #include <crow.h>
 #include <sqlite_orm/sqlite_orm.h>
-namespace sql = sqlite_orm;
 
+#include "DBBehaviour.h"
+#include "QuestionManager.h"
+
+namespace sql = sqlite_orm;
 
 int main()
 {

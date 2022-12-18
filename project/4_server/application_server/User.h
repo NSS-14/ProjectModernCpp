@@ -21,7 +21,6 @@ public:
 	void SetId(unsigned int id);
 	void SetName(const std::string &name);
 	void SetPassword(const std::string& password);
-	
 
 protected:
 	unsigned int m_id;

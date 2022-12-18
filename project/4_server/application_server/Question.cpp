@@ -5,6 +5,10 @@ WrongAnswer::WrongAnswer(const WrongAnswer& wrongAnswer)
 {
 	*this = wrongAnswer;
 }
+WrongAnswer::WrongAnswer(WrongAnswer&& wrongAnswer) noexcept
+{
+	*this = std::move(wrongAnswer);
+}
 WrongAnswer::WrongAnswer(unsigned int id, unsigned int questionId, const std::string& wrongAnswer)
 	: m_id(id)
 	, m_questionId(questionId)
@@ -18,6 +22,13 @@ WrongAnswer& WrongAnswer::operator=(const WrongAnswer& wrongAnswer)
 	m_id = wrongAnswer.m_id;
 	m_questionId = wrongAnswer.m_questionId;
 	m_wrongAnswer = wrongAnswer.m_wrongAnswer;
+	return *this;
+}
+WrongAnswer& WrongAnswer::operator=(WrongAnswer&& wrongAnswer) noexcept
+{
+	m_id = wrongAnswer.m_id;
+	m_questionId = wrongAnswer.m_questionId;
+	m_wrongAnswer = std::move(wrongAnswer.m_wrongAnswer);
 	return *this;
 }
 bool WrongAnswer::operator==(const WrongAnswer& wrongAnswer)
@@ -58,6 +69,10 @@ Question::Question(const Question& question)
 {
 	*this = question;
 }
+Question::Question(Question&& question) noexcept
+{
+	*this = std::move(question);
+}
 Question::Question(unsigned int id, const std::string& question, const std::string& answer, bool type)
 	: m_id(id)
 	, m_question(question)
@@ -80,6 +95,14 @@ Question& Question::operator=(const Question& question)
 	m_id = question.m_id;
 	m_question = question.m_question;
 	m_answers = question.m_answers;
+	m_type = question.m_type;
+	return *this;
+}
+Question& Question::operator=(Question&& question) noexcept
+{
+	m_id = question.m_id;
+	m_question = std::move(question.m_question);
+	m_answers = std::move(question.m_answers);
 	m_type = question.m_type;
 	return *this;
 }

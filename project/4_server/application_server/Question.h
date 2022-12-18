@@ -9,10 +9,12 @@ class WrongAnswer
 public:
 	WrongAnswer() = default;
 	WrongAnswer(const WrongAnswer& wrongAnswer);
+	WrongAnswer(WrongAnswer&& wrongAnswer) noexcept;
 	WrongAnswer(unsigned int id, unsigned int questionId, const std::string& wrongAnswer);
 
 public:
 	WrongAnswer& operator =(const WrongAnswer& wrongAnswer);
+	WrongAnswer& operator =(WrongAnswer&& wrongAnswer) noexcept;
 	bool operator ==(const WrongAnswer& wrongAnswer);
 
 public:
@@ -36,11 +38,13 @@ class Question
 public:
 	Question() = default;
 	Question(const Question& question);
+	Question(Question&& question) noexcept;
 	Question(unsigned int id, const std::string& question, const std::string& answer, bool type);
 	Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers, bool type);
 
 public:
 	Question& operator =(const Question& question);
+	Question& operator =(Question&& question) noexcept;
 	bool operator ==(const Question& question);
 	friend std::ostream& operator <<(std::ostream& out, const Question& question);
 

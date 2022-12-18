@@ -107,7 +107,7 @@ void QuestionManager::ReadDataBase(Storage& db)
 	}
 }
 
-void QuestionManager::PopulateDataBase(Storage& db)
+void QuestionManager::PopulateDataBase(Storage& db) const
 {
 	using namespace sqlite_orm;
 

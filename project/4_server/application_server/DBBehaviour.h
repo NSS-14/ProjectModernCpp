@@ -1,12 +1,14 @@
 #pragma once
-#include<string>
-#include<vector>
+#include <string>
+#include <vector>
 #include <crow.h>
 #include <sqlite_orm/sqlite_orm.h>
-namespace sql = sqlite_orm;
-#include "User.h"
+
 #include "UtilityFunctions.h"
+#include "User.h"
 #include "Question.h"
+
+namespace sql = sqlite_orm;
 
 inline auto CreateStorage(const std::string& filename)
 {

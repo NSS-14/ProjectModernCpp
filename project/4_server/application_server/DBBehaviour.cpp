@@ -3,7 +3,7 @@
 LoginHandler::LoginHandler(Storage& storage)
 	:m_db(storage)
 {
-	/*EMPTY*/
+	/* EMPTY */
 }
 
 crow::response LoginHandler::operator()(const crow::request& req) const
