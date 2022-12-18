@@ -8,8 +8,14 @@ class QuestionManager
 {
 public:
 	QuestionManager()=default;
+	QuestionManager(const QuestionManager& questionManager);
+	QuestionManager(QuestionManager&& questionManager);
 	QuestionManager(std::ifstream& in);
 	QuestionManager(std::string path);
+
+public:
+	QuestionManager& operator =(const QuestionManager& questionManager);
+	QuestionManager& operator =(QuestionManager&& questionManager);
 
 public:
 	Question GetNumericalQuestion();

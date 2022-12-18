@@ -92,7 +92,7 @@ void Game::StartDuels()
 			winner = GiveQuestionToTwo(randomPlayerOrder[j] + 1, m_map[duelRegion]);
 			if (winner == randomPlayerOrder[j] + 1)
 			{
-				if (m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).getScore() == 100)
+				if (m_players[m_map[duelRegion] - 1].GetRegion(duelRegion).GetScore() == 100)
 				{
 					m_players[randomPlayerOrder[j]].InsertRegion(m_players[m_map[duelRegion] - 1].ExtractRegion(duelRegion));
 					m_map[duelRegion] = randomPlayerOrder[j] + 1;

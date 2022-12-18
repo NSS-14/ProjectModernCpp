@@ -1,6 +1,16 @@
 #include "QuestionManager.h"
 
 
+QuestionManager::QuestionManager(const QuestionManager& questionManager)
+{
+	*this = questionManager;
+}
+
+QuestionManager::QuestionManager(QuestionManager&& questionManager)
+{
+	*this = std::move(questionManager);
+}
+
 QuestionManager::QuestionManager(std::ifstream& in)
 {
 	ReadFile(in);
@@ -10,6 +20,20 @@ QuestionManager::QuestionManager(std::string path)
 {
 	std::ifstream in(path);
 	ReadFile(in);
+}
+
+QuestionManager& QuestionManager::operator=(const QuestionManager& questionManager)
+{
+	m_gridQuestions = questionManager.m_gridQuestions;
+	m_numericalQuestions = questionManager.m_numericalQuestions;
+	return *this;
+}
+
+QuestionManager& QuestionManager::operator=(QuestionManager&& questionManager)
+{
+	m_gridQuestions = std::move(questionManager.m_gridQuestions);
+	m_numericalQuestions = std::move(questionManager.m_numericalQuestions);
+	return *this;
 }
 
 Question QuestionManager::GetNumericalQuestion()
