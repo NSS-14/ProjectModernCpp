@@ -25,18 +25,19 @@ int main()
 		if(rows.empty())
 			db.insert(user);
 
-	    return crow::response(200);
+		return crow::response(200);
 	});
 
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
 	loginPut(LoginHandler(db));*/
 
-	std::ifstream in("Questions.txt");
+	//std::ifstream in("Questions.txt");
 	QuestionManager qm;
-	qm.ReadFile(in);
-	qm.PopulateDataBase(db);
-
+	//qm.ReadFile(in);
+	//qm.PopulateDataBase(db);
+	qm.ReadDataBase(db);
+	std::cout << qm.GetGridQuestion();
 	//app.port(18080).multithreaded().run();
 
 	return 0;

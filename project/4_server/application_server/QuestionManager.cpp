@@ -44,7 +44,7 @@ void QuestionManager::ReadFile(std::ifstream& in)
 	while (!in.eof())
 	{
 		in >> type;
-		std::getline(in,questionString);
+		std::getline(in, questionString);
 		std::getline(in, questionString);
 		std::string str;
 		in >> numberOfAnswers;
@@ -52,7 +52,7 @@ void QuestionManager::ReadFile(std::ifstream& in)
 		for (int i = 0; i < numberOfAnswers; i++)
 		{
 			std::string answer;
-			std::getline(in,answer);
+			std::getline(in, answer);
 			answers.push_back(answer);
 		}
 		Question question(1, questionString, answers, type);
@@ -69,52 +69,52 @@ void QuestionManager::ReadDataBase(Storage& db)
 {
 	using namespace sqlite_orm;
 
-	int totalNumberOfQuestionsFromDB = db.count<Question>();
-	for (int i = 1; i <= totalNumberOfQuestionsFromDB; ++i)
-	{
-		auto rows1= db.select(sql::columns(&Question::GetQuestion, &Question::GetAnswer, &Question::GetType), sql::where(sql::c(&Question::GetId)==i));
-		const auto& tuple = rows1[0];
+	auto rows = db.select(sql::columns(&Question::GetId, &Question::GetQuestion, &Question::GetAnswer, &Question::GetType));
+	for (const auto& row : rows) {
+		Question q(std::get<0>(row), std::get<1>(row), std::get<2>(row), std::get<3>(row));
+		auto wrongAnswers = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == q.GetId()));
+		q.AppendWrongAnswers(wrongAnswers);
 
-		Question q(i,std::get<0>(tuple),std::get<1>(tuple), std::get<2>(tuple));
-		
-		auto rows2 = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == i));
-		q.AppendWrongAnswers(rows2);
-
-		if (q.GetType())
+		if (q.GetType()) {
 			m_numericalQuestions.push_back(q);
-		else
-			m_gridQuestions.push_back(q);
+			continue;
+		}
+		m_gridQuestions.push_back(q);
 	}
 }
 
 void QuestionManager::PopulateDataBase(Storage& db)
 {
-	bool type;
-	std::string questionString;
-	int numberOfAnswers;
-	std::vector<std::string> answers;
-	unsigned int counter = 1;
-	
+	using namespace sqlite_orm;
+
 	for (const auto& question : m_gridQuestions)
 	{
-		db.insert(question);
+		auto rows = db.select(&Question::GetQuestion, sql::where(sql::c(&Question::GetQuestion) == question.GetQuestion()));
+		if (rows.size()) {
+			continue;
+		}
+
+		int id = db.insert(question);
 		std::vector<std::string> wrongAnswers = question.GetWrongAnswers();
 		for (const auto& wrongAnswer : wrongAnswers)
 		{
-			WrongAnswer wa(1, counter, wrongAnswer);
+			WrongAnswer wa(1, id, wrongAnswer);
 			db.insert(wa);
 		}
-		counter++;
 	}
 	for (const auto& question : m_numericalQuestions)
 	{
-		db.insert(question);
+		auto rows = db.select(&Question::GetQuestion, sql::where(sql::c(&Question::GetQuestion) == question.GetQuestion()));
+		if (rows.size()) {
+			continue;
+		}
+
+		int id = db.insert(question);
 		std::vector<std::string> wrongAnswers = question.GetWrongAnswers();
 		for (const auto& wrongAnswer : wrongAnswers)
 		{
-			WrongAnswer wa(1, counter, wrongAnswer);
+			WrongAnswer wa(1, id, wrongAnswer);
 			db.insert(wa);
 		}
-		counter++;
 	}
 }
