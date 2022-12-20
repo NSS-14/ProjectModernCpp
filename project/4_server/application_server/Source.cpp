@@ -16,7 +16,7 @@ int main()
 	Storage db = CreateStorage(dbFile);
 	db.sync_schema();
 
-	//crow::SimpleApp app;
+	crow::SimpleApp app;
 
 	/*CROW_ROUTE(app, "/login/<string>/<string>")([&db](const crow::request& req, const std::string& name, const std::string& password) {
 		using namespace sqlite_orm;
@@ -27,11 +27,11 @@ int main()
 			db.insert(user);
 
 		return crow::response(200);
-	});
+	});*/
 
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(LoginHandler(db));*/
+	loginPut(LoginHandler(db));
 
 	//std::ifstream in("Questions.txt");
 	QuestionManager qm;
@@ -39,7 +39,7 @@ int main()
 	//qm.PopulateDataBase(db);
 	qm.ReadDataBase(db);
 	std::cout << qm.GetGridQuestion();
-	//app.port(18080).multithreaded().run();
+	app.port(18080).multithreaded().run();
 
 	return 0;
 }

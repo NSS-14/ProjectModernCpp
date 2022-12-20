@@ -27,7 +27,7 @@ public:
 	void PopulateDataBase(Storage& db) const;
 
 private:
-	std::list<Question> m_numericalQuestions;
+	std::list<Question> m_numericalQuestions; // to do ( make it vector )
 	std::list<Question> m_gridQuestions;
 };
 

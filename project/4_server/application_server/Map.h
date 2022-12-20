@@ -33,7 +33,7 @@ public:
 	friend std::ostream& operator <<(std::ostream& out, const Map& map);
 
 private:
-	std::vector<uint8_t> m_regions;
+	std::vector<uint8_t> m_regions;//to rename
 	std::size_t m_height;
 	std::size_t m_width;
 

@@ -47,9 +47,9 @@ public:
 	bool UseAdvantage(uint8_t advantageIndex);
 
 private:
-	Region m_baseRegion;
+	Region m_baseRegion; // get rid of that
 	std::unordered_map<Region::Coordinates, Region, HashPair> m_ownedRegions;
-	std::array<bool, 3> m_advantages;
+	std::array<bool, 3> m_advantages; // enum
 
 };
 
