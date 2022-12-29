@@ -1,143 +1,161 @@
 #include "Player.h"
 
 Player::Player()
-    : m_advantages()
-    , m_baseRegion()
-    , m_ownedRegions()
-{
-    m_advantages.fill(true);
-}
-
-Player::Player(std::string name, std::string password)
-    : User(1,name,password)
+    : User()
     , m_advantages()
-    , m_baseRegion()
     , m_ownedRegions()
 {
-    m_advantages.fill(true);
+    InitializeAdvantages();
 }
-
+Player::Player(unsigned int id, std::string name, std::string password)
+    : User(id, name, password)
+    , m_ownedRegions()
+    , m_advantages()
+{
+    InitializeAdvantages();
+}
 Player::Player(const Player& player)
 {
     *this = player;
 }
-
+Player::Player(Player&& player) noexcept
+{
+    *this = std::move(player);
+}
 Player::Player(const User& user)
     : User(user)
     , m_advantages()
-    , m_baseRegion()
     , m_ownedRegions()
 {
-    m_advantages.fill(true);
+    InitializeAdvantages();
+}
+Player::Player(User&& user) noexcept
+    : User(std::move(user))
+    , m_advantages()
+    , m_ownedRegions()
+{
+    InitializeAdvantages();
 }
 
 Player& Player::operator=(const Player& player)
 {
-    m_advantages = player.m_advantages;
-    m_baseRegion = player.m_baseRegion;
     m_ownedRegions = player.m_ownedRegions;
+    m_advantages = player.m_advantages;
     m_id = player.m_id;
     m_name = player.m_name;
     m_password = player.m_password;
-
     return *this;
 }
-
+Player& Player::operator=(Player&& player) noexcept
+{
+    m_ownedRegions = std::move(player.m_ownedRegions);
+    m_advantages = std::move(player.m_advantages);
+    m_id = player.m_id;
+    m_name = std::move(player.m_name);
+    m_password = std::move(player.m_password);
+    return *this;
+}
 bool Player::operator==(const Player& player)
 {
-    return m_advantages==player.m_advantages
-        && m_baseRegion==player.m_baseRegion
-        && m_ownedRegions== player.m_ownedRegions
-        && m_id==player.m_id
-        && m_name==player.m_name
-        && m_password==player.m_password;
-}
-
-const Region& Player::GetBaseRegion()
-{
-    return m_baseRegion;
-}
-
-
-const Region& Player::GetRegion(const Region::Coordinates& coordinates) const
-{
-    if (m_baseRegion.GetCoordinates() == coordinates)
-    {
-        return m_baseRegion;
-    }
-    return m_ownedRegions.at(coordinates);
+    return m_ownedRegions == player.m_ownedRegions
+        && m_advantages == player.m_advantages
+        && m_id == player.m_id
+        && m_name == player.m_name
+        && m_password == player.m_password;
 }
 
 unsigned int Player::GetScore() const
 {
     unsigned int totalScore = 0;
-
-    totalScore += m_baseRegion.GetScore();
-
     for (const auto& element : m_ownedRegions)
     {
-        totalScore += element.second.GetScore();
+        totalScore += element.second;
     }
     return totalScore;
 }
 
-const std::array<bool, 3>& Player::GetAdvantages() const
+void Player::IncrementScore(const Coordinates& coordinates)
 {
-    return m_advantages;
-}
-
-void Player::SetBaseRegion(const Region& region)
-{
-    m_baseRegion = region;
-}
-
-
-Region& Player::SetRegion(const Region::Coordinates& coordinates)
-{
-    if (m_baseRegion.GetCoordinates() == coordinates)
-    {
-        return m_baseRegion;
+    if (!m_ownedRegions.count(coordinates)) {
+        return;
     }
-    return m_ownedRegions[coordinates];
+    m_ownedRegions[coordinates] += kScoreStepValue;
 }
-
-void Player::SetAdvantages(const std::array<bool, 3>& advantages)
+void Player::DecrementScore(const Coordinates& coordinates)
 {
-    m_advantages = advantages;
+    if (!m_ownedRegions.count(coordinates)) {
+        return;
+    }
+    if (m_ownedRegions[coordinates] == kScoreDefaultValue) {
+        return;
+    }
+    m_ownedRegions[coordinates] -= kScoreStepValue;
+}
+void Player::AddNewRegionAt(const Coordinates& coordinates)
+{
+    if (m_ownedRegions.count(coordinates)) {
+        return;
+    }
+    if (!m_ownedRegions.size()) {
+        m_ownedRegions.emplace(coordinates, kScoreBaseRegionDefaultValue);
+        return;
+    }
+    m_ownedRegions.emplace(coordinates, kScoreDefaultValue);
 }
 
 void Player::InsertRegion(const Region& region)
 {
-    m_ownedRegions.insert(std::make_pair(region.GetCoordinates(),region));
+    m_ownedRegions.insert(region);
 }
-
-bool Player::HasRegion(const Region::Coordinates& coordinates)
+Player::Region Player::ExtractRegion(const Coordinates& coordinates)
+{
+    auto region = m_ownedRegions.extract(coordinates);
+    if (region)
+        return {std::move(region.key()), std::move(region.mapped())};
+    throw "Region not found.";
+}
+bool Player::HasRegionOn(const Coordinates& coordinates)
 {
     if (m_ownedRegions.count(coordinates))
         return true;
     return false;
 }
-
-Region Player::ExtractRegion(const Region::Coordinates& coordinates)
+bool Player::UseAdvantage(Advantage advantage)
 {
-    auto region = m_ownedRegions.extract(coordinates);
-
-    if (region)
-        return std::move(region.mapped());
-    throw "Region not found.";
-}
-
-bool Player::UseAdvantage(uint8_t advantageIndex)
-{
-    if (!m_advantages[advantageIndex])
+    if (m_advantages[static_cast<size_t>(advantage)] == Advantage::UsedAdvantage)
         return false;
     
-    for (const std::pair<Region::Coordinates, Region>& regionPair : m_ownedRegions) {
-        if (regionPair.second.GetScore() >= 200) {
-            m_advantages[advantageIndex] = false;
+    for (const Region& region : m_ownedRegions) {
+        if (region.second >= 200) {
+            m_advantages[static_cast<size_t>(advantage)] = Advantage::UsedAdvantage;
             return true;
         }
     }
-
     return false;
+}
+
+void Player::InitializeAdvantages()
+{
+    for (uint8_t i = 0; i < kNumberOfAdvantages; ++i) {
+        m_advantages[i] = static_cast<Advantage>(i);
+    }
+}
+
+bool operator==(const Player::MapOfRegions& firstMapOfRegions, const Player::MapOfRegions& secondMapOfRegions)
+{
+    if (firstMapOfRegions.size() != secondMapOfRegions.size()) {
+        return false;
+    }
+    Player::MapOfRegions::const_iterator firstMapIt;
+    Player::MapOfRegions::const_iterator secondMapIt;
+    for (firstMapIt = firstMapOfRegions.begin(), secondMapIt = secondMapOfRegions.begin();
+        firstMapIt != firstMapOfRegions.end(), secondMapIt != secondMapOfRegions.end();
+        ++firstMapIt, ++secondMapIt)
+    {
+        if (firstMapIt->first != secondMapIt->first ||
+            firstMapIt->second != secondMapIt->second) {
+            return false;
+        }
+    }
+    return true;
 }

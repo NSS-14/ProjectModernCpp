@@ -1,55 +1,69 @@
 #pragma once
-#include "Region.h"
+
 #include <unordered_map>
 #include <array>
-#include"User.h"
-#include <boost/functional/hash.hpp>
+
+#include "User.h"
+#include "PairHashers.h"
 
 class Player : public User
 {
 public:
-	struct HashPair {
-		template<class T1, class T2> 
-		size_t operator()(const std::pair<T1, T2> pair) const {
-			auto hash1 = boost::hash<T1>()(pair.first);
-			auto hash2 = boost::hash<T2>()(pair.second);
-			
-			if (hash1 != hash2)
-				return hash1 ^ hash2;
-			return hash1;
-		}
+	enum class Advantage : uint8_t
+	{
+		FiftyFifty, // Grid questions
+		ChooseAnswer, // Numerical questions
+		Suggestion, // Numerical questions
+		NumberOfAdvantages,
+		UsedAdvantage
 	};
+
+public:
+	static inline const size_t kNumberOfAdvantages = static_cast<size_t>(Advantage::NumberOfAdvantages);
+	static inline const unsigned int kScoreStepValue = 100;
+	static inline const unsigned int kScoreDefaultValue = 100;
+	static inline const unsigned int kScoreBaseRegionDefaultValue = 300;
+
+public:
+	using Coordinates = std::pair<uint8_t, uint8_t>;
+	using Score = unsigned int;
+	using Region = std::pair<Coordinates, Score>;
+	using MapOfRegions = std::unordered_map<Coordinates, Score, PairHashers::HashsStringableTypes>;
+	using AdvantageArray = std::array<Advantage, kNumberOfAdvantages>;
+
+public:
 	Player();
-	Player(std::string name, std::string password);
+	Player(unsigned int id, std::string name, std::string password);
 	Player(const Player& player);
+	Player(Player&& player) noexcept;
 	Player(const User& user);
-	
+	Player(User&& user) noexcept;
+
 public:
 	Player& operator =(const Player& player);
+	Player& operator =(Player&& player) noexcept;
 	bool operator ==(const Player& player);
 
 public:
-	const Region& GetBaseRegion();
-	const Region& GetRegion(const Region::Coordinates& coordinates) const;
 	unsigned int GetScore() const;
-	const std::array<bool, 3>& GetAdvantages() const;
 
 public:
-	void SetBaseRegion(const Region& region);
-	Region& SetRegion(const Region::Coordinates& coordinates);
-	void SetAdvantages(const std::array<bool, 3>& advantages);
+	void IncrementScore(const Coordinates& coordinates);
+	void DecrementScore(const Coordinates& coordinates);
+	void AddNewRegionAt(const Coordinates& coordinates);
 
 public:
 	void InsertRegion(const Region& region);
-	bool HasRegion(const Region::Coordinates& coordinates);
-	Region ExtractRegion(const Region::Coordinates& coordinates);
-	
-	bool UseAdvantage(uint8_t advantageIndex);
+	Region ExtractRegion(const Coordinates& coordinates);
+	bool HasRegionOn(const Coordinates& coordinates);
+	bool UseAdvantage(Advantage advantage);
 
 private:
-	Region m_baseRegion; // get rid of that
-	std::unordered_map<Region::Coordinates, Region, HashPair> m_ownedRegions;
-	std::array<bool, 3> m_advantages; // enum
+	void InitializeAdvantages();
 
+private:
+	MapOfRegions m_ownedRegions;
+	AdvantageArray m_advantages;
 };
 
+bool operator ==(const Player::MapOfRegions& firstMapOfRegions, const Player::MapOfRegions& secondMapOfRegions);

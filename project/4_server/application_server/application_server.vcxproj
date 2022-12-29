@@ -139,28 +139,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DBBehaviour.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="AnswerHandler.cpp" />
+    <ClCompile Include="LoginHandler.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Question.cpp" />
     <ClCompile Include="QuestionManager.cpp" />
     <ClCompile Include="Ranking.cpp" />
-    <ClCompile Include="Region.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnswerHandler.h" />
     <ClInclude Include="DBBehaviour.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="LoginHandler.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="PairHash.h" />
+    <ClInclude Include="PairHashers.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="QuestionManager.h" />
     <ClInclude Include="Ranking.h" />
-    <ClInclude Include="Region.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UtilityFunctions.h" />
   </ItemGroup>

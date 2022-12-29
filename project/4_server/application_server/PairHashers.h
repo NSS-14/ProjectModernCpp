@@ -1,10 +1,11 @@
 #pragma once
+
 #include <tuple>
 #include <string>
 
-namespace PairHash
+namespace PairHashers
 {
-	struct Hash
+	struct HashsStringableTypes
 	{
 		template<class T1, class T2>
 		size_t operator()(const std::pair<T1, T2>& key) const

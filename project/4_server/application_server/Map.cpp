@@ -1,13 +1,12 @@
 #include "Map.h"
-#include "PairHash.h"
+#include "PairHashers.h"
 
 Map::Map(size_t height, size_t width)
 	: m_height(height)
 	, m_width(width)
 {
-	m_regions.resize(height * width, 0);
+	m_players.resize(height * width, 0);
 }
-
 Map::Map(const Map& map)
 {
 	*this = map;
@@ -15,36 +14,32 @@ Map::Map(const Map& map)
 
 Map& Map::operator=(const Map& map)
 {
-	m_regions = map.m_regions;
+	m_players = map.m_players;
 	m_height = map.m_height;
 	m_width = map.m_width;
 	return *this;
 }
-
 bool Map::operator==(const Map& map)
 {
-	return m_regions == map.m_regions
+	return m_players == map.m_players
 		&& m_height == map.m_height
 		&& m_width == map.m_width;
 }
-
-uint8_t Map::operator[](Region::Coordinates position) const
+uint8_t Map::operator[](const Coordinates& position) const
 {
 	const auto& [line, column] = position;
-	return m_regions[line * m_width + column];
+	return m_players[line * m_width + column];
 }
-
-uint8_t& Map::operator[](Region::Coordinates position)
+uint8_t& Map::operator[](const Coordinates& position)
 {
 	const auto& [line, column] = position;
-	return m_regions[line * m_width + column];
+	return m_players[line * m_width + column];
 }
 
 std::size_t Map::GetHeight() const
 {
 	return m_height;
 }
-
 std::size_t Map::GetWidth() const
 {
 	return m_width;
@@ -54,7 +49,6 @@ void Map::SetHeight(std::size_t height)
 {
 	m_height = height;
 }
-
 void Map::SetWidth(std::size_t width)
 {
 	m_width = width;
@@ -62,48 +56,45 @@ void Map::SetWidth(std::size_t width)
 
 std::size_t Map::Size()
 {
-	return m_regions.size();
+	return m_players.size();
 }
 
-std::vector<Region::Coordinates> Map::Neighbours(Region::Coordinates coordonates)
+std::vector<Map::Coordinates> Map::Neighbours(const Coordinates& coordinates)
 {
-	std::vector<Region::Coordinates> neighbours;
-	Region::Coordinates neighbour;
-	neighbour.first = coordonates.first;
-	neighbour.second = coordonates.second - 1;
+	std::vector<Coordinates> neighbours;
+	Coordinates neighbour;
 
+	neighbour.first = coordinates.first;
+	neighbour.second = coordinates.second - 1;
 	if (neighbour.second < m_width)
-		if ((*this)[coordonates] != (*this)[neighbour])
+		if ((*this)[coordinates] != (*this)[neighbour])
 			neighbours.push_back(neighbour);
 
-	neighbour.first = coordonates.first;
-	neighbour.second = coordonates.second + 1;
-
+	neighbour.first = coordinates.first;
+	neighbour.second = coordinates.second + 1;
 	if (neighbour.second < m_width)
-		if ((*this)[coordonates] != (*this)[neighbour])
+		if ((*this)[coordinates] != (*this)[neighbour])
 			neighbours.push_back(neighbour);
 
-	neighbour.first = coordonates.first - 1;
-	neighbour.second = coordonates.second;
-
+	neighbour.first = coordinates.first - 1;
+	neighbour.second = coordinates.second;
 	if (neighbour.first < m_height)
-		if ((*this)[coordonates] != (*this)[neighbour])
+		if ((*this)[coordinates] != (*this)[neighbour])
 			neighbours.push_back(neighbour);
 
-	neighbour.first = coordonates.first + 1;
-	neighbour.second = coordonates.second;
-
+	neighbour.first = coordinates.first + 1;
+	neighbour.second = coordinates.second;
 	if (neighbour.first < m_height)
-		if ((*this)[coordonates] != (*this)[neighbour])
+		if ((*this)[coordinates] != (*this)[neighbour])
 			neighbours.push_back(neighbour);
 
 	return neighbours;
 }
 
-std::vector<Region::Coordinates> Map::Neighbours(uint8_t playerIndex)
+std::vector<Map::Coordinates> Map::Neighbours(uint8_t playerIndex)
 {
-	std::unordered_set<Region::Coordinates, PairHash::Hash> neighbours;
-	Region::Coordinates iterator;
+	std::unordered_set<Coordinates, PairHashers::HashsStringableTypes> neighbours;
+	Coordinates iterator;
 	auto& [line, column] = iterator;
 	for (line = 0; line < m_height; ++line)
 	{
@@ -111,18 +102,18 @@ std::vector<Region::Coordinates> Map::Neighbours(uint8_t playerIndex)
 		{
 			if ((*this)[iterator] == playerIndex)
 			{
-				std::vector<Region::Coordinates> currentNeighbours;
+				std::vector<Coordinates> currentNeighbours;
 				currentNeighbours = Neighbours(iterator);
-				for (const Region::Coordinates& coordinates : currentNeighbours)
+				for (const Coordinates& coordinates : currentNeighbours)
 				{
 					neighbours.insert(coordinates);
 				}
 			}
 		}
 	}
-	std::vector<Region::Coordinates > result;
+	std::vector<Coordinates > result;
 	result.reserve(neighbours.size());
-	for (const Region::Coordinates& coordinate : neighbours)
+	for (const Coordinates& coordinate : neighbours)
 	{
 		result.push_back(coordinate);
 	}

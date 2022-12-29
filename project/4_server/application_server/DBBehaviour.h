@@ -1,10 +1,6 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <crow.h>
 #include <sqlite_orm/sqlite_orm.h>
 
-#include "UtilityFunctions.h"
 #include "User.h"
 #include "Question.h"
 
@@ -36,12 +32,3 @@ inline auto CreateStorage(const std::string& filename)
 		);
 }
 using Storage = decltype(CreateStorage(""));
-
-class LoginHandler {
-public:
-	LoginHandler(Storage& storage);
-	crow::response operator()(const crow::request& req) const;
-
-private:
-	Storage& m_db;
-};
