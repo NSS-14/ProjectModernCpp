@@ -10,4 +10,5 @@ public:
 
 private:
 	Storage& m_db;
+	mutable std::map<std::string, User> m_loggedUsers;
 };
