@@ -74,6 +74,11 @@ unsigned int Player::GetScore() const
 	return totalScore;
 }
 
+unsigned int Player::GetScore(const Coordinates& coordinates) const
+{
+	return m_ownedRegions.at(coordinates);
+}
+
 void Player::IncrementScore(const Coordinates& coordinates)
 {
 	if (!m_ownedRegions.count(coordinates)) {

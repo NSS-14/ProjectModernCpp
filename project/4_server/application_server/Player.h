@@ -46,6 +46,7 @@ public:
 
 public:
 	unsigned int GetScore() const;
+	unsigned int GetScore(const Coordinates& coordinates) const;
 
 public:
 	void IncrementScore(const Coordinates& coordinates);
