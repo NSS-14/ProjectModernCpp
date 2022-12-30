@@ -73,19 +73,19 @@ Question::Question(Question&& question) noexcept
 {
 	*this = std::move(question);
 }
-Question::Question(unsigned int id, const std::string& question, const std::string& answer, bool type)
+Question::Question(unsigned int id, const std::string& question, const std::string& answer, bool isNumerical)
 	: m_id(id)
 	, m_question(question)
 	, m_answers(1)
-	, m_type(type)
+	, m_isNumerical(isNumerical)
 {
 	SetAnswer(answer);
 }
-Question::Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers, bool type)
+Question::Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers, bool isNumerical)
 	: m_id(id)
 	, m_question(question)
 	, m_answers(answers)
-	, m_type(type)
+	, m_isNumerical(isNumerical)
 {
 	/* EMPTY */
 }
@@ -95,7 +95,7 @@ Question& Question::operator=(const Question& question)
 	m_id = question.m_id;
 	m_question = question.m_question;
 	m_answers = question.m_answers;
-	m_type = question.m_type;
+	m_isNumerical = question.m_isNumerical;
 	return *this;
 }
 Question& Question::operator=(Question&& question) noexcept
@@ -103,7 +103,7 @@ Question& Question::operator=(Question&& question) noexcept
 	m_id = question.m_id;
 	m_question = std::move(question.m_question);
 	m_answers = std::move(question.m_answers);
-	m_type = question.m_type;
+	m_isNumerical = question.m_isNumerical;
 	return *this;
 }
 bool Question::operator==(const Question& question)
@@ -111,7 +111,7 @@ bool Question::operator==(const Question& question)
 	return m_id == question.m_id
 		&& m_question == question.m_question
 		&& m_answers == question.m_answers
-		&& m_type == question.m_type;
+		&& m_isNumerical == question.m_isNumerical;
 }
 std::ostream& operator<<(std::ostream& out, const Question& question)
 {
@@ -160,7 +160,7 @@ std::vector<std::string> Question::GetWrongAnswers() const
 }
 bool Question::GetType() const
 {
-	return m_type;
+	return m_isNumerical;
 }
 
 void Question::SetId(unsigned int id)
@@ -179,9 +179,9 @@ void Question::SetAnswer(const std::string& answer)
 {
 	m_answers[0] = answer;
 }
-void Question::SetType(bool type)
+void Question::SetType(bool isNumerical)
 {
-	m_type = type;
+	m_isNumerical = isNumerical;
 }
 
 void Question::AddWrongAnswer(const std::string& wrongAnswer)

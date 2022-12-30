@@ -1,13 +1,13 @@
 #pragma once
-#include <list>
+#include <vector>
 #include "Question.h"
 #include <fstream>
-#include "Storage.h"
+#include "StorageManager.h"
 
 class QuestionManager
 {
 public:
-	QuestionManager() = default;
+	QuestionManager();
 	QuestionManager(const QuestionManager& questionManager);
 	QuestionManager(QuestionManager&& questionManager);
 	QuestionManager(std::ifstream& in);
@@ -27,7 +27,9 @@ public:
 	void PopulateDataBase(Storage& db) const;
 
 private:
-	std::list<Question> m_numericalQuestions; // to do ( make it vector )
-	std::list<Question> m_gridQuestions;
+	std::vector<Question> m_numericalQuestions; // to do ( make it vector )
+	std::vector<Question> m_gridQuestions;
+	size_t m_nextNumericalQuestionIndex;
+	size_t m_nextGridQuestionIndex;
 };
 

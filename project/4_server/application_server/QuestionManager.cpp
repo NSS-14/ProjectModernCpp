@@ -1,6 +1,13 @@
 #include "QuestionManager.h"
 
 
+QuestionManager::QuestionManager()
+	: m_nextNumericalQuestionIndex(0)
+	, m_nextGridQuestionIndex(0)
+{
+	//EMPTY
+}
+
 QuestionManager::QuestionManager(const QuestionManager& questionManager)
 {
 	*this = questionManager;
@@ -38,24 +45,12 @@ QuestionManager& QuestionManager::operator=(QuestionManager&& questionManager)
 
 Question QuestionManager::GetNumericalQuestion()
 {
-	unsigned int randomPosition = rand() % m_numericalQuestions.size();
-	std::list<Question>::const_iterator it = m_numericalQuestions.begin();
-	std::advance(it, randomPosition);
-
-	Question tmp(*it);
-	m_numericalQuestions.erase(it);
-	return tmp;
+	return m_numericalQuestions[m_nextNumericalQuestionIndex++];
 }
 
 Question QuestionManager::GetGridQuestion()
 {
-	unsigned int randomPosition = rand() % m_gridQuestions.size();
-	std::list<Question>::const_iterator it = m_gridQuestions.begin();
-	std::advance(it, randomPosition);
-
-	Question tmp(*it);
-	m_gridQuestions.erase(it);
-	return tmp;
+	return m_gridQuestions[m_nextGridQuestionIndex++];
 }
 
 void QuestionManager::ReadFile(std::ifstream& in)

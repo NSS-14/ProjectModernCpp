@@ -39,8 +39,8 @@ public:
 	Question() = default;
 	Question(const Question& question);
 	Question(Question&& question) noexcept;
-	Question(unsigned int id, const std::string& question, const std::string& answer, bool type);
-	Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers, bool type);
+	Question(unsigned int id, const std::string& question, const std::string& answer, bool isNumerical);
+	Question(unsigned int id, const std::string& question, const std::vector<std::string>& answers, bool isNumerical);
 
 public:
 	Question& operator =(const Question& question);
@@ -61,7 +61,7 @@ public:
 	void SetQuestion(const std::string& question);
 	void SetAnswers(const std::vector<std::string>& answers);
 	void SetAnswer(const std::string& answer);
-	void SetType(bool type);
+	void SetType(bool isNumerical);
 
 public:
 	void AddWrongAnswer(const std::string& wrongAnswer);
@@ -74,5 +74,5 @@ private:
 	unsigned int m_id;
 	std::string m_question;
 	std::vector<std::string> m_answers;
-	bool m_type; // enum or rename
+	bool m_isNumerical; 
 };
