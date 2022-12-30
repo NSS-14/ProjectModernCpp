@@ -9,7 +9,7 @@ class QuestionManager
 public:
 	QuestionManager();
 	QuestionManager(const QuestionManager& questionManager);
-	QuestionManager(QuestionManager&& questionManager);
+	QuestionManager(QuestionManager&& questionManager) noexcept;
 	QuestionManager(std::ifstream& in);
 	QuestionManager(std::string path);
 
@@ -27,7 +27,7 @@ public:
 	void PopulateDataBase(Storage& db) const;
 
 private:
-	std::vector<Question> m_numericalQuestions; // to do ( make it vector )
+	std::vector<Question> m_numericalQuestions;
 	std::vector<Question> m_gridQuestions;
 	size_t m_nextNumericalQuestionIndex;
 	size_t m_nextGridQuestionIndex;

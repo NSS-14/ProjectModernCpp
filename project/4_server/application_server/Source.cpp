@@ -1,6 +1,6 @@
 #include <iostream>
-#include "QuestionManager.h"
 #include "LoginHandler.h"
+#include"Map.h"
 
 int main()
 {
@@ -12,9 +12,10 @@ int main()
 		.methods(crow::HTTPMethod::PUT);
 	loginPut(loginHandler);
 
-	QuestionManager qm;
-	qm.ReadDataBase(StorageManager::GetInstance().GetStorage());
-
+	Map map(3, 3);
+	map[{0, 0}] = std::make_shared<Player>(Player(3, "alexia", "parola"));
+	std::cout << map;
+	
 	app.port(18080).multithreaded().run();
 
 	return 0;

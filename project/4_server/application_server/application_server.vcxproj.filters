@@ -78,6 +78,9 @@
     <ClCompile Include="StorageManager.cpp">
       <Filter>Source Files\DataBase</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginHandler.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="StorageManager.h">
       <Filter>Header Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

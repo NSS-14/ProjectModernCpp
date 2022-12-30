@@ -142,6 +142,7 @@
     <ClCompile Include="GetNextDelimiterOffset.cpp" />
     <ClCompile Include="LoginHandler.cpp" />
     <ClCompile Include="MainFunctions.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Question.cpp" />
     <ClCompile Include="QuestionManager.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="GetNextDelimiterOffset.h" />
     <ClInclude Include="LoginHandler.h" />

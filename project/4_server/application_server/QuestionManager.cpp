@@ -13,7 +13,7 @@ QuestionManager::QuestionManager(const QuestionManager& questionManager)
 	*this = questionManager;
 }
 
-QuestionManager::QuestionManager(QuestionManager&& questionManager)
+QuestionManager::QuestionManager(QuestionManager&& questionManager) noexcept
 {
 	*this = std::move(questionManager);
 }
@@ -101,21 +101,6 @@ void QuestionManager::ReadDataBase(Storage& db)
 		usedIds.insert(randomId);
 		auto row=db.select(sql::columns(&Question::GetId, &Question::GetQuestion, &Question::GetAnswer, &Question::GetType), sql::where(sql::c(&Question::GetId)==randomId));
 		Question q(std::get<0>(row[0]), std::get<1>(row[0]), std::get<2>(row[0]), std::get<3>(row[0]));
-		auto wrongAnswers = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == q.GetId()));
-		q.AppendWrongAnswers(wrongAnswers);
-
-		if (q.GetType()) {
-			m_numericalQuestions.push_back(q);
-			continue;
-		}
-		m_gridQuestions.push_back(q);
-	}
-
-
-
-	auto rows = db.select(sql::columns(&Question::GetId, &Question::GetQuestion, &Question::GetAnswer, &Question::GetType));
-	for (const auto& row : rows) {
-		Question q(std::get<0>(row), std::get<1>(row), std::get<2>(row), std::get<3>(row));
 		auto wrongAnswers = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == q.GetId()));
 		q.AppendWrongAnswers(wrongAnswers);
 
