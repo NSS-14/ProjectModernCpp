@@ -1,8 +1,5 @@
 #include <iostream>
-#include <crow.h>
-#include <sqlite_orm/sqlite_orm.h>
 
-#include "DBBehaviour.h"
 #include "LoginHandler.h"
 
 namespace sql = sqlite_orm;

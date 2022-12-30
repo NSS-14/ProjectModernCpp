@@ -1,9 +1,9 @@
 #include "LoginHandler.h"
-
 #include "UtilityFunctions.h"
 
 LoginHandler::LoginHandler(Storage& storage)
-	:m_db(storage)
+	: m_db(storage)
+	, m_loggedUsers()
 {
 	/* EMPTY */
 }
@@ -25,7 +25,7 @@ crow::response LoginHandler::operator()(const crow::request& request) const
 				return crow::response(401);
 			}
 			if (m_loggedUsers.count(nameIterator->second)) {
-				return crow::response(402);
+				return crow::response(403);
 			}
 			m_loggedUsers.emplace(nameIterator->second, User(std::get<0>(rows[0]), nameIterator->second, passwordIterator->second));
 			if (m_loggedUsers.size() == 1) {

@@ -28,7 +28,7 @@ public:
 	using Coordinates = std::pair<uint8_t, uint8_t>;
 	using Score = unsigned int;
 	using Region = std::pair<Coordinates, Score>;
-	using MapOfRegions = std::unordered_map<Coordinates, Score, PairHashers::HashsStringableTypes>;
+	using MapOfRegions = std::unordered_map<Coordinates, Score, PairHashers::HashStringableTypes>;
 	using AdvantageArray = std::array<Advantage, kNumberOfAdvantages>;
 
 public:

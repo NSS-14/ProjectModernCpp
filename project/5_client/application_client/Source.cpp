@@ -44,14 +44,14 @@ void LoginMenu() {
 			std::system("PAUSE");
 			return;
 		}
-		if (response.status_code != 401 && response.status_code != 402 && response.status_code != 0) {
+		if (response.status_code != 401 && response.status_code != 403 && response.status_code != 0) {
 			std::cout << "There was an error on the server. We are sorry!\nError code: " << response.status_code << '\n';
 			std::system("PAUSE");
 			return;
 		}
 		if (response.status_code == 0) std::cout << "The server is offline. Try again later!";
 		if (response.status_code == 401) std::cout << "Your account was not logged on becouse the inserted password is incorect.";
-		if (response.status_code == 402) std::cout << "Error! You are already logged in. Change password if it is not you.";
+		if (response.status_code == 403) std::cout << "Error! You are already logged in. Change password if it is not you.";
 		std::cout << "\nPress 1 and enter to retry the login operation.\n";
 		int choice; std::cin >> choice;
 		if (choice != 1) {
