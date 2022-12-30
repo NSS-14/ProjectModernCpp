@@ -1,31 +1,23 @@
 #include "UtilityFunctions.h"
+#include "GetNextDelimiterOffset.h"
 
-GetNextDelimiterOffset::GetNextDelimiterOffset(const std::string& inputString, const std::string& delimiter)
-	: m_inputString(inputString)
-	, m_delimiter(delimiter)
-{
-	/* EMPTY */
-}
-size_t GetNextDelimiterOffset::operator()(size_t currentWordOffset)
-{
-	return m_inputString.find(m_delimiter, currentWordOffset);
-}
 std::vector<std::string> Split(const std::string& inputString, const std::string& delimiter)
 {
 	std::vector<std::string> result;
+	GetNextDelimiterOffset nextWordEnd(inputString, delimiter);
 
-	GetNextDelimiterOffset nextDelimiterOffsetOf(inputString, delimiter);
-	size_t currentWordOffset = 0;
-	const std::string::const_iterator& beginIt(inputString.begin());
-	for (size_t currentDelimiterOffset = nextDelimiterOffsetOf(currentWordOffset);
-		currentDelimiterOffset != std::string::npos;
-		currentDelimiterOffset = nextDelimiterOffsetOf(currentWordOffset))
+	size_t wordBegin = 0;
+
+	std::string::const_iterator itBegin = inputString.begin();
+	std::string::const_iterator itEnd = inputString.end();
+
+	for (size_t wordEnd = nextWordEnd(wordBegin); wordEnd != std::string::npos; wordEnd = nextWordEnd(wordBegin))
 	{
-		result.emplace_back(beginIt + currentWordOffset, beginIt + currentDelimiterOffset);
-		currentWordOffset += currentDelimiterOffset + delimiter.size();
+		result.emplace_back(itBegin + wordBegin, itBegin + wordEnd);
+		wordBegin += wordEnd + delimiter.size();
 	}
-	if (currentWordOffset != inputString.size())
-		result.emplace_back(inputString.begin() + currentWordOffset, inputString.end());
+	if (wordBegin != inputString.size())
+		result.emplace_back(itBegin + wordBegin, itEnd);
 	return result;
 }
 

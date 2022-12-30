@@ -139,32 +139,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GetNextDelimiterOffset.cpp" />
     <ClCompile Include="LoginHandler.cpp" />
+    <ClCompile Include="MainFunctions.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Question.cpp" />
     <ClCompile Include="QuestionManager.cpp" />
     <ClCompile Include="Ranking.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="StorageManager.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DBBehaviour.h" />
+    <ClInclude Include="Storage.h" />
+    <ClInclude Include="GetNextDelimiterOffset.h" />
     <ClInclude Include="LoginHandler.h" />
+    <ClInclude Include="MainFunctions.h" />
     <ClInclude Include="PairHashers.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="QuestionManager.h" />
     <ClInclude Include="Ranking.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="StorageManager.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UtilityFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Questions.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="application_server.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

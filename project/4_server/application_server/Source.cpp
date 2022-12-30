@@ -6,16 +6,11 @@ namespace sql = sqlite_orm;
 
 int main()
 {
-	using namespace sqlite_orm;
-	const std::string dbFile = "database.sqlite";
-	Storage db = CreateStorage(dbFile);
-	db.sync_schema();
-
 	crow::SimpleApp app;
 
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(LoginHandler(db));
+	loginPut(LoginHandler(StorageManager::GetInstance().GetStorage()));
 
 	app.port(18080).multithreaded().run();
 

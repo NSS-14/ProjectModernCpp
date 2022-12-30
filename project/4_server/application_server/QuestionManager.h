@@ -1,13 +1,13 @@
 #pragma once
-#include<list>
-#include"Question.h"
-#include<fstream>
-#include"DBBehaviour.h"
+#include <list>
+#include "Question.h"
+#include <fstream>
+#include "Storage.h"
 
 class QuestionManager
 {
 public:
-	QuestionManager()=default;
+	QuestionManager() = default;
 	QuestionManager(const QuestionManager& questionManager);
 	QuestionManager(QuestionManager&& questionManager);
 	QuestionManager(std::ifstream& in);
