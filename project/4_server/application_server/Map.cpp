@@ -1,4 +1,7 @@
 #include "Map.h"
+#include <unordered_set>
+#include "PairHashers.h"
+
 Map::Map(size_t height, size_t width)
 	: m_height(height)
 	, m_width(width)
@@ -57,6 +60,67 @@ std::size_t Map::Size()
 	return m_playersOnMap.size();
 }
 
+std::vector<Map::Coordinates> Map::Neighbours(const Coordinates& coordinates)
+{
+	std::vector<Coordinates> neighbours;
+	Coordinates neighbour;
+
+	neighbour.first = coordinates.first;
+	neighbour.second = coordinates.second - 1;
+	if (neighbour.second < m_width)
+		if ((*this)[coordinates] != (*this)[neighbour] && (*this)[neighbour])
+			neighbours.push_back(neighbour);
+
+	neighbour.first = coordinates.first;
+	neighbour.second = coordinates.second + 1;
+	if (neighbour.second < m_width)
+		if ((*this)[coordinates] != (*this)[neighbour] && (*this)[neighbour])
+			neighbours.push_back(neighbour);
+
+	neighbour.first = coordinates.first - 1;
+	neighbour.second = coordinates.second;
+	if (neighbour.first < m_height)
+		if ((*this)[coordinates] != (*this)[neighbour] && (*this)[neighbour])
+			neighbours.push_back(neighbour);
+
+	neighbour.first = coordinates.first + 1;
+	neighbour.second = coordinates.second;
+	if (neighbour.first < m_height)
+		if ((*this)[coordinates] != (*this)[neighbour] && (*this)[neighbour])
+			neighbours.push_back(neighbour);
+
+	return neighbours;
+}
+
+std::vector<Map::Coordinates> Map::Neighbours(std::shared_ptr<Player> player)
+{
+	std::unordered_set<Coordinates, PairHashers::HashStringableTypes> neighbours;
+	Coordinates iterator;
+	auto& [line, column] = iterator;
+	for (line = 0; line < m_height; ++line)
+	{
+		for (column = 0; column < m_width; ++column)
+		{
+			if ((*this)[iterator] == player)
+			{
+				std::vector<Coordinates> currentNeighbours;
+				currentNeighbours = Neighbours(iterator);
+				for (const Coordinates& coordinates : currentNeighbours)
+				{
+					neighbours.insert(coordinates);
+				}
+			}
+		}
+	}
+	std::vector<Coordinates > result;
+	result.reserve(neighbours.size());
+	for (const Coordinates& coordinate : neighbours)
+	{
+		result.push_back(coordinate);
+	}
+	return result;
+}
+
 std::ostream& operator<<(std::ostream& out, const Map& map)
 {
 	std::pair<uint8_t, uint8_t> position;
@@ -79,3 +143,4 @@ std::ostream& operator<<(std::ostream& out, const Map& map)
 	}
 	return out;
 }
+

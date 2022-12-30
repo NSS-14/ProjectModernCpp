@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GetNextDelimiterOffset.cpp" />
     <ClCompile Include="LoginHandler.cpp" />
     <ClCompile Include="MainFunctions.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="GetNextDelimiterOffset.h" />

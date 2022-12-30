@@ -32,6 +32,8 @@ public:
 
 public:
 	std::size_t Size();
+	std::vector<Coordinates> Neighbours(const Coordinates& coordinates);
+	std::vector<Coordinates> Neighbours(std::shared_ptr<Player> player);
 
 public:
 	friend std::ostream& operator <<(std::ostream& out, const Map& map);

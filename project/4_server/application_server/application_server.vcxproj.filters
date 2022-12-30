@@ -79,6 +79,9 @@
       <Filter>Source Files\DataBase</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
+      <Filter>Source Files\GameClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -120,6 +123,9 @@
       <Filter>Header Files\DataBase</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
+      <Filter>Header Files\GameClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
