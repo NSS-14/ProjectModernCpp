@@ -1,5 +1,5 @@
 #include "QuestionManager.h"
-
+#include<unordered_set>
 
 QuestionManager::QuestionManager()
 	: m_nextNumericalQuestionIndex(0)
@@ -87,6 +87,31 @@ void QuestionManager::ReadFile(std::ifstream& in)
 void QuestionManager::ReadDataBase(Storage& db)
 {
 	using namespace sqlite_orm;
+
+	std::unordered_set<unsigned int> usedIds;
+	int numberOfQuestions = db.count<Question>();
+	for (int i = 0; i < numberOfQuestions; ++i)
+	{
+		unsigned int randomId = 1 + rand() % numberOfQuestions;
+		if (usedIds.count(randomId))
+		{
+			--i;
+			continue;
+		}
+		usedIds.insert(randomId);
+		auto row=db.select(sql::columns(&Question::GetId, &Question::GetQuestion, &Question::GetAnswer, &Question::GetType), sql::where(sql::c(&Question::GetId)==randomId));
+		Question q(std::get<0>(row[0]), std::get<1>(row[0]), std::get<2>(row[0]), std::get<3>(row[0]));
+		auto wrongAnswers = db.select(&WrongAnswer::GetWrongAnswer, sql::where(sql::c(&WrongAnswer::GetQuestionId) == q.GetId()));
+		q.AppendWrongAnswers(wrongAnswers);
+
+		if (q.GetType()) {
+			m_numericalQuestions.push_back(q);
+			continue;
+		}
+		m_gridQuestions.push_back(q);
+	}
+
+
 
 	auto rows = db.select(sql::columns(&Question::GetId, &Question::GetQuestion, &Question::GetAnswer, &Question::GetType));
 	for (const auto& row : rows) {
