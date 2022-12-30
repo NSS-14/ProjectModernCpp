@@ -13,49 +13,43 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\DB">
-      <UniqueIdentifier>{9d4dc8b4-f08d-4e1a-a67e-85b7d0f9916f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\DB">
-      <UniqueIdentifier>{5868d03a-0824-4a23-b70b-300708aec6f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\DB\Handlers">
-      <UniqueIdentifier>{2c84ca49-9df9-4334-afa4-a6fd7747252b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\DB\Handlers">
-      <UniqueIdentifier>{39e36dba-87fd-44b1-8ff0-e04a4cae6cb4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GameClasses">
       <UniqueIdentifier>{af3951cd-ac1d-492e-9887-df1a1e45d7af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\DB\Classes">
-      <UniqueIdentifier>{a4e15cae-cbb4-4733-b219-376113917575}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\DB\Classes">
-      <UniqueIdentifier>{83a7e14d-f994-4924-8d83-1b2b8fef97b9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GameClasses">
       <UniqueIdentifier>{e4e3b91c-7ba5-4c5b-b3cb-4c5d7c8a50d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Functors">
+      <UniqueIdentifier>{1054417a-5e30-4c10-9bb1-91abba546eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Functors">
+      <UniqueIdentifier>{38a117c4-00c0-42ff-a326-4c0cf8abe96a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CollectionOfFunctions">
+      <UniqueIdentifier>{3c04bdb2-32c1-4e6b-9f3b-e2e708131695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CollectionOfFunctions">
+      <UniqueIdentifier>{5d6454f5-11e4-43fa-aaf5-150c6dc56d21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataBase">
+      <UniqueIdentifier>{5868d03a-0824-4a23-b70b-300708aec6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DataBase">
+      <UniqueIdentifier>{9d4dc8b4-f08d-4e1a-a67e-85b7d0f9916f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Handlers">
+      <UniqueIdentifier>{2c84ca49-9df9-4334-afa4-a6fd7747252b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Handlers">
+      <UniqueIdentifier>{39e36dba-87fd-44b1-8ff0-e04a4cae6cb4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AnswerHandler.cpp">
-      <Filter>Source Files\DB\Handlers</Filter>
-    </ClCompile>
     <ClCompile Include="LoginHandler.cpp">
-      <Filter>Source Files\DB\Handlers</Filter>
-    </ClCompile>
-    <ClCompile Include="UtilityFunctions.cpp">
-      <Filter>Source Files\DB</Filter>
-    </ClCompile>
-    <ClCompile Include="User.cpp">
-      <Filter>Source Files\DB\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files\GameClasses</Filter>
+      <Filter>Source Files\Handlers</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\GameClasses</Filter>
@@ -69,19 +63,25 @@
     <ClCompile Include="Ranking.cpp">
       <Filter>Source Files\GameClasses</Filter>
     </ClCompile>
+    <ClCompile Include="GetNextDelimiterOffset.cpp">
+      <Filter>Source Files\Functors</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFunctions.cpp">
+      <Filter>Source Files\CollectionOfFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="UtilityFunctions.cpp">
+      <Filter>Source Files\CollectionOfFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Source Files\GameClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="StorageManager.cpp">
+      <Filter>Source Files\DataBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DBBehaviour.h">
-      <Filter>Header Files\DB</Filter>
-    </ClInclude>
-    <ClInclude Include="AnswerHandler.h">
-      <Filter>Header Files\DB\Handlers</Filter>
-    </ClInclude>
     <ClInclude Include="LoginHandler.h">
-      <Filter>Header Files\DB\Handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files\GameClasses</Filter>
+      <Filter>Header Files\Handlers</Filter>
     </ClInclude>
     <ClInclude Include="PairHashers.h">
       <Filter>Header Files\GameClasses</Filter>
@@ -98,11 +98,23 @@
     <ClInclude Include="Ranking.h">
       <Filter>Header Files\GameClasses</Filter>
     </ClInclude>
+    <ClInclude Include="GetNextDelimiterOffset.h">
+      <Filter>Header Files\Functors</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFunctions.h">
+      <Filter>Header Files\CollectionOfFunctions</Filter>
+    </ClInclude>
     <ClInclude Include="UtilityFunctions.h">
-      <Filter>Header Files\DB</Filter>
+      <Filter>Header Files\CollectionOfFunctions</Filter>
     </ClInclude>
     <ClInclude Include="User.h">
-      <Filter>Header Files\DB\Classes</Filter>
+      <Filter>Header Files\GameClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage.h">
+      <Filter>Header Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="StorageManager.h">
+      <Filter>Header Files\DataBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

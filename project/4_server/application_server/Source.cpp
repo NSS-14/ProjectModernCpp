@@ -2,15 +2,15 @@
 
 #include "LoginHandler.h"
 
-namespace sql = sqlite_orm;
-
 int main()
 {
 	crow::SimpleApp app;
 
+	LoginHandler loginHandler;
+
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(LoginHandler(StorageManager::GetInstance().GetStorage()));
+	loginPut(loginHandler);
 
 	app.port(18080).multithreaded().run();
 
