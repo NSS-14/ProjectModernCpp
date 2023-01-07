@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Handlers">
       <UniqueIdentifier>{39e36dba-87fd-44b1-8ff0-e04a4cae6cb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ServerClasses">
+      <UniqueIdentifier>{8b774176-9ef0-4697-bf0f-40410aef421f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ServerClasses">
+      <UniqueIdentifier>{966f4f4f-8b3d-4dfd-8b3f-55fac74f62bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -81,8 +87,11 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files\GameClasses</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="SetTheNumberOfPlayersHandler.cpp">
+      <Filter>Source Files\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadyManager.cpp">
+      <Filter>Source Files\ServerClasses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,8 +134,11 @@
     <ClInclude Include="Map.h">
       <Filter>Header Files\GameClasses</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SetTheNumberOfPlayersHandler.h">
+      <Filter>Header Files\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadyManager.h">
+      <Filter>Header Files\ServerClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
