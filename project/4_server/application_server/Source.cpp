@@ -1,27 +1,31 @@
 #include <iostream>
+#include <iostream>
+#include <mutex>
+
 #include "LoginHandler.h"
-#include"Map.h"
+#include "SetTheNumberOfPlayersHandler.h"
 
 int main()
 {
 	crow::SimpleApp app;
-
-	LoginHandler loginHandler;
+	ReadyManager readyManager;
+	LoginHandler loginHandler(readyManager);
 
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
 	loginPut(loginHandler);
 
-	Map map(3, 3);
-	map[{0, 0}] = std::make_shared<Player>(Player(3, "alexia", "parola"));
-	map[{0, 1}] = std::make_shared<Player>(Player(4, "darius", "parola"));
-	
-	auto n = map.Neighbours(map[{0, 0}]);
-	for (const auto& e : n) {
-		std::cout << static_cast<int>(e.first) << " " << static_cast<int>(e.second) << "\n";
-	}
-	std::cout << map;
-	
+	auto& setTheNumberOfPlayersPut = CROW_ROUTE(app, "/host/set-size")
+		.methods(crow::HTTPMethod::PUT);
+	setTheNumberOfPlayersPut(SetTheNumberOfPlayersHandler(readyManager));
+
+	CROW_ROUTE(app, "/ready")([&readyManager]() {
+		if (readyManager.GetOnlinePlayers() == readyManager.GetDesiredNumberOfPlayers()) {
+			return crow::response(200);
+		}
+	return crow::response(500);
+		});
+
 	app.port(18080).multithreaded().run();
 
 	return 0;
