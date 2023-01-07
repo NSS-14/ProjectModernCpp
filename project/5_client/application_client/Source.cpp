@@ -11,7 +11,8 @@ enum class LoginState {
 };
 LoginState LoginMenu();
 void SetGameSize();
-
+std::string GetMap();
+std::string GetQuestion();
 
 int main()
 {
@@ -28,12 +29,14 @@ int main()
 			break;
 		}
 	}
+
 	std::system("CLS");
-	std::cout << "Game ready!";
+	std::cout << "Game ready!\n";
+	std::cout << GetMap();
 	std::system("PAUSE");
 
-	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
-	std::cout << response.text;
+	std::system("CLS");
+	std::cout << GetQuestion();
 	std::system("PAUSE");
 
 	return 0;
@@ -111,4 +114,16 @@ void SetGameSize()
 	if (response.status_code == 200) {
 		std::cout << "The game size is " << gameSize << '.' << std::endl;
 	}
+}
+
+std::string GetMap()
+{
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
+	return response.text;
+}
+
+std::string GetQuestion()
+{
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/question" });
+	return response.text;
 }

@@ -95,7 +95,7 @@ std::string Map::ToString() const
 	return sstream.str();
 }
 
-std::vector<Map::Coordinates> Map::Neighbours(const Coordinates& coordinates)
+std::vector<Map::Coordinates> Map::Neighbours(const Coordinates& coordinates) const
 {
 	std::vector<Coordinates> neighbours;
 	Coordinates neighbour;
@@ -127,7 +127,7 @@ std::vector<Map::Coordinates> Map::Neighbours(const Coordinates& coordinates)
 	return neighbours;
 }
 
-std::vector<Map::Coordinates> Map::Neighbours(std::shared_ptr<Player> player)
+std::vector<Map::Coordinates> Map::Neighbours(std::shared_ptr<Player> player) const
 {
 	std::unordered_set<Coordinates, PairHashers::HashStringableTypes> neighbours;
 	Coordinates iterator;

@@ -2,7 +2,8 @@
 #include "Map.h"
 #include "QuestionManager.h"
 #include "Player.h"
-#include "Ranking.h" 
+#include "Ranking.h"
+#include <memory>
 
 class Game
 {
@@ -13,7 +14,10 @@ public:
 	Game(uint8_t numberOfPlayers);
 
 public:
-	void AddPlayer(const Player& player);
+	const Map& GetMap() const;
+
+public:
+	void AddUserAndMakeHimPlayer(const User& user);
 	void Start();
 	std::shared_ptr<Player> GiveQuestionToTwo(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2);
 	Ranking GiveNumericalQuestionToAll();
@@ -30,5 +34,5 @@ private:
 private:
 	Map m_map;
 	QuestionManager m_qm;
-	std::vector<Player> m_players;
+	std::vector<std::shared_ptr<Player>> m_players;
 };

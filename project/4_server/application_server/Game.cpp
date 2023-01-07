@@ -21,6 +21,11 @@ Game::Game(uint8_t numberOfPlayers)
 	srand(time(0));
 }
 
+const Map& Game::GetMap() const
+{
+	return m_map;
+}
+
 void Game::Update()
 {
 	std::cout << m_map;
@@ -112,9 +117,17 @@ void Game::StartDuels()
 	}
 }
 
-void Game::AddPlayer(const Player& player)
+void Game::AddUserAndMakeHimPlayer(const User& user)
 {
-	m_players.push_back(player);
+	Player toBeAdded(user);
+	switch (m_players.size())
+	{
+	case 0: toBeAdded.SetColorInGame(Player::ColorInGame::Blue); break;
+	case 1:	toBeAdded.SetColorInGame(Player::ColorInGame::Yellow); break;
+	case 2:	toBeAdded.SetColorInGame(Player::ColorInGame::Red); break;
+	case 3:	toBeAdded.SetColorInGame(Player::ColorInGame::Green); break;
+	}
+	m_players.push_back(std::make_shared<Player>(std::move(toBeAdded)));
 }
 
 void Game::Start()
