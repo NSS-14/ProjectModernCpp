@@ -15,24 +15,27 @@ public:
 
 public:
 	const Map& GetMap() const;
+	Question GetQuestion() const;
+	size_t GetNumberOfPlayers() const;
 
 public:
 	void AddUserAndMakeHimPlayer(const User& user);
-	void Start();
-	std::shared_ptr<Player> GiveQuestionToTwo(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2);
-	Ranking GiveNumericalQuestionToAll();
+	//void Start();
+	//std::shared_ptr<Player> GiveQuestionToTwo(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2);
+	//Ranking GiveNumericalQuestionToAll();
 
 private:
-	uint8_t GetRandomPlayerIndex();
+	uint8_t GetRandomPlayerIndex() const;
 
 private:
-	void ChooseBase(Ranking rank);
-	void Update();
-	void FillMap();
-	void StartDuels();
+	//void ChooseBase(Ranking rank);
+	//void Update();
+	//void FillMap();
+	//void StartDuels();
 
 private:
 	Map m_map;
 	QuestionManager m_qm;
 	std::vector<std::shared_ptr<Player>> m_players;
+	mutable uint8_t m_phase;
 };

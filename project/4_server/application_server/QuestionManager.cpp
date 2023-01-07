@@ -19,11 +19,15 @@ QuestionManager::QuestionManager(QuestionManager&& questionManager) noexcept
 }
 
 QuestionManager::QuestionManager(std::ifstream& in)
+	: m_nextNumericalQuestionIndex(0)
+	, m_nextGridQuestionIndex(0)
 {
 	ReadFile(in);
 }
 
-QuestionManager::QuestionManager(std::string path)
+QuestionManager::QuestionManager(const std::string& path)
+	: m_nextNumericalQuestionIndex(0)
+	, m_nextGridQuestionIndex(0)
 {
 	std::ifstream in(path);
 	ReadFile(in);
@@ -43,12 +47,12 @@ QuestionManager& QuestionManager::operator=(QuestionManager&& questionManager)
 	return *this;
 }
 
-Question QuestionManager::GetNumericalQuestion()
+Question QuestionManager::GetNumericalQuestion() const
 {
 	return m_numericalQuestions[m_nextNumericalQuestionIndex++];
 }
 
-Question QuestionManager::GetGridQuestion()
+Question QuestionManager::GetGridQuestion() const
 {
 	return m_gridQuestions[m_nextGridQuestionIndex++];
 }

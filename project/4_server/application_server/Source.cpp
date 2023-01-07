@@ -17,6 +17,10 @@ int main()
 	ReadyManager readyManager;
 	LoginHandler loginHandler(readyManager);
 
+	Question* currentQuestion = nullptr;
+	uint8_t questionReceivers = 0;
+	std::mutex questionMutex;
+
 	// Game initialization:
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
@@ -39,13 +43,28 @@ int main()
 			}
 			return crow::response(200);
 		}
-	return crow::response(500);
+		return crow::response(500);
 		});
 
 	// Server functions:
-	CROW_ROUTE(app, "/map")([&game]() {
+	CROW_ROUTE(app, "/map")([&game, &gameMutex]() {
+		std::lock_guard<std::mutex> lock(gameMutex);
 		return game->GetMap().ToString();
 		});
+	CROW_ROUTE(app, "/question")([&game, &gameMutex, &currentQuestion, &questionReceivers, &questionMutex]() {
+		std::lock_guard<std::mutex> lockQuestion(questionMutex);
+		if (currentQuestion == nullptr) {
+			std::lock_guard<std::mutex> lockGame(gameMutex);
+			currentQuestion = new Question(game->GetQuestion());
+		}
+		Question q(*currentQuestion);
+		if (questionReceivers == game->GetNumberOfPlayers() - 1) {
+			delete currentQuestion;
+			currentQuestion = nullptr;
+		}
+		return q.GetQuestion();
+		});
+
 	app.port(18080).multithreaded().run();
 
 	return 0;

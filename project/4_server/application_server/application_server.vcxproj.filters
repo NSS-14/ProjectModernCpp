@@ -93,6 +93,9 @@
     <ClCompile Include="ReadyManager.cpp">
       <Filter>Source Files\ServerClasses</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\GameClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginHandler.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="ReadyManager.h">
       <Filter>Header Files\ServerClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\GameClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
