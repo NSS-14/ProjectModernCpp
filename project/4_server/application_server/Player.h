@@ -17,6 +17,15 @@ public:
 		NumberOfAdvantages,
 		UsedAdvantage
 	};
+	enum class ColorInGame : uint8_t
+	{
+		Blue,
+		Yellow,
+		Red,
+		Green,
+		NumberOfColors,
+		UninitializedColor
+	};
 
 public:
 	static inline const size_t kNumberOfAdvantages = static_cast<size_t>(Advantage::NumberOfAdvantages);
@@ -33,7 +42,7 @@ public:
 
 public:
 	Player();
-	Player(unsigned int id, std::string name, std::string password);
+	Player(unsigned int id, std::string name, std::string password, const ColorInGame& colorInGame = ColorInGame::UninitializedColor);
 	Player(const Player& player);
 	Player(Player&& player) noexcept;
 	Player(const User& user);
@@ -46,7 +55,11 @@ public:
 
 public:
 	unsigned int GetScore() const;
-	unsigned int GetScore(const Coordinates& coordinates) const;
+	unsigned int GetScore(const Coordinates& coordinates) const; // this returns the score of the region from the coordinates
+	const ColorInGame& GetColorInGame() const;
+
+public:
+	void SetColorInGame(const ColorInGame& colorInGame);
 
 public:
 	void IncrementScore(const Coordinates& coordinates);
@@ -65,6 +78,7 @@ private:
 private:
 	MapOfRegions m_ownedRegions;
 	AdvantageArray m_advantages;
+	ColorInGame m_colorInGame;
 };
 
 bool operator ==(const Player::MapOfRegions& firstMapOfRegions, const Player::MapOfRegions& secondMapOfRegions);

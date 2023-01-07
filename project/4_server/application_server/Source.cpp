@@ -4,6 +4,7 @@
 
 #include "LoginHandler.h"
 #include "SetTheNumberOfPlayersHandler.h"
+#include "Map.h"
 
 int main()
 {
@@ -25,6 +26,12 @@ int main()
 		}
 	return crow::response(500);
 		});
+
+	Map map(3, 3);
+
+	Player p1(0, "edi", "123", Player::ColorInGame::Blue);
+	map[{0, 0}] = std::make_shared<Player>(p1);
+	std::cout << map;
 
 	app.port(18080).multithreaded().run();
 

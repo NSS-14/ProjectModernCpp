@@ -4,13 +4,15 @@ Player::Player()
 	: User()
 	, m_advantages()
 	, m_ownedRegions()
+	, m_colorInGame(ColorInGame::UninitializedColor)
 {
 	InitializeAdvantages();
 }
-Player::Player(unsigned int id, std::string name, std::string password)
+Player::Player(unsigned int id, std::string name, std::string password, const ColorInGame& colorInGame)
 	: User(id, name, password)
 	, m_ownedRegions()
 	, m_advantages()
+	, m_colorInGame(colorInGame)
 {
 	InitializeAdvantages();
 }
@@ -44,6 +46,7 @@ Player& Player::operator=(const Player& player)
 	m_id = player.m_id;
 	m_name = player.m_name;
 	m_password = player.m_password;
+	m_colorInGame = player.m_colorInGame;
 	return *this;
 }
 Player& Player::operator=(Player&& player) noexcept
@@ -53,6 +56,7 @@ Player& Player::operator=(Player&& player) noexcept
 	m_id = player.m_id;
 	m_name = std::move(player.m_name);
 	m_password = std::move(player.m_password);
+	m_colorInGame = player.m_colorInGame;
 	return *this;
 }
 bool Player::operator==(const Player& player)
@@ -61,7 +65,8 @@ bool Player::operator==(const Player& player)
 		&& m_advantages == player.m_advantages
 		&& m_id == player.m_id
 		&& m_name == player.m_name
-		&& m_password == player.m_password;
+		&& m_password == player.m_password
+		&& m_colorInGame == player.m_colorInGame;
 }
 
 unsigned int Player::GetScore() const
@@ -77,6 +82,15 @@ unsigned int Player::GetScore() const
 unsigned int Player::GetScore(const Coordinates& coordinates) const
 {
 	return m_ownedRegions.at(coordinates);
+}
+const Player::ColorInGame& Player::GetColorInGame() const
+{
+	return m_colorInGame;
+}
+
+void Player::SetColorInGame(const ColorInGame& colorInGame)
+{
+	m_colorInGame = colorInGame;
 }
 
 void Player::IncrementScore(const Coordinates& coordinates)

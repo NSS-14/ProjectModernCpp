@@ -46,7 +46,13 @@ std::ostream& operator<<(std::ostream& out, const Map& map)
 		{
 			if (map[position].get() != nullptr)
 			{
-				out << map[position]->GetName();
+				switch (map[position]->GetColorInGame())
+				{
+				case Player::ColorInGame::Blue: out << "Blue"; break;
+				case Player::ColorInGame::Yellow: out << "Yellow"; break;
+				case Player::ColorInGame::Red: out << "Red"; break;
+				case Player::ColorInGame::Green: out << "Green"; break;
+				}
 			}
 			else
 			{
