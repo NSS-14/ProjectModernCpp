@@ -19,7 +19,11 @@ int main()
 
 	Question* currentQuestion = nullptr;
 	uint8_t questionReceivers = 0;
+	std::vector<std::pair<int, time_t>> beforeQuestionTimes;
+	std::vector<std::pair<int, time_t>> answerTimes;
+	Ranking currentRanking;
 	std::mutex questionMutex;
+
 
 	// Game initialization:
 	auto& loginPut = CROW_ROUTE(app, "/login")
@@ -51,9 +55,11 @@ int main()
 		std::lock_guard<std::mutex> lock(gameMutex);
 		return game->GetMap().ToString();
 		});
-	CROW_ROUTE(app, "/question")([&game, &gameMutex, &currentQuestion, &questionReceivers, &questionMutex]() {
+	CROW_ROUTE(app, "/question/<int>")([&game, &gameMutex, &currentQuestion, &questionReceivers, &questionMutex, &currentRanking, &beforeQuestionTimes](int id) {
 		std::lock_guard<std::mutex> lockQuestion(questionMutex);
 		if (currentQuestion == nullptr) {
+			beforeQuestionTimes.clear();
+			beforeQuestionTimes.push_back({ id, time(0) });
 			std::lock_guard<std::mutex> lockGame(gameMutex);
 			currentQuestion = new Question(game->GetQuestion());
 		}
@@ -63,6 +69,10 @@ int main()
 			currentQuestion = nullptr;
 		}
 		return q.GetQuestion();
+		});
+	CROW_ROUTE(app, "/answer/<int><string>")([&game, &gameMutex, &questionMutex, &currentRanking, &beforeQuestionTimes, &answerTimes](int id, const std::string& answer) {
+		std::lock_guard<std::mutex> lockQuestion(questionMutex);
+		answerTimes.push_back({ id, time(0) });
 		});
 
 	app.port(18080).multithreaded().run();

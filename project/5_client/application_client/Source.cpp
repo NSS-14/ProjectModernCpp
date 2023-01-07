@@ -13,6 +13,7 @@ LoginState LoginMenu();
 void SetGameSize();
 std::string GetMap();
 std::string GetQuestion();
+void SetAnswer(const std::string& answer);
 
 int main()
 {
@@ -121,9 +122,13 @@ std::string GetMap()
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
 	return response.text;
 }
-
 std::string GetQuestion()
 {
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/question" });
 	return response.text;
+}
+
+void SetAnswer(const std::string& answer)
+{
+	
 }
