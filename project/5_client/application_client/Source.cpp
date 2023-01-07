@@ -32,6 +32,10 @@ int main()
 	std::cout << "Game ready!";
 	std::system("PAUSE");
 
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
+	std::cout << response.text;
+	std::system("PAUSE");
+
 	return 0;
 }
 

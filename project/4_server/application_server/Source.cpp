@@ -31,8 +31,10 @@ int main()
 
 	Player p1(0, "edi", "123", Player::ColorInGame::Blue);
 	map[{0, 0}] = std::make_shared<Player>(p1);
-	std::cout << map;
 
+	CROW_ROUTE(app, "/map")([&map]() {
+		return map.ToString();
+		});
 	app.port(18080).multithreaded().run();
 
 	return 0;

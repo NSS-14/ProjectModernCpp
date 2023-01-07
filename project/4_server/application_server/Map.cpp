@@ -1,5 +1,6 @@
 #include "Map.h"
 #include <unordered_set>
+#include <sstream>
 #include "PairHashers.h"
 
 Map::Map(size_t height, size_t width)
@@ -83,9 +84,15 @@ void Map::SetWidth(std::size_t width)
 	m_width = width;
 }
 
-std::size_t Map::Size()
+std::size_t Map::Size() const
 {
 	return m_playersOnMap.size();
+}
+std::string Map::ToString() const
+{
+	std::stringstream sstream;
+	sstream << *this;
+	return sstream.str();
 }
 
 std::vector<Map::Coordinates> Map::Neighbours(const Coordinates& coordinates)

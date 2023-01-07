@@ -32,7 +32,8 @@ public:
 	void SetWidth(std::size_t width);
 
 public:
-	std::size_t Size();
+	std::size_t Size() const;
+	std::string ToString() const;
 	std::vector<Coordinates> Neighbours(const Coordinates& coordinates);
 	std::vector<Coordinates> Neighbours(std::shared_ptr<Player> player); // to reimplement
 
