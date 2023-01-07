@@ -2,8 +2,9 @@
 #include "UtilityFunctions.h"
 #include "StorageManager.h"
 
-LoginHandler::LoginHandler()
+LoginHandler::LoginHandler(ReadyManager& readyManager)
 	: m_onlineUsers()
+	, m_readyManager(readyManager)
 {
 	/* EMPTY */
 }
@@ -23,6 +24,11 @@ crow::response LoginHandler::operator()(const crow::request& request) const
 	if (nameIterator == end || passwordIterator == end) {
 		return crow::response(400);
 	}
+	if (GetTheNumberOfOnlineUsers()) {
+		if (GetTheNumberOfOnlineUsers() == m_readyManager.GetDesiredNumberOfPlayers()) {
+			return crow::response(500);
+		}
+	}
 	IdPasswordVector rows = db.select(sql::columns(&User::GetId, &User::GetPassword), sql::from<User>(), sql::where(sql::c(&User::GetName) == nameIterator->second));
 	if (!rows.empty()) {
 		unsigned int id = std::get<0>(rows[0]);
@@ -34,12 +40,15 @@ crow::response LoginHandler::operator()(const crow::request& request) const
 			return crow::response(403);
 		}
 		m_onlineUsers.emplace_back(id, nameIterator->second, passwordIterator->second);
+		m_readyManager.SetOnlinePlayers(m_onlineUsers.size());
 		if (m_onlineUsers.size() == 1) {
 			return crow::response(201);
 		}
+		return crow::response(202);
 	}
 	unsigned int id = db.insert(User(0, nameIterator->second, passwordIterator->second));
 	m_onlineUsers.emplace_back(id, nameIterator->second, passwordIterator->second);
+	m_readyManager.SetOnlinePlayers(m_onlineUsers.size());
 	if (m_onlineUsers.size() == 1) {
 		return crow::response(201);
 	}
