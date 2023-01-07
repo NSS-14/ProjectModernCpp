@@ -36,6 +36,28 @@ std::shared_ptr<Player>& Map::operator[](const Coordinates& position)
 	const auto& [line, column] = position;
 	return m_playersOnMap[line * m_width + column];
 }
+std::ostream& operator<<(std::ostream& out, const Map& map)
+{
+	std::pair<uint8_t, uint8_t> position;
+	auto& [line, column] = position;
+	for (line = 0; line < map.m_height; line++)
+	{
+		for (column = 0; column < map.m_width; column++)
+		{
+			if (map[position].get() != nullptr)
+			{
+				out << map[position]->GetName();
+			}
+			else
+			{
+				out << '-';
+			}
+			out << ' ';
+		}
+		out << std::endl;
+	}
+	return out;
+}
 
 std::size_t Map::GetHeight() const
 {
@@ -120,27 +142,3 @@ std::vector<Map::Coordinates> Map::Neighbours(std::shared_ptr<Player> player)
 	}
 	return result;
 }
-
-std::ostream& operator<<(std::ostream& out, const Map& map)
-{
-	std::pair<uint8_t, uint8_t> position;
-	auto& [line, column] = position;
-	for (line = 0; line < map.m_height; line++)
-	{
-		for (column = 0; column < map.m_width; column++)
-		{
-			if (map[position].get() != nullptr)
-			{
-				out << map[position]->GetName();
-			}
-			else
-			{
-				out << '-';
-			}
-			out << ' ';
-		}
-		out << std::endl;
-	}
-	return out;
-}
-

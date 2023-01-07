@@ -1,7 +1,8 @@
 #pragma once
-#include<queue>
+#include <queue>
 #include "Player.h"
 #include <tuple>
+#include <memory>
 
 class Ranking
 {

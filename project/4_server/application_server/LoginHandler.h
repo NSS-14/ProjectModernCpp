@@ -4,10 +4,11 @@
 #include <crow.h>
 
 #include "User.h"
+#include "ReadyManager.h"
 
 class LoginHandler {
 public:
-	LoginHandler();
+	LoginHandler(ReadyManager& readyManager);
 
 public:
 	crow::response operator()(const crow::request& request) const;
@@ -19,4 +20,5 @@ public:
 
 private:
 	mutable std::vector<User> m_onlineUsers; // the first user in this vector is the game host.
+	ReadyManager& m_readyManager;
 };

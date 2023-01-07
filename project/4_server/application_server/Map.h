@@ -21,6 +21,7 @@ public:
 	bool operator ==(const Map& map);
 	const std::shared_ptr<Player>& operator [](const Coordinates& position) const; //getter
 	std::shared_ptr<Player>& operator [](const Coordinates& position); //setter
+	friend std::ostream& operator <<(std::ostream& out, const Map& map);
 
 public:
 	std::size_t GetHeight() const;
@@ -33,15 +34,10 @@ public:
 public:
 	std::size_t Size();
 	std::vector<Coordinates> Neighbours(const Coordinates& coordinates);
-	std::vector<Coordinates> Neighbours(std::shared_ptr<Player> player);
-
-public:
-	friend std::ostream& operator <<(std::ostream& out, const Map& map);
+	std::vector<Coordinates> Neighbours(std::shared_ptr<Player> player); // to reimplement
 
 private:
 	std::vector<std::shared_ptr<Player>> m_playersOnMap;
 	std::size_t m_height;
 	std::size_t m_width;
-
 };
-
