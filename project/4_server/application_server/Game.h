@@ -25,6 +25,11 @@ public:
 
 public:
 	void AddUserAndMakeHimPlayer(const User& user);
+
+public:
+	Map& GetMap();
+
+public:
 	//void Start();
 	//std::shared_ptr<Player> GiveQuestionToTwo(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2);
 	//Ranking GiveNumericalQuestionToAll();

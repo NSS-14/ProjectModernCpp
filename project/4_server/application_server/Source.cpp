@@ -10,7 +10,9 @@
 
 int main()
 {
+	// App:
 	crow::SimpleApp app;
+	app.loglevel(crow::LogLevel::Warning);
 
 	// Variables:
 	Game* game = nullptr;
@@ -30,16 +32,20 @@ int main()
 	std::shared_ptr<Player> playerInCurrentTurn;
 	std::mutex turnMutex;
 
+
 	// Game initialization:
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
 	loginPut(LoginHandler(readyManager));
+
 	auto& setTheNumberOfPlayersPut = CROW_ROUTE(app, "/host/set_size")
 		.methods(crow::HTTPMethod::PUT);
 	setTheNumberOfPlayersPut(SetTheNumberOfPlayersHandler(readyManager));
 
+
 	// Check the ready state and initialize game object:
 	CROW_ROUTE(app, "/ready")([&readyManager, &game, &gameMutex]() {
+		std::system("CLS");
 		if (readyManager.GetOnlinePlayers() == readyManager.GetDesiredNumberOfPlayers()) {
 			std::lock_guard<std::mutex> lock(gameMutex);
 			if (game == nullptr) {
@@ -55,12 +61,14 @@ int main()
 		return crow::response(500);
 		});
 
+
 	// Server functions:
 	// Get information from server ( Server -> Client ):
 	CROW_ROUTE(app, "/map")([&game, &gameMutex]() {
 		std::lock_guard<std::mutex> lock(gameMutex);
 		return game->GetMap().ToString();
 		});
+
 	CROW_ROUTE(app, "/map_borders")([&game, &gameMutex]() {
 		std::lock_guard<std::mutex> lock(gameMutex);
 		std::string h = std::to_string(game->GetMap().GetHeight());
@@ -70,6 +78,7 @@ int main()
 				{"width", w}
 		};
 		});
+
 	CROW_ROUTE(app, "/numerical_question/<string>")([&game, &gameMutex,
 		&currentAskedQuestion, &replyFormated, &questionReceivers, &currentRanking, &beforeQuestionTimes, &questionMutex](std::string name)
 		{
@@ -89,7 +98,9 @@ int main()
 		}
 		return reply;
 		});
+
 	CROW_ROUTE(app, "/is_my_turn/<string>")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex](std::string name) {
+		std::system("CLS");
 		std::lock_guard<std::mutex> lockTurn(turnMutex);
 		if (playerInCurrentTurn.get() == nullptr) {
 			return crow::response(500);
@@ -99,6 +110,7 @@ int main()
 		}
 		return crow::response(500);
 		});
+
 
 	// Set information on server ( Client -> Server ):
 	auto& answerPut = CROW_ROUTE(app, "/numerical_answer").methods(crow::HTTPMethod::PUT);
@@ -124,6 +136,21 @@ int main()
 			answersGived = 0;
 			playerInCurrentTurn = currentRanking.Pop();
 		}
+		return crow::response(200);
+		});
+
+	CROW_ROUTE(app, "/set_base/<string>")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex, &game, &gameMutex](std::string coordinates) {
+		uint8_t x = std::stoi(coordinates.substr(0, 1));
+		uint8_t y = std::stoi(coordinates.substr(1, 1));
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		if (game->GetMap()[{x, y}].get() != nullptr) {
+			return crow::response(500);
+		}
+		std::lock_guard<std::mutex> lockTurn(turnMutex);
+		game->GetMap()[{x, y}] = playerInCurrentTurn;
+		playerInCurrentTurn->AddNewRegionAt({ x, y });
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		playerInCurrentTurn = currentRanking.Pop();
 		return crow::response(200);
 		});
 

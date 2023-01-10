@@ -164,6 +164,11 @@ void Game::AddUserAndMakeHimPlayer(const User& user)
 	m_players.push_back(std::make_shared<Player>(std::move(toBeAdded)));
 }
 
+Map& Game::GetMap()
+{
+	return m_map;
+}
+
 //void Game::Start()
 //{
 //	Ranking currentrank;

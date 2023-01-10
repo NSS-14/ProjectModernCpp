@@ -18,6 +18,7 @@ std::string GetNumericalQuestion(const std::string& name);
 
 void SetGameSize();
 void SetNumericalAnswer(const std::string& name);
+void SetBase(const std::pair<uint8_t, uint8_t>& borders);
 
 int main()
 {
@@ -50,14 +51,32 @@ int main()
 	std::system("PAUSE");
 
 	std::system("CLS");
+	std::string lastMap = GetMap();
+	std::cout << lastMap;
+	std::cout << "\nWait for your turn to place your base.";
 	while (true) {
 		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/is_my_turn/" + name });
 		if (response.status_code == 200) {
 			break;
 		}
-		std::cout << GetMap();
-		std::cout << "\nWait for your turn to place your base.";
-		std::system("CLS");
+		if (lastMap != GetMap()) {
+			std::system("CLS");
+			lastMap = GetMap();
+			std::cout << lastMap;
+			std::cout << "\nWait for your turn to place your base.";
+		}
+	}
+
+	std::system("CLS");
+	std::cout << GetMap();
+	SetBase(mapBorders);
+	while (true) {
+		if (lastMap != GetMap()) {
+			std::system("CLS");
+			lastMap = GetMap();
+			std::cout << lastMap;
+			std::cout << "\nWait for your the rest of the players.";
+		}
 	}
 
 	return 0;
@@ -138,7 +157,7 @@ void SetGameSize()
 void SetNumericalAnswer(const std::string& name)
 {
 	std::string answer;
-	std::regex number("[1-9][0-9]*");
+	std::regex number("[0-9]|([1-9][0-9]+)");
 
 	while (true) {
 		std::cout << "Your answer: ";
@@ -158,6 +177,30 @@ void SetNumericalAnswer(const std::string& name)
 	);
 	if (response.status_code == 200) {
 		std::cout << "Wait for the rest of players.";
+	}
+}
+void SetBase(const std::pair<uint8_t, uint8_t>& borders)
+{
+	std::pair<std::string, std::string> answer;
+	std::regex number("[0-9]|([1-9][0-9]+)");
+
+	while (true) {
+		std::cout << "Insert your base coordinates: ";
+		std::cin >> answer.first >> answer.second;
+		if (!std::regex_match(answer.first, number) || !std::regex_match(answer.second, number)) {
+			std::cout << "Your input is not a number. Try again!\n";
+			continue;
+		}
+		if (std::stoi(answer.first) >= borders.first || std::stoi(answer.second) >= borders.second ) {
+			std::cout << "Your input is out of bounds. Try again!\n";
+			continue;
+		}
+		auto response = cpr::Get(cpr::Url{ "http://localhost:18080/set_base/" + answer.first + answer.second });
+		if (response.status_code != 200) {
+			std::cout << "The place is already ocupied. Try another place!\n";
+			continue;
+		}
+		break;
 	}
 }
 

@@ -17,6 +17,9 @@ void Ranking::Push(std::shared_ptr<Player> player, float distanceFromAnswer, flo
 
 std::shared_ptr<Player> Ranking::Pop()
 {
+    if (m_rank.empty()) {
+        return {};
+    }
     std::shared_ptr<Player> tmp(std::get<0>(m_rank.top()));
     m_rank.pop();
     return tmp;

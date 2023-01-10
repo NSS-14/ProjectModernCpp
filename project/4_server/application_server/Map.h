@@ -35,7 +35,7 @@ public:
 	std::size_t Size() const;
 	std::string ToString() const;
 	std::vector<Coordinates> Neighbours(const Coordinates& coordinates) const;
-	std::vector<Coordinates> Neighbours(std::shared_ptr<Player> player) const; // to reimplement
+	std::vector<Coordinates> Neighbours(std::shared_ptr<Player> player) const; // to reimplement in such manner that it will search in players region only
 
 private:
 	std::vector<std::shared_ptr<Player>> m_playersOnMap;
