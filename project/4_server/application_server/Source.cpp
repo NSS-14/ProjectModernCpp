@@ -13,34 +13,34 @@ int main()
 
 	// Variables:
 	Game* game = nullptr;
-	std::mutex gameMutex;
 	ReadyManager readyManager;
-	LoginHandler loginHandler(readyManager);
+	std::mutex gameMutex;
 
-	Question* currentQuestion = nullptr;
+	std::string replyFormated;
 	uint8_t questionReceivers = 0;
-	std::vector<std::pair<int, time_t>> beforeQuestionTimes;
-	std::vector<std::pair<int, time_t>> answerTimes;
-	Ranking currentRanking;
+	std::unordered_map<std::string, time_t> beforeQuestionTimes;
 	std::mutex questionMutex;
 
+	std::unordered_map<std::string, time_t> answerTimes;
+	Ranking currentRanking;
+	std::mutex answerMutex;
 
 	// Game initialization:
 	auto& loginPut = CROW_ROUTE(app, "/login")
 		.methods(crow::HTTPMethod::PUT);
-	loginPut(loginHandler);
+	loginPut(LoginHandler(readyManager));
 	auto& setTheNumberOfPlayersPut = CROW_ROUTE(app, "/host/set-size")
 		.methods(crow::HTTPMethod::PUT);
 	setTheNumberOfPlayersPut(SetTheNumberOfPlayersHandler(readyManager));
 
 	// Check the ready state and initialize game object:
-	CROW_ROUTE(app, "/ready")([&readyManager, &game, &gameMutex, &loginHandler]() {
+	CROW_ROUTE(app, "/ready")([&readyManager, &game, &gameMutex]() {
 		if (readyManager.GetOnlinePlayers() == readyManager.GetDesiredNumberOfPlayers()) {
 			std::lock_guard<std::mutex> lock(gameMutex);
 			if (game == nullptr) {
 				game = new Game(readyManager.GetDesiredNumberOfPlayers());
 
-				auto users = loginHandler.GetTheOnlineUsers();
+				auto users = readyManager.GetUsers();
 				for (const auto& user : users) {
 					game->AddUserAndMakeHimPlayer(user);
 				}
@@ -51,29 +51,36 @@ int main()
 		});
 
 	// Server functions:
+	// Get information from server ( Server -> Client ):
 	CROW_ROUTE(app, "/map")([&game, &gameMutex]() {
 		std::lock_guard<std::mutex> lock(gameMutex);
 		return game->GetMap().ToString();
 		});
-	CROW_ROUTE(app, "/question/<int>")([&game, &gameMutex, &currentQuestion, &questionReceivers, &questionMutex, &currentRanking, &beforeQuestionTimes](int id) {
+	CROW_ROUTE(app, "/numerical_question/<string>")([&game, &gameMutex,
+		&replyFormated, &questionReceivers, &currentRanking, &beforeQuestionTimes, &questionMutex](std::string name)
+		{
 		std::lock_guard<std::mutex> lockQuestion(questionMutex);
-		if (currentQuestion == nullptr) {
+		if (questionReceivers == 0) {
 			beforeQuestionTimes.clear();
-			beforeQuestionTimes.push_back({ id, time(0) });
+			beforeQuestionTimes[name] = time(0);
 			std::lock_guard<std::mutex> lockGame(gameMutex);
-			currentQuestion = new Question(game->GetQuestion());
+			const Question& currentQuestion = game->GetNumericalQuestion();
+			replyFormated = currentQuestion.GetQuestion() + "\n";
 		}
-		Question q(*currentQuestion);
-		if (questionReceivers == game->GetNumberOfPlayers() - 1) {
-			delete currentQuestion;
-			currentQuestion = nullptr;
+		++questionReceivers;
+		std::string reply = replyFormated;
+		if (questionReceivers == game->GetNumberOfPlayers()) {
+			questionReceivers = 0;
+			replyFormated.clear();
 		}
-		return q.GetQuestion();
+		return reply;
 		});
-	CROW_ROUTE(app, "/answer/<int><string>")([&game, &gameMutex, &questionMutex, &currentRanking, &beforeQuestionTimes, &answerTimes](int id, const std::string& answer) {
+
+	// Set information on server ( Client -> Server ):
+	/*CROW_ROUTE(app, "/answer/<int><string>")([&game, &gameMutex, &questionMutex, &currentRanking, &beforeQuestionTimes, &answerTimes](int id, const std::string& answer) {
 		std::lock_guard<std::mutex> lockQuestion(questionMutex);
 		answerTimes.push_back({ id, time(0) });
-		});
+		});*/
 
 	app.port(18080).multithreaded().run();
 

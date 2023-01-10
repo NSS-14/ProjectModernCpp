@@ -1,9 +1,10 @@
 #pragma once
+#include <memory>
+
 #include "Map.h"
 #include "QuestionManager.h"
 #include "Player.h"
 #include "Ranking.h"
-#include <memory>
 
 class Game
 {
@@ -15,7 +16,9 @@ public:
 
 public:
 	const Map& GetMap() const;
-	Question GetQuestion() const;
+	const QuestionManager& GetQuestionManager() const;
+	const Question& GetNumericalQuestion() const;
+	const Question& GetGridQuestion() const;
 	size_t GetNumberOfPlayers() const;
 
 public:

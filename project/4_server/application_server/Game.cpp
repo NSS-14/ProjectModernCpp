@@ -1,10 +1,10 @@
 #include "Game.h"
-#include <unordered_set>
 #include "StorageManager.h"
 
+#include <unordered_set>
+
 Game::Game(uint8_t numberOfPlayers)
-	: m_qm("Questions.txt")
-	, m_phase(0)
+	: m_phase(0)
 {
 	switch (numberOfPlayers)
 	{
@@ -27,16 +27,18 @@ const Map& Game::GetMap() const
 {
 	return m_map;
 }
-
-Question Game::GetQuestion() const
+const QuestionManager& Game::GetQuestionManager() const
 {
-	if (m_phase == 0) {
-		++m_phase;
-		return m_qm.GetNumericalQuestion();
-	}
-	return {};
+	return m_qm;
 }
-
+const Question& Game::GetNumericalQuestion() const
+{
+	return m_qm.GetNumericalQuestion();
+}
+const Question& Game::GetGridQuestion() const
+{
+	return m_qm.GetGridQuestion();
+}
 size_t Game::GetNumberOfPlayers() const
 {
 	return m_players.size();

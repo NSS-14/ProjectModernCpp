@@ -1,5 +1,6 @@
 #include "QuestionManager.h"
-#include<unordered_set>
+#include <unordered_set>
+#include <ctime>
 
 QuestionManager::QuestionManager()
 	: m_nextNumericalQuestionIndex(0)
@@ -7,30 +8,13 @@ QuestionManager::QuestionManager()
 {
 	//EMPTY
 }
-
 QuestionManager::QuestionManager(const QuestionManager& questionManager)
 {
 	*this = questionManager;
 }
-
 QuestionManager::QuestionManager(QuestionManager&& questionManager) noexcept
 {
 	*this = std::move(questionManager);
-}
-
-QuestionManager::QuestionManager(std::ifstream& in)
-	: m_nextNumericalQuestionIndex(0)
-	, m_nextGridQuestionIndex(0)
-{
-	ReadFile(in);
-}
-
-QuestionManager::QuestionManager(const std::string& path)
-	: m_nextNumericalQuestionIndex(0)
-	, m_nextGridQuestionIndex(0)
-{
-	std::ifstream in(path);
-	ReadFile(in);
 }
 
 QuestionManager& QuestionManager::operator=(const QuestionManager& questionManager)
@@ -39,59 +23,26 @@ QuestionManager& QuestionManager::operator=(const QuestionManager& questionManag
 	m_numericalQuestions = questionManager.m_numericalQuestions;
 	return *this;
 }
-
-QuestionManager& QuestionManager::operator=(QuestionManager&& questionManager)
+QuestionManager& QuestionManager::operator=(QuestionManager&& questionManager) noexcept
 {
 	m_gridQuestions = std::move(questionManager.m_gridQuestions);
 	m_numericalQuestions = std::move(questionManager.m_numericalQuestions);
 	return *this;
 }
 
-Question QuestionManager::GetNumericalQuestion() const
+const Question& QuestionManager::GetNumericalQuestion() const
 {
 	return m_numericalQuestions[m_nextNumericalQuestionIndex++];
 }
-
-Question QuestionManager::GetGridQuestion() const
+const Question& QuestionManager::GetGridQuestion() const
 {
 	return m_gridQuestions[m_nextGridQuestionIndex++];
-}
-
-void QuestionManager::ReadFile(std::ifstream& in)
-{
-	bool type;
-	std::string questionString;
-	int numberOfAnswers;
-	std::vector<std::string> answers;
-
-	while (!in.eof())
-	{
-		in >> type;
-		std::getline(in, questionString);
-		std::getline(in, questionString);
-		std::string str;
-		in >> numberOfAnswers;
-		std::getline(in, str);
-		for (int i = 0; i < numberOfAnswers; i++)
-		{
-			std::string answer;
-			std::getline(in, answer);
-			answers.push_back(answer);
-		}
-		Question question(1, questionString, answers, type);
-		answers.clear();
-		if (type)
-			m_numericalQuestions.push_back(question);
-		else
-			m_gridQuestions.push_back(question);
-	}
-	in.close();
 }
 
 void QuestionManager::ReadDataBase(Storage& db)
 {
 	using namespace sqlite_orm;
-
+	srand(std::time(0));
 	std::unordered_set<unsigned int> usedIds;
 	int numberOfQuestions = db.count<Question>();
 	for (int i = 0; i < numberOfQuestions; ++i)
@@ -109,45 +60,9 @@ void QuestionManager::ReadDataBase(Storage& db)
 		q.AppendWrongAnswers(wrongAnswers);
 
 		if (q.GetType()) {
-			m_numericalQuestions.push_back(q);
+			m_numericalQuestions.emplace_back(std::move(q));
 			continue;
 		}
-		m_gridQuestions.push_back(q);
-	}
-}
-
-void QuestionManager::PopulateDataBase(Storage& db) const
-{
-	using namespace sqlite_orm;
-
-	for (const auto& question : m_gridQuestions)
-	{
-		auto rows = db.select(&Question::GetQuestion, sql::where(sql::c(&Question::GetQuestion) == question.GetQuestion()));
-		if (rows.size()) {
-			continue;
-		}
-
-		int id = db.insert(question);
-		std::vector<std::string> wrongAnswers = question.GetWrongAnswers();
-		for (const auto& wrongAnswer : wrongAnswers)
-		{
-			WrongAnswer wa(1, id, wrongAnswer);
-			db.insert(wa);
-		}
-	}
-	for (const auto& question : m_numericalQuestions)
-	{
-		auto rows = db.select(&Question::GetQuestion, sql::where(sql::c(&Question::GetQuestion) == question.GetQuestion()));
-		if (rows.size()) {
-			continue;
-		}
-
-		int id = db.insert(question);
-		std::vector<std::string> wrongAnswers = question.GetWrongAnswers();
-		for (const auto& wrongAnswer : wrongAnswers)
-		{
-			WrongAnswer wa(1, id, wrongAnswer);
-			db.insert(wa);
-		}
+		m_gridQuestions.emplace_back(std::move(q));
 	}
 }

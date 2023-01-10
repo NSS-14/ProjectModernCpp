@@ -3,8 +3,7 @@
 #include "StorageManager.h"
 
 LoginHandler::LoginHandler(ReadyManager& readyManager)
-	: m_onlineUsers()
-	, m_readyManager(readyManager)
+	: m_readyManager(readyManager)
 {
 	/* EMPTY */
 }
@@ -24,8 +23,8 @@ crow::response LoginHandler::operator()(const crow::request& request) const
 	if (nameIterator == end || passwordIterator == end) {
 		return crow::response(400);
 	}
-	if (GetTheNumberOfOnlineUsers()) {
-		if (GetTheNumberOfOnlineUsers() == m_readyManager.GetDesiredNumberOfPlayers()) {
+	if (m_readyManager.GetOnlinePlayers()) {
+		if (m_readyManager.GetOnlinePlayers() == m_readyManager.GetDesiredNumberOfPlayers()) {
 			return crow::response(500);
 		}
 	}
@@ -36,36 +35,19 @@ crow::response LoginHandler::operator()(const crow::request& request) const
 		if (realPassword != passwordIterator->second) {
 			return crow::response(401);
 		}
-		if (ContainsUserWithId(m_onlineUsers, id)) {
+		if (ContainsUserWithId(m_readyManager.GetUsers(), id)) {
 			return crow::response(403);
 		}
-		m_onlineUsers.emplace_back(id, nameIterator->second, passwordIterator->second);
-		m_readyManager.SetOnlinePlayers(m_onlineUsers.size());
-		if (m_onlineUsers.size() == 1) {
+		m_readyManager.AddUser(id, nameIterator->second, passwordIterator->second);
+		if (m_readyManager.GetOnlinePlayers() == 1) {
 			return crow::response(201);
 		}
 		return crow::response(202);
 	}
 	unsigned int id = db.insert(User(0, nameIterator->second, passwordIterator->second));
-	m_onlineUsers.emplace_back(id, nameIterator->second, passwordIterator->second);
-	m_readyManager.SetOnlinePlayers(m_onlineUsers.size());
-	if (m_onlineUsers.size() == 1) {
+	m_readyManager.AddUser(id, nameIterator->second, passwordIterator->second);
+	if (m_readyManager.GetOnlinePlayers() == 1) {
 		return crow::response(201);
 	}
 	return crow::response(202);
-}
-
-size_t LoginHandler::GetTheNumberOfOnlineUsers() const
-{
-	return m_onlineUsers.size();
-}
-const std::vector<User>& LoginHandler::GetTheOnlineUsers() const
-{
-	return m_onlineUsers;
-}
-User LoginHandler::GetTheHost() const
-{
-	if (!m_onlineUsers.size())
-		return User();
-	return m_onlineUsers[0];
 }

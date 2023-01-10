@@ -35,6 +35,7 @@ std::unordered_map<std::string, std::string> ParseUrlArguments(const std::string
 	}
 	return result;
 }
+
 bool ContainsUserWithId(const std::vector<User>& users, unsigned int id)
 {
 	for (const User& user : users) {

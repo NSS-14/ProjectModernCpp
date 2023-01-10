@@ -9,15 +9,17 @@ enum class LoginState {
 	Wait,
 	Error
 };
-LoginState LoginMenu();
+LoginState LoginMenu(std::string& name, std::string& password);
 void SetGameSize();
 std::string GetMap();
-std::string GetQuestion();
+std::string GetNumericalQuestion(const std::string& name);
 void SetAnswer(const std::string& answer);
 
 int main()
 {
-	LoginState loginState = LoginMenu();
+	std::string name;
+	std::string password;
+	LoginState loginState = LoginMenu(name, password);
 	if (loginState == LoginState::Error) {
 		return 1;
 	}
@@ -37,15 +39,13 @@ int main()
 	std::system("PAUSE");
 
 	std::system("CLS");
-	std::cout << GetQuestion();
+	std::cout << GetNumericalQuestion(name);
 	std::system("PAUSE");
 
 	return 0;
 }
 
-LoginState LoginMenu() {
-	std::string name;
-	std::string password;
+LoginState LoginMenu(std::string& name, std::string& password) {
 
 	while (true) {
 		std::system("CLS");
@@ -122,13 +122,13 @@ std::string GetMap()
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
 	return response.text;
 }
-std::string GetQuestion()
+std::string GetNumericalQuestion(const std::string& name)
 {
-	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/question" });
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/numerical_question/" + name });
 	return response.text;
 }
 
 void SetAnswer(const std::string& answer)
 {
-	
+
 }
