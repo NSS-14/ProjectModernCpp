@@ -20,6 +20,8 @@ public:
 	const Question& GetNumericalQuestion() const;
 	const Question& GetGridQuestion() const;
 	size_t GetNumberOfPlayers() const;
+	const std::shared_ptr<Player>& GetPlayerWithName(const std::string& name);
+	const std::shared_ptr<Player>& GetPlayerWithColor(const Player::ColorInGame& color);
 
 public:
 	void AddUserAndMakeHimPlayer(const User& user);

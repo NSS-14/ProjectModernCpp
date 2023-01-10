@@ -10,10 +10,12 @@ enum class LoginState {
 	Error
 };
 LoginState LoginMenu(std::string& name, std::string& password);
-void SetGameSize();
+
 std::string GetMap();
 std::string GetNumericalQuestion(const std::string& name);
-void SetAnswer(const std::string& answer);
+
+void SetGameSize();
+void SetNumericalAnswer(const std::string& name);
 
 int main()
 {
@@ -40,6 +42,7 @@ int main()
 
 	std::system("CLS");
 	std::cout << GetNumericalQuestion(name);
+	SetNumericalAnswer(name);
 	std::system("PAUSE");
 
 	return 0;
@@ -90,15 +93,16 @@ LoginState LoginMenu(std::string& name, std::string& password) {
 		}
 	}
 }
+
 void SetGameSize()
 {
 	std::string gameSize;
+	std::regex digitIntervalRegex("[2-4]");
 
 	while (true) {
 		std::system("CLS");
 		std::cout << "Insert the game size: ";
 		std::cin >> gameSize;
-		std::regex digitIntervalRegex("[2-4]");
 		if (!std::regex_match(gameSize, digitIntervalRegex)) {
 			std::cout << "You have to insert a number between 2 and 4!\n";
 			std::system("PAUSE");
@@ -107,13 +111,38 @@ void SetGameSize()
 		break;
 	}
 	auto response = cpr::Put(
-		cpr::Url{ "http://localhost:18080/host/set-size" },
+		cpr::Url{ "http://localhost:18080/host/set_size" },
 		cpr::Payload{
 			{ "size", gameSize }
 		}
 	);
 	if (response.status_code == 200) {
 		std::cout << "The game size is " << gameSize << '.' << std::endl;
+	}
+}
+void SetNumericalAnswer(const std::string& name)
+{
+	std::string answer;
+	std::regex number("[1-9][0-9]*");
+
+	while (true) {
+		std::cout << "Your answer: ";
+		std::cin >> answer;
+		if (!std::regex_match(answer, number)) {
+			std::cout << "Your input is not a number. Try again!\n";
+			continue;
+		}
+		break;
+	}
+	auto response = cpr::Put(
+		cpr::Url{ "http://localhost:18080/answer" },
+		cpr::Payload{
+			{ "name", name },
+			{ "answer", answer }
+		}
+	);
+	if (response.status_code == 200) {
+		std::cout << "Wait for the rest of players.";
 	}
 }
 
@@ -126,9 +155,4 @@ std::string GetNumericalQuestion(const std::string& name)
 {
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/numerical_question/" + name });
 	return response.text;
-}
-
-void SetAnswer(const std::string& answer)
-{
-
 }

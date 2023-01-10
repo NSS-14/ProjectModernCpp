@@ -43,6 +43,24 @@ size_t Game::GetNumberOfPlayers() const
 {
 	return m_players.size();
 }
+const std::shared_ptr<Player>& Game::GetPlayerWithName(const std::string& name)
+{
+	for (const std::shared_ptr<Player>& sharedPlayer : m_players) {
+		if (sharedPlayer->GetName() == name) {
+			return sharedPlayer;
+		}
+	}
+	return {};
+}
+const std::shared_ptr<Player>& Game::GetPlayerWithColor(const Player::ColorInGame& color)
+{
+	for (const std::shared_ptr<Player>& sharedPlayer : m_players) {
+		if (sharedPlayer->GetColorInGame() == color) {
+			return sharedPlayer;
+		}
+	}
+	return {};
+}
 
 //void Game::Update()
 //{
