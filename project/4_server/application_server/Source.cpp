@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iostream>
 #include <mutex>
+#include <chrono>
+#include <thread>
 
 #include "LoginHandler.h"
 #include "UtilityFunctions.h"
@@ -13,6 +15,10 @@ int main()
 	// App:
 	crow::SimpleApp app;
 	app.loglevel(crow::LogLevel::Warning);
+
+	// Delay:
+	std::chrono::milliseconds delayTime(10);
+	std::mutex delayMutex;
 
 	// Variables:
 	Game* game = nullptr;
@@ -44,8 +50,9 @@ int main()
 
 
 	// Check the ready state and initialize game object:
-	CROW_ROUTE(app, "/ready")([&readyManager, &game, &gameMutex]() {
-		std::system("CLS");
+	CROW_ROUTE(app, "/ready")([&readyManager, &game, &gameMutex, &delayTime, &delayMutex]() {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::this_thread::sleep_for(delayTime);
 		if (readyManager.GetOnlinePlayers() == readyManager.GetDesiredNumberOfPlayers()) {
 			std::lock_guard<std::mutex> lock(gameMutex);
 			if (game == nullptr) {
@@ -64,8 +71,10 @@ int main()
 
 	// Server functions:
 	// Get information from server ( Server -> Client ):
-	CROW_ROUTE(app, "/map")([&game, &gameMutex]() {
-		std::lock_guard<std::mutex> lock(gameMutex);
+	CROW_ROUTE(app, "/map")([&game, &gameMutex, &delayTime, &delayMutex]() {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		std::this_thread::sleep_for(delayTime);
 		return game->GetMap().ToString();
 		});
 
@@ -99,8 +108,9 @@ int main()
 		return reply;
 		});
 
-	CROW_ROUTE(app, "/is_my_turn/<string>")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex](std::string name) {
-		std::system("CLS");
+	CROW_ROUTE(app, "/is_my_turn/<string>")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex, &delayTime, &delayMutex](std::string name) {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::this_thread::sleep_for(delayTime);
 		std::lock_guard<std::mutex> lockTurn(turnMutex);
 		if (playerInCurrentTurn.get() == nullptr) {
 			return crow::response(500);

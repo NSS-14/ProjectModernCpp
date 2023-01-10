@@ -5,7 +5,6 @@ void ReadyManager::SetDesiredNumberOfPlayers(uint8_t value)
 {
 	std::lock_guard<std::mutex> lock(m_mutexDesiredNumberOfPlayers);
 	m_desiredNumberOfPlayers = value;
-	std::cout << static_cast<int>(value);
 }
 
 void ReadyManager::AddUser(const User& user)
