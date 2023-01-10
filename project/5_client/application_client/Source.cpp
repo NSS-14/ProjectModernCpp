@@ -3,6 +3,7 @@
 #include <cpr/cpr.h>
 #include <crow.h>
 #include <regex>
+#include <cstdint>
 
 enum class LoginState {
 	Host,
@@ -12,6 +13,7 @@ enum class LoginState {
 LoginState LoginMenu(std::string& name, std::string& password);
 
 std::string GetMap();
+std::pair<uint8_t, uint8_t> GetMapBorders();
 std::string GetNumericalQuestion(const std::string& name);
 
 void SetGameSize();
@@ -21,6 +23,7 @@ int main()
 {
 	std::string name;
 	std::string password;
+	std::pair<uint8_t, uint8_t> mapBorders;
 	LoginState loginState = LoginMenu(name, password);
 	if (loginState == LoginState::Error) {
 		return 1;
@@ -43,7 +46,19 @@ int main()
 	std::system("CLS");
 	std::cout << GetNumericalQuestion(name);
 	SetNumericalAnswer(name);
+	mapBorders = GetMapBorders();
 	std::system("PAUSE");
+
+	std::system("CLS");
+	while (true) {
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/is_my_turn/" + name });
+		if (response.status_code == 200) {
+			break;
+		}
+		std::cout << GetMap();
+		std::cout << "\nWait for your turn to place your base.";
+		std::system("CLS");
+	}
 
 	return 0;
 }
@@ -135,7 +150,7 @@ void SetNumericalAnswer(const std::string& name)
 		break;
 	}
 	auto response = cpr::Put(
-		cpr::Url{ "http://localhost:18080/answer" },
+		cpr::Url{ "http://localhost:18080/numerical_answer" },
 		cpr::Payload{
 			{ "name", name },
 			{ "answer", answer }
@@ -150,6 +165,14 @@ std::string GetMap()
 {
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
 	return response.text;
+}
+std::pair<uint8_t, uint8_t> GetMapBorders()
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/map_borders" });
+	auto responseRows = crow::json::load(response.text);
+	int h = responseRows["height"].i();
+	int w = responseRows["width"].i();
+	return { h, w };
 }
 std::string GetNumericalQuestion(const std::string& name)
 {

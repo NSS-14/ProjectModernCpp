@@ -27,8 +27,8 @@ int main()
 	Ranking currentRanking;
 	std::mutex answerMutex;
 
-	std::shared_ptr<Player> winner;
-	std::mutex winnerMutex;
+	std::shared_ptr<Player> playerInCurrentTurn;
+	std::mutex turnMutex;
 
 	// Game initialization:
 	auto& loginPut = CROW_ROUTE(app, "/login")
@@ -61,6 +61,15 @@ int main()
 		std::lock_guard<std::mutex> lock(gameMutex);
 		return game->GetMap().ToString();
 		});
+	CROW_ROUTE(app, "/map_borders")([&game, &gameMutex]() {
+		std::lock_guard<std::mutex> lock(gameMutex);
+		std::string h = std::to_string(game->GetMap().GetHeight());
+		std::string w = std::to_string(game->GetMap().GetWidth());
+		return crow::json::wvalue{
+				{"height", h},
+				{"width", w}
+		};
+		});
 	CROW_ROUTE(app, "/numerical_question/<string>")([&game, &gameMutex,
 		&currentAskedQuestion, &replyFormated, &questionReceivers, &currentRanking, &beforeQuestionTimes, &questionMutex](std::string name)
 		{
@@ -80,12 +89,23 @@ int main()
 		}
 		return reply;
 		});
+	CROW_ROUTE(app, "/is_my_turn/<string>")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex](std::string name) {
+		std::lock_guard<std::mutex> lockTurn(turnMutex);
+		if (playerInCurrentTurn.get() == nullptr) {
+			return crow::response(500);
+		}
+		if (playerInCurrentTurn->GetName() == name) {
+			return crow::response(200);
+		}
+		return crow::response(500);
+		});
 
 	// Set information on server ( Client -> Server ):
-	auto& answerPut = CROW_ROUTE(app, "/answer").methods(crow::HTTPMethod::PUT);
+	auto& answerPut = CROW_ROUTE(app, "/numerical_answer").methods(crow::HTTPMethod::PUT);
 	answerPut([&currentAskedQuestion, &beforeQuestionTimes, &questionMutex,
 		&game, &gameMutex,
-		&answersGived, &currentRanking, &answerMutex](const crow::request& request) {
+		&answersGived, &currentRanking, &answerMutex,
+		&playerInCurrentTurn, &turnMutex](const crow::request& request) {
 		auto parsedArguments = ParseUrlArguments(request.body);
 		auto end = parsedArguments.end();
 		auto nameIterator = parsedArguments.find("name");
@@ -100,7 +120,9 @@ int main()
 		currentRanking.Push(game->GetPlayerWithName(nameIterator->second), distanceBetweenAnswers, time(0) - beforeQuestionTimes[nameIterator->second]);
 		++answersGived;
 		if (answersGived == game->GetNumberOfPlayers()) {
-			// to be continued
+			std::lock_guard<std::mutex> lockTurn(turnMutex);
+			answersGived = 0;
+			playerInCurrentTurn = currentRanking.Pop();
 		}
 		return crow::response(200);
 		});
