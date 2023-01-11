@@ -21,6 +21,9 @@ public:
 	Ranking() = default;
 
 public:
+	bool Empty() const;
+
+public:
 	void Push(std::shared_ptr<Player> player, float distanceFromAnswer, float time);
 	std::shared_ptr<Player> Pop();
 

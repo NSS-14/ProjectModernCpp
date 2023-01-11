@@ -75,13 +75,23 @@ int main()
 	SetBase(mapBorders);
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/set_base_phase_done" });
+		if (response.status_code == 200) {
+			break;
+		}
 		if (lastMap != GetMap()) {
 			std::system("CLS");
 			lastMap = GetMap();
 			std::cout << lastMap;
-			std::cout << "\nWait for your the rest of the players.";
+			std::cout << "\nWait for all players to set their base.";
 		}
 	}
+	std::system("CLS");
+	std::cout << GetMap();
+	std::cout << "\nThe chosing base phase is done!\n";
+	std::system("PAUSE");
+
+
 
 	return 0;
 }

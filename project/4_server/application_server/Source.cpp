@@ -121,6 +121,16 @@ int main()
 		return crow::response(500);
 		});
 
+	CROW_ROUTE(app, "/set_base_phase_done")([&currentRanking, &answerMutex, &delayTime, &delayMutex]() {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::this_thread::sleep_for(delayTime);
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		if (currentRanking.Empty()) {
+			return crow::response(200);
+		}
+		return crow::response(500);
+		});
+
 
 	// Set information on server ( Client -> Server ):
 	auto& answerPut = CROW_ROUTE(app, "/numerical_answer").methods(crow::HTTPMethod::PUT);
