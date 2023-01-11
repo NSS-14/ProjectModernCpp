@@ -88,17 +88,27 @@ int main()
 		};
 		});
 
+	CROW_ROUTE(app, "/map_is_full")([&game, &gameMutex, &delayTime, &delayMutex]() {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::this_thread::sleep_for(delayTime);
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		if (game->GetMap().FreeSpacesLeft()) {
+			return crow::response(500);
+		}
+		return crow::response(200);
+		});
+
 	CROW_ROUTE(app, "/numerical_question/<string>")([&game, &gameMutex,
 		&currentAskedQuestion, &replyFormated, &questionReceivers, &currentRanking, &beforeQuestionTimes, &questionMutex](std::string name)
 		{
 		std::lock_guard<std::mutex> lockQuestion(questionMutex);
 		if (questionReceivers == 0) {
 			beforeQuestionTimes.clear();
-			beforeQuestionTimes[name] = time(0);
 			std::lock_guard<std::mutex> lockGame(gameMutex);
 			currentAskedQuestion = game->GetNumericalQuestion();
 			replyFormated = currentAskedQuestion.GetQuestion() + "\n";
 		}
+		beforeQuestionTimes[name] = time(0);
 		++questionReceivers;
 		std::string reply = replyFormated;
 		if (questionReceivers == game->GetNumberOfPlayers()) {
@@ -121,14 +131,24 @@ int main()
 		return crow::response(500);
 		});
 
-	CROW_ROUTE(app, "/set_base_phase_done")([&currentRanking, &answerMutex, &delayTime, &delayMutex]() {
+	CROW_ROUTE(app, "/phase_done")([&playerInCurrentTurn, &turnMutex, &delayTime, &delayMutex]() {
 		std::lock_guard<std::mutex> lockDelay(delayMutex);
 		std::this_thread::sleep_for(delayTime);
-		std::lock_guard<std::mutex> lockAnswer(answerMutex);
-		if (currentRanking.Empty()) {
+		std::lock_guard<std::mutex> lockAnswer(turnMutex);
+		if (playerInCurrentTurn.get() == nullptr) {
 			return crow::response(200);
 		}
 		return crow::response(500);
+		});
+
+	CROW_ROUTE(app, "/how_many_regions")([&game, &gameMutex, &currentRanking, &answerMutex]() {
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		size_t freeSpaces = game->GetMap().FreeSpacesLeft();
+		if (freeSpaces < currentRanking.Size()) {
+			return std::to_string(freeSpaces);
+		}
+		return std::to_string(currentRanking.Size());
 		});
 
 
@@ -169,6 +189,26 @@ int main()
 		std::lock_guard<std::mutex> lockTurn(turnMutex);
 		game->GetMap()[{x, y}] = playerInCurrentTurn;
 		playerInCurrentTurn->AddNewRegionAt({ x, y });
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		playerInCurrentTurn = currentRanking.Pop();
+		return crow::response(200);
+		});
+
+	CROW_ROUTE(app, "/set_region/<string>")([&playerInCurrentTurn, &turnMutex, &game, &gameMutex](std::string coordinates) {
+		uint8_t x = std::stoi(coordinates.substr(0, 1));
+		uint8_t y = std::stoi(coordinates.substr(1, 1));
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		if (game->GetMap()[{x, y}].get() != nullptr) {
+			return crow::response(500);
+		}
+		std::lock_guard<std::mutex> lockTurn(turnMutex);
+		game->GetMap()[{x, y}] = playerInCurrentTurn;
+		playerInCurrentTurn->AddNewRegionAt({ x, y });
+		return crow::response(200);
+		});
+
+	CROW_ROUTE(app, "/go_next_player")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex]() {
+		std::lock_guard<std::mutex> lockTurn(turnMutex);
 		std::lock_guard<std::mutex> lockAnswer(answerMutex);
 		playerInCurrentTurn = currentRanking.Pop();
 		return crow::response(200);

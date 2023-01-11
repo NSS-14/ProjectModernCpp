@@ -49,15 +49,16 @@ std::ostream& operator<<(std::ostream& out, const Map& map)
 			{
 				switch (map[position]->GetColorInGame())
 				{
-				case Player::ColorInGame::Blue: out << "Blue"; break;
-				case Player::ColorInGame::Yellow: out << "Yellow"; break;
-				case Player::ColorInGame::Red: out << "Red"; break;
-				case Player::ColorInGame::Green: out << "Green"; break;
+				case Player::ColorInGame::Blue: out << 'B'; break;
+				case Player::ColorInGame::Yellow: out << 'Y'; break;
+				case Player::ColorInGame::Red: out << 'R'; break;
+				case Player::ColorInGame::Green: out << 'G'; break;
 				}
+				out << map[position]->GetScore(position);
 			}
 			else
 			{
-				out << '-';
+				out << "____";
 			}
 			out << ' ';
 		}
@@ -154,4 +155,15 @@ std::vector<Map::Coordinates> Map::Neighbours(std::shared_ptr<Player> player) co
 		result.push_back(coordinate);
 	}
 	return result;
+}
+size_t Map::FreeSpacesLeft() const
+{
+	size_t ocupiedSpaces = 0;
+	for (const std::shared_ptr<Player>& sharedPlayer : m_playersOnMap) {
+		if (sharedPlayer.get() == nullptr) {
+			continue;
+		}
+		++ocupiedSpaces;
+	}
+	return m_playersOnMap.size() - ocupiedSpaces;
 }

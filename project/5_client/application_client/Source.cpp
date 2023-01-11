@@ -21,6 +21,7 @@ std::string GetNumericalQuestion(const std::string& name);
 void SetGameSize();
 void SetNumericalAnswer(const std::string& name);
 void SetBase(const std::pair<uint8_t, uint8_t>& borders);
+void SetRegions(const std::pair<uint8_t, uint8_t>& borders);
 
 int main()
 {
@@ -75,7 +76,7 @@ int main()
 	SetBase(mapBorders);
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/set_base_phase_done" });
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/phase_done" });
 		if (response.status_code == 200) {
 			break;
 		}
@@ -91,7 +92,54 @@ int main()
 	std::cout << "\nThe chosing base phase is done!\n";
 	std::system("PAUSE");
 
+	while (true) {
+		std::system("CLS");
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/map_is_full" });
+		if (response.status_code == 200) {
+			break;
+		}
+		std::cout << GetNumericalQuestion(name);
+		SetNumericalAnswer(name);
+		std::system("PAUSE");
 
+		std::system("CLS");
+		lastMap = GetMap();
+		std::cout << lastMap;
+		std::cout << "\nWait for your turn to place your regions.";
+		while (true) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/is_my_turn/" + name });
+			if (response.status_code == 200) {
+				break;
+			}
+			if (lastMap != GetMap()) {
+				std::system("CLS");
+				lastMap = GetMap();
+				std::cout << lastMap;
+				std::cout << "\nWait for your turn to place your regions.";
+			}
+		}
+		std::system("CLS");
+		std::cout << GetMap();
+		SetRegions(mapBorders);
+		while (true) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/phase_done" });
+			if (response.status_code == 200) {
+				break;
+			}
+			if (lastMap != GetMap()) {
+				std::system("CLS");
+				lastMap = GetMap();
+				std::cout << lastMap;
+				std::cout << "\nWait for all players to set their regions.";
+			}
+		}
+	}
+	std::system("CLS");
+	std::cout << GetMap();
+	std::cout << "\nThe filling map phase is done!\n";
+	std::system("PAUSE");
 
 	return 0;
 }
@@ -216,6 +264,39 @@ void SetBase(const std::pair<uint8_t, uint8_t>& borders)
 		}
 		break;
 	}
+}
+void SetRegions(const std::pair<uint8_t, uint8_t>& borders)
+{
+	std::pair<std::string, std::string> answer;
+	std::regex number("[0-9]|([1-9][0-9]+)");
+
+	auto responseNumberOfRegionsIcanPlace = cpr::Get(cpr::Url{ "http://localhost:18080/how_many_regions" });
+	int numberOfRegionsIcanPlace = std::stoi(responseNumberOfRegionsIcanPlace.text);
+
+	for (int i = 0; i < numberOfRegionsIcanPlace; ++i) {
+		std::system("CLS");
+		std::cout << GetMap();
+		std::cout << "You shoud place " << numberOfRegionsIcanPlace << " regions!\n";
+		std::cout << "Insert your region (" << i + 1 << ") coordinates: ";
+		std::cin >> answer.first >> answer.second;
+		if (!std::regex_match(answer.first, number) || !std::regex_match(answer.second, number)) {
+			std::cout << "Your input is not a number. Try again!\n";
+			--i;
+			continue;
+		}
+		if (std::stoi(answer.first) >= borders.first || std::stoi(answer.second) >= borders.second) {
+			std::cout << "Your input is out of bounds. Try again!\n";
+			--i;
+			continue;
+		}
+		auto response = cpr::Get(cpr::Url{ "http://localhost:18080/set_region/" + answer.first + answer.second });
+		if (response.status_code != 200) {
+			std::cout << "The place is already ocupied. Try another place!\n";
+			--i;
+			continue;
+		}
+	}
+	auto responeNext = cpr::Get(cpr::Url{ "http://localhost:18080/go_next_player" });
 }
 
 std::string GetMap()

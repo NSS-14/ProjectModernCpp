@@ -14,6 +14,10 @@ bool Ranking::Empty() const
 {
     return m_rank.empty();
 }
+size_t Ranking::Size() const
+{
+    return m_rank.size();
+}
 
 void Ranking::Push(std::shared_ptr<Player> player, float distanceFromAnswer, float time)
 {
