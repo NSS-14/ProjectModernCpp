@@ -667,7 +667,7 @@ De cate ori a castigat Michael Jordan campionate pentru Chicago Bulls?
 8
 4
 0
-Ce sport olimpic implica tucks si suturi?
+72Ce sport olimpic implica tucks si suturi?
 7
 Inot
 Imprejmuire
@@ -677,7 +677,7 @@ Volei
 Tenis
 Baseball
 0
-Manny Pacquiao este un boxer legendar din care tara?
+73Manny Pacquiao este un boxer legendar din care tara?
 7
 Filipine
 Coreea
@@ -687,7 +687,7 @@ Olanda
 Thailanda
 Japonia
 1
-Cati jucatori sunt intr-o echipa intr-un joc mediu de baseball?
+74Cati jucatori sunt intr-o echipa intr-un joc mediu de baseball?
 7
 9
 10
@@ -697,7 +697,7 @@ Cati jucatori sunt intr-o echipa intr-un joc mediu de baseball?
 5
 6
 1
-Cate runde exista intr-un singur joc de box profesionist?
+75Cate runde exista intr-un singur joc de box profesionist?
 7
 12
 5
@@ -707,7 +707,7 @@ Cate runde exista intr-un singur joc de box profesionist?
 16
 20
 0
-Care echipa NBA are cea mai lunga serie de victorii?
+76Care echipa NBA are cea mai lunga serie de victorii?
 7
 LA Lakers
 Chicago Bulls
@@ -717,7 +717,7 @@ Boston Celtics
 Brooklyn Nets
 New York Knicks
 0
-Cine este cel mai mare atlet de box din toate timpurile?
+77Cine este cel mai mare atlet de box din toate timpurile?
 7
 Muhammad Ali
 Manny Pacquiao
@@ -727,7 +727,7 @@ Tyson Fury
 Cancelo Alvarez
 George Foreman
 1
-Cand a avut loc Javelin Throw pentru prima data la Jocurile Olimpice?
+78Cand a avut loc Javelin Throw pentru prima data la Jocurile Olimpice?
 7
 1908
 1990
@@ -737,7 +737,7 @@ Cand a avut loc Javelin Throw pentru prima data la Jocurile Olimpice?
 1930
 1928
 0
-Ce planeta este orbitate de Autonoe?
+79Ce planeta este orbitata de Autonoe?
 7
 Jupiter
 Uranus
@@ -746,7 +746,7 @@ Saturn
 Neptun
 Venus
 Marte
-0 
+1 
 Cat face 5X4?
 6
 20
@@ -970,6 +970,7 @@ Pe ce loc s-a situat SUA la Olimpiada de la Chamonix?
 3
 4
 7
+6
 1
 La ce greutate pot ajunge masculii girafa (kg)?
 6
