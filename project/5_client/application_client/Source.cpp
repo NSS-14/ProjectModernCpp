@@ -336,6 +336,26 @@ void WaitForMyTurnToPlaceMyBase(const std::string& name)
 		}
 	}
 }
+void WaitForTheRestOfThePlayersToSetTheirBase()
+{
+	std::system("CLS");
+	std::cout << "You have placed your base succesfuly! Now wait for the rest of the players!\n";
+	std::string lastMap = GetMap();
+	std::cout << lastMap;
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/phase_done" });
+		if (response.status_code == 200) {
+			break;
+		}
+		if (lastMap != GetMap()) {
+			std::system("CLS");
+			std::cout << "You have placed your base succesfuly! Now wait for the rest of the players!\n";
+			lastMap = GetMap();
+			std::cout << lastMap;
+		}
+	}
+}
 
 std::string GetMap()
 {
