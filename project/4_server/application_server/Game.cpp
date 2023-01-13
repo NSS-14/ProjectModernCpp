@@ -61,6 +61,23 @@ const std::shared_ptr<Player>& Game::GetPlayerWithColor(const Player::ColorInGam
 	}
 	return {};
 }
+std::vector<std::shared_ptr<Player>> Game::GetPlayersInRandomOrganizedOrder() const
+{
+	std::vector<std::shared_ptr<Player>> result;
+	std::unordered_set<uint8_t> alreadyPlacedPlayersIndexes;
+	while (true) {
+		uint8_t nextPlayerIndex = GetRandomPlayerIndex();
+		if (alreadyPlacedPlayersIndexes.count(nextPlayerIndex)) {
+			continue;
+		}
+		alreadyPlacedPlayersIndexes.insert(nextPlayerIndex);
+		result.push_back(m_players[nextPlayerIndex]);
+		if (result.size() == GetNumberOfPlayers()) {
+			break;
+		}
+	}
+	return result;
+}
 
 //void Game::Update()
 //{

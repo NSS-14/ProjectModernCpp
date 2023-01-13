@@ -22,6 +22,7 @@ public:
 	size_t GetNumberOfPlayers() const;
 	const std::shared_ptr<Player>& GetPlayerWithName(const std::string& name);
 	const std::shared_ptr<Player>& GetPlayerWithColor(const Player::ColorInGame& color);
+	std::vector<std::shared_ptr<Player>> GetPlayersInRandomOrganizedOrder() const;
 
 public:
 	void AddUserAndMakeHimPlayer(const User& user);

@@ -34,6 +34,7 @@ bool TestIfFillMapPhaseIsDone();
 bool LoginPhase(std::string& name, std::string& password);
 void ChosingBasePhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
+void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 
 int main()
 {
@@ -53,6 +54,9 @@ int main()
 
 	// Filling the map with regions phase:
 	FillMapPhase(name, mapBorders);
+
+	// Duel phase:
+
 
 	return 0;
 }
@@ -102,6 +106,25 @@ LoginState LoginMenu(std::string& name, std::string& password) {
 			return LoginState::Error;
 		}
 	}
+}
+
+std::string GetMap()
+{
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
+	return response.text;
+}
+std::pair<uint8_t, uint8_t> GetMapBorders()
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/map_borders" });
+	auto responseRows = crow::json::load(response.text);
+	int h = responseRows["height"].i();
+	int w = responseRows["width"].i();
+	return { h, w };
+}
+std::string GetNumericalQuestion(const std::string& name)
+{
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/numerical_question/" + name });
+	return response.text;
 }
 
 void SetGameSize()
@@ -224,25 +247,6 @@ void SetRegions(const std::pair<uint8_t, uint8_t>& borders)
 	auto responeNext = cpr::Get(cpr::Url{ "http://localhost:18080/go_next_player" });
 }
 
-std::string GetMap()
-{
-	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
-	return response.text;
-}
-std::pair<uint8_t, uint8_t> GetMapBorders()
-{
-	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/map_borders" });
-	auto responseRows = crow::json::load(response.text);
-	int h = responseRows["height"].i();
-	int w = responseRows["width"].i();
-	return { h, w };
-}
-std::string GetNumericalQuestion(const std::string& name)
-{
-	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/numerical_question/" + name });
-	return response.text;
-}
-
 void WaitForAllPlayersToLogin()
 {
 	while (true) {
@@ -306,8 +310,8 @@ void WaitForMyTurnToPlaceMyRegions(const std::string& name)
 			break;
 		}
 		if (lastMap != GetMap()) {
-			std::cout << "Wait for your turn to place your regions.\n";
 			std::system("CLS");
+			std::cout << "Wait for your turn to place your regions.\n";
 			lastMap = GetMap();
 			std::cout << lastMap;
 		}
@@ -333,6 +337,7 @@ void WaitForTheRestOfThePlayersToSetTheirRegions()
 		}
 	}
 }
+void WaitForMyTurnToChooseMyOponent();
 
 bool TestIfFillMapPhaseIsDone()
 {
@@ -407,4 +412,8 @@ void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& ma
 	std::cout << GetMap();
 	std::cout << "Press any key to go to the next phase!\n";
 	std::system("PAUSE");
+}
+void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
+{
+
 }
