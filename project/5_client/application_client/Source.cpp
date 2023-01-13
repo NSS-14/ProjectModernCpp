@@ -23,6 +23,13 @@ void SetNumericalAnswer(const std::string& name);
 void SetBase(const std::pair<uint8_t, uint8_t>& borders);
 void SetRegions(const std::pair<uint8_t, uint8_t>& borders);
 
+
+void WaitForAllPlayersToLogin();
+void WaitForMyTurnToPlaceMyBase(const std::string& name);
+void WaitForTheRestOfThePlayersToSetTheirBase();
+void WaitForMyTurnToPlaceMyRegions(const std::string& name);
+void WaitForTheRestOfThePlayersToSetTheirRegions();
+
 int main()
 {
 	std::string name;
