@@ -376,6 +376,26 @@ void WaitForMyTurnToPlaceMyRegions(const std::string& name)
 		}
 	}
 }
+void WaitForTheRestOfThePlayersToSetTheirRegions()
+{
+	std::system("CLS");
+	std::cout << "You are done! Now wait for all players to set their regions.\n";
+	std::string lastMap = GetMap();
+	std::cout << lastMap;
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/phase_done" });
+		if (response.status_code == 200) {
+			break;
+		}
+		if (lastMap != GetMap()) {
+			std::system("CLS");
+			std::cout << "You are done! Now wait for all players to set their regions.\n";
+			lastMap = GetMap();
+			std::cout << lastMap;
+		}
+	}
+}
 
 std::string GetMap()
 {
