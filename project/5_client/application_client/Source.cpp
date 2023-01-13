@@ -23,12 +23,17 @@ void SetNumericalAnswer(const std::string& name);
 void SetBase(const std::pair<uint8_t, uint8_t>& borders);
 void SetRegions(const std::pair<uint8_t, uint8_t>& borders);
 
-
 void WaitForAllPlayersToLogin();
 void WaitForMyTurnToPlaceMyBase(const std::string& name);
 void WaitForTheRestOfThePlayersToSetTheirBase();
 void WaitForMyTurnToPlaceMyRegions(const std::string& name);
 void WaitForTheRestOfThePlayersToSetTheirRegions();
+
+bool TestIfFillMapPhaseIsDone();
+
+bool LoginPhase(std::string& name, std::string& password);
+void ChosingBasePhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
+void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 
 int main()
 {
@@ -414,4 +419,13 @@ std::string GetNumericalQuestion(const std::string& name)
 {
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/numerical_question/" + name });
 	return response.text;
+}
+
+bool TestIfFillMapPhaseIsDone()
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/map_is_full" });
+	if (response.status_code == 200) {
+		return true;
+	}
+	return false;
 }
