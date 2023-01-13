@@ -306,6 +306,17 @@ void SetRegions(const std::pair<uint8_t, uint8_t>& borders)
 	auto responeNext = cpr::Get(cpr::Url{ "http://localhost:18080/go_next_player" });
 }
 
+void WaitForAllPlayersToLogin()
+{
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::microseconds(10));
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/ready" });
+		if (response.status_code == 200) {
+			break;
+		}
+	}
+}
+
 std::string GetMap()
 {
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/map" });
