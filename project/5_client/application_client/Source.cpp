@@ -429,3 +429,21 @@ bool TestIfFillMapPhaseIsDone()
 	}
 	return false;
 }
+
+bool LoginPhase(std::string& name, std::string& password)
+{
+	LoginState loginState = LoginMenu(name, password);
+	if (loginState == LoginState::Error) {
+		return false;
+	}
+	if (loginState == LoginState::Host) {
+		SetGameSize();
+	}
+	WaitForAllPlayersToLogin();
+	std::system("CLS");
+	std::cout << "The game is ready! All players are loged in!\n";
+	std::cout << GetMap();
+	std::cout << "Press any key to start the first phase of the game!\n";
+	std::system("PAUSE");
+	return true;
+}
