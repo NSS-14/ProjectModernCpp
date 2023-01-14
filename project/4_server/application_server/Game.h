@@ -23,6 +23,7 @@ public:
 	const std::shared_ptr<Player>& GetPlayerWithName(const std::string& name);
 	const std::shared_ptr<Player>& GetPlayerWithColor(const Player::ColorInGame& color);
 	std::vector<std::shared_ptr<Player>> GetPlayersInRandomOrganizedOrder() const;
+	std::string GetGameResult();
 
 public:
 	void AddUserAndMakeHimPlayer(const User& user);

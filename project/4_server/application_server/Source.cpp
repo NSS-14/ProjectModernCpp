@@ -389,6 +389,11 @@ int main()
 		}
 		});
 
+	CROW_ROUTE(app, "/game_result")([&game, &gameMutex]() {
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		return game->GetGameResult();
+		});
+
 
 	// Set information on server ( Client -> Server ):
 	auto& numericalAnswerPut = CROW_ROUTE(app, "/numerical_answer").methods(crow::HTTPMethod::PUT);

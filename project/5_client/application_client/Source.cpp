@@ -59,6 +59,7 @@ bool LoginPhase(std::string& name, std::string& password);
 void ChosingBasePhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
+void ResultsPhase();
 
 void AttackerBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void AttackedBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
@@ -85,6 +86,9 @@ int main()
 
 	// Duel phase:
 	DuelPhase(name, mapBorders);
+
+	// Results phase:
+	ResultsPhase();
 
 	return 0;
 }
@@ -745,6 +749,14 @@ void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBo
 	std::cout << "The duel phase is done!\n";
 	std::cout << GetMap();
 	std::cout << "Press any key to go to the next phase!\n";
+	std::system("PAUSE");
+}
+void ResultsPhase()
+{
+	std::system("CLS");
+	std::cout << GetMap();
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/game_result"});
+	std::cout << response.text;
 	std::system("PAUSE");
 }
 

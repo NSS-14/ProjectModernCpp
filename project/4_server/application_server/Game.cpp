@@ -78,6 +78,38 @@ std::vector<std::shared_ptr<Player>> Game::GetPlayersInRandomOrganizedOrder() co
 	}
 	return result;
 }
+std::string Game::GetGameResult()
+{
+	std::string result;
+	int max = 0;
+	int index;
+	for (size_t i = 0; i < m_players.size(); ++i) {
+		int score = m_players[i]->GetScore();
+		if (max < score) {
+			index = i;
+			max = score;
+		}
+		result += m_players[i]->GetName() + "-" + std::to_string(score) + " ";
+	}
+	result += "\n";
+	std::vector<int> draw;
+	for (size_t i = 0; i < m_players.size(); ++i) {
+		int score = m_players[i]->GetScore();
+		if (max == score) {
+			draw.push_back(i);
+		}
+	}
+	if (draw.size() == 1) {
+		result += "The winner is: " + m_players[index]->GetName();
+	}
+	else {
+		result += "We have draw between some players: ";
+		for (int drawIndex : draw) {
+			result += m_players[drawIndex]->GetName() + " ";
+		}
+	}
+	return result;
+}
 
 //void Game::Update()
 //{
