@@ -18,6 +18,15 @@ size_t Ranking::Size() const
 {
     return m_rank.size();
 }
+void Ranking::Clear()
+{
+    while (true) {
+        if (m_rank.empty()) {
+            break;
+        }
+        m_rank.pop();
+    }
+}
 
 void Ranking::Push(std::shared_ptr<Player> player, float distanceFromAnswer, float time)
 {

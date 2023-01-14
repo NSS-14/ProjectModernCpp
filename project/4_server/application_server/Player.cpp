@@ -126,16 +126,21 @@ void Player::AddNewRegionAt(const Coordinates& coordinates)
 	m_ownedRegions.emplace(coordinates, kScoreDefaultValue);
 }
 
-void Player::InsertRegion(const Region& region)
+void Player::InsertRegion(Region region)
 {
-	m_ownedRegions.insert(region);
+	m_ownedRegions[region.first] = region.second;
 }
 Player::Region Player::ExtractRegion(const Coordinates& coordinates)
 {
-	auto region = m_ownedRegions.extract(coordinates);
+	Region result;
+	result.first = coordinates;
+	result.second = m_ownedRegions[coordinates];
+	m_ownedRegions.erase(coordinates);
+	return result;
+	/*auto region = m_ownedRegions.extract(coordinates);
 	if (region)
 		return { std::move(region.key()), std::move(region.mapped()) };
-	throw "Region not found.";
+	throw "Region not found.";*/
 }
 bool Player::HasRegionOn(const Coordinates& coordinates)
 {

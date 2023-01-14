@@ -17,7 +17,7 @@ int main()
 	app.loglevel(crow::LogLevel::Warning);
 
 	// Delay:
-	std::chrono::milliseconds delayTime(10);
+	std::chrono::milliseconds delayTime(30);
 	std::mutex delayMutex;
 
 	// Variables:
@@ -298,10 +298,19 @@ int main()
 		return crow::response(500);
 		});
 
-	CROW_ROUTE(app, "/test_duel_question_is_answered_by_bouth_of_us")([&answersGived, &answerMutex, &delayTime, &delayMutex]() {
+	CROW_ROUTE(app, "/test_duel_question_is_answered_by_bouth_of_us")([&theAnswerGivedByEachPlayer, &questionMutex, &delayTime, &delayMutex]() {
 		std::lock_guard<std::mutex> lockDelay(delayMutex);
 		std::this_thread::sleep_for(delayTime);
-		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		std::lock_guard<std::mutex> lockQuestion(questionMutex);
+		if (theAnswerGivedByEachPlayer.size() == 2) {
+			return crow::response(200);
+		}
+		return crow::response(500);
+		});
+
+	CROW_ROUTE(app, "/test_duel_question_is_answered_by_bouth_of_us_numerical")([&answersGived, &answerMutex, &delayTime, &delayMutex]() {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::this_thread::sleep_for(delayTime);
 		if (answersGived == 2) {
 			return crow::response(200);
 		}
@@ -314,6 +323,68 @@ int main()
 			return crow::response(200);
 		}
 		return crow::response(500);
+		});
+
+	CROW_ROUTE(app, "/duel_result/<string>")([&remainedRoundsInDuelPhase, &currentDuelOreder, &currentPlayerIndex, &drawInGridQuestion, &theAttackedPlayer, &attackedRegionCoordiantes, &duelMutex,
+	&theGridQuestionWinner, &currentRanking, &answersGived, &answerMutex,
+	&game, &gameMutex,
+	&theAnswerGivedByEachPlayer,&questionReceivers, &questionMutex](const std::string& name) {
+		std::lock_guard<std::mutex> lockDuel(duelMutex);
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		if (theAttackedPlayer.get() == nullptr) {
+			answersGived = 0;
+			if (theGridQuestionWinner.get() == nullptr) {
+				return "None of you won!\n";
+			}
+			if (game->GetPlayerWithName(name) == theGridQuestionWinner) {
+				return "You've won!\n";
+			}
+			else {
+				return "You've lost!\n";
+			}
+		}
+		std::shared_ptr<Player> winner;
+		if (drawInGridQuestion) {
+			winner = currentRanking.Pop();
+			currentRanking.Clear();
+			theGridQuestionWinner = winner;
+		}
+		else {
+			winner = theGridQuestionWinner;
+		}
+		if (winner.get() != nullptr) {
+			if (winner == theAttackedPlayer) {
+				theAttackedPlayer->IncrementScore(attackedRegionCoordiantes);
+			}
+			else {
+				if (theAttackedPlayer->GetScore(attackedRegionCoordiantes) == 100) {
+					//winner->InsertRegion(theAttackedPlayer->ExtractRegion(attackedRegionCoordiantes));
+				}
+				else {
+					theAttackedPlayer->DecrementScore(attackedRegionCoordiantes);
+				}
+			}
+		}
+		std::lock_guard<std::mutex> lockQuestion(questionMutex);
+		questionReceivers = 0;
+		theAnswerGivedByEachPlayer.clear();
+		theAttackedPlayer.reset();
+		++currentPlayerIndex;
+		if (currentDuelOreder.size() == currentPlayerIndex) {
+			currentPlayerIndex = 0;
+			--remainedRoundsInDuelPhase;
+			currentDuelOreder = game->GetPlayersInRandomOrganizedOrder();
+		}
+		if (winner.get() == nullptr) {
+			return "None of you won!\n";
+		}
+		if (game->GetPlayerWithName(name) == winner) {
+			return "You've won!\n";
+		}
+		else {
+			return "You've lost!\n";
+		}
 		});
 
 
@@ -384,6 +455,7 @@ int main()
 					theGridQuestionWinner.reset();
 				}
 			}
+			answersGived = 0;
 		}
 		return crow::response(200);
 		});

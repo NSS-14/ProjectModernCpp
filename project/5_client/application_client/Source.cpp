@@ -46,6 +46,7 @@ void WaitForTheRestOfThePlayersToSetTheirBase();
 void WaitForMyTurnToPlaceMyRegions(const std::string& name);
 void WaitForTheRestOfThePlayersToSetTheirRegions();
 void WaitForBouthDuelPlayersToAnswer();
+void WaitForBouthDuelPlayersToAnswerNumericalQuestion();
 
 bool TestIfFillMapPhaseIsDone();
 bool TestIfDuelsAreDone();
@@ -60,6 +61,7 @@ void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBo
 
 void AttackerBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void AttackedBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
+void ShowDuelResult(const std::string& name);
 
 int main()
 {
@@ -163,13 +165,15 @@ WhatAmI GetWhatAmI(const std::string& name)
 	std::string lastMap = GetMap();
 	std::cout << lastMap;
 	while (true) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		if (TestIfIAmAttacked(name)) {
 			return WhatAmI::Attacked;
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		if (TestIfIAmAttacker(name)) {
 			return WhatAmI::Attacker;
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		if (lastMap != GetMap()) {
 			std::string lastMap = GetMap();
 			std::system("CLS");
@@ -575,6 +579,16 @@ void WaitForBouthDuelPlayersToAnswer()
 		}
 	}
 }
+void WaitForBouthDuelPlayersToAnswerNumericalQuestion()
+{
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/test_duel_question_is_answered_by_bouth_of_us_numerical" });
+		if (response.status_code == 200) {
+			break;
+		}
+	}
+}
 
 bool TestIfFillMapPhaseIsDone()
 {
@@ -699,7 +713,34 @@ void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBo
 		else {
 			AttackedBehaviour(name, mapBorders);
 		}
+		std::cout << GetGridQuestion();
+		bool iUsedAdvantage = UseAdvantageForCurrentQuestion(name, false);
+		SetGridAnswer(name);
+		WaitForBouthDuelPlayersToAnswer();
+		if (iUsedAdvantage) {
+			std::system("CLS");
+			std::cout << "You have used one advantage! Choose one region to decrement score from the map.\n";
+			std::cout << GetMap();
+			SetAdvantageUseRegion(name, mapBorders);
+		}
+		std::system("CLS");
+		bool drawTest = TestIfItWasDrawOnGridQuestion();
+		if (drawTest) {
+			std::cout << GetNumericalQuestion(name);
+			iUsedAdvantage = UseAdvantageForCurrentQuestion(name, true);
+			SetNumericalAnswer(name);
+			WaitForBouthDuelPlayersToAnswerNumericalQuestion();
+		}
+		std::system("CLS");
+		ShowDuelResult(name);
+		std::system("PAUSE");
 	}
+
+	std::system("CLS");
+	std::cout << "The duel phase is done!\n";
+	std::cout << GetMap();
+	std::cout << "Press any key to go to the next phase!\n";
+	std::system("PAUSE");
 }
 
 void AttackerBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
@@ -711,22 +752,6 @@ void AttackerBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t
 	GetAttackableRegionsCoordinates();
 	SetTheRegionYouWantToAttack(mapBorders);
 	std::system("CLS");
-	std::cout << GetGridQuestion();
-	bool iUsedAdvantage = UseAdvantageForCurrentQuestion(name, false);
-	SetGridAnswer(name);
-	WaitForBouthDuelPlayersToAnswer();
-	if (iUsedAdvantage) {
-		std::system("CLS");
-		std::cout << GetMap();
-		SetAdvantageUseRegion(name, mapBorders);
-	}
-	std::system("CLS");
-	bool drawTest = TestIfItWasDrawOnGridQuestion();
-	if (drawTest) {
-		std::cout << GetNumericalQuestion(name);
-		iUsedAdvantage = UseAdvantageForCurrentQuestion(name, true);
-		SetNumericalAnswer(name);
-	}
 }
 
 void AttackedBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
@@ -735,20 +760,10 @@ void AttackedBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t
 	std::cout << "You are attacked! Prepare for battle!\n";
 	std::system("PAUSE");
 	std::system("CLS");
-	std::cout << GetGridQuestion();
-	bool iUsedAdvantage = UseAdvantageForCurrentQuestion(name, false);
-	SetGridAnswer(name);
-	WaitForBouthDuelPlayersToAnswer();
-	if (iUsedAdvantage) {
-		std::system("CLS");
-		std::cout << GetMap();
-		SetAdvantageUseRegion(name, mapBorders);
-	}
-	std::system("CLS");
-	bool drawTest = TestIfItWasDrawOnGridQuestion();
-	if (drawTest) {
-		std::cout << GetNumericalQuestion(name);
-		iUsedAdvantage = UseAdvantageForCurrentQuestion(name, true);
-		SetNumericalAnswer(name);
-	}
+}
+
+void ShowDuelResult(const std::string& name)
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/duel_result/" + name });
+	std::cout << response.text;
 }

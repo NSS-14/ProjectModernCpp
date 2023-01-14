@@ -23,6 +23,7 @@ public:
 public:
 	bool Empty() const;
 	size_t Size() const;
+	void Clear();
 
 public:
 	void Push(std::shared_ptr<Player> player, float distanceFromAnswer, float time);

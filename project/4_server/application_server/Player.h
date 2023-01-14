@@ -68,7 +68,7 @@ public:
 
 public:
 	void AddNewRegionAt(const Coordinates& coordinates);
-	void InsertRegion(const Region& region);
+	void InsertRegion(Region region);
 	Region ExtractRegion(const Coordinates& coordinates);
 	bool HasRegionOn(const Coordinates& coordinates);
 	bool UseAdvantage(Advantage advantage);
