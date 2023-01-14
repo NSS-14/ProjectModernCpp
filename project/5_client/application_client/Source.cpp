@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include <cpr/cpr.h>
 #include <crow.h>
@@ -256,7 +257,7 @@ void SetGridAnswer(const std::string& name)
 	std::cin.clear();
 	std::cin.seekg(std::ios::end);
 	std::cout << "Your answer: ";
-	std::cin >> answer;
+	std::getline(std::cin, answer);
 	auto response = cpr::Put(
 		cpr::Url{ "http://localhost:18080/grid_answer" },
 		cpr::Payload{
@@ -404,7 +405,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 	std::cout << "Here are your advantages:\n";
 	for (const auto& advantage : advantages) {
 		std::cout << advantage["name"] << " ";
-		if (advantage["available"]) {
+		if (advantage["available"].b()) {
 			std::cout << "available";
 			haveAtLeasOne = true;
 		}
@@ -448,6 +449,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 			advantageResponse = cpr::Get(cpr::Url{ "http://localhost:18080/use_fifty_fifty_advantage/" + name });
 			if (!advantageResponse.text.size()) {
 				std::cout << "You used an unavallable advantage.\n";
+				return false;
 			}
 			else {
 				std::cout << advantageResponse.text << std::endl;
@@ -458,6 +460,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 			advantageResponse = cpr::Get(cpr::Url{ "http://localhost:18080/use_choose_answer_advantage/" + name });
 			if (!advantageResponse.text.size()) {
 				std::cout << "You used an unavallable advantage.\n";
+				return false;
 			}
 			else {
 				std::cout << advantageResponse.text << std::endl;
@@ -468,6 +471,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 			advantageResponse = cpr::Get(cpr::Url{ "http://localhost:18080/use_suggestion_advantage/" + name });
 			if (!advantageResponse.text.size()) {
 				std::cout << "You used an unavallable advantage.\n";
+				return false;
 			}
 			else {
 				std::cout << advantageResponse.text << std::endl;
@@ -477,6 +481,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 		}
 		break;
 	}
+	return true;
 }
 
 void WaitForAllPlayersToLogin()

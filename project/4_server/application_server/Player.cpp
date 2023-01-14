@@ -128,19 +128,14 @@ void Player::AddNewRegionAt(const Coordinates& coordinates)
 
 void Player::InsertRegion(Region region)
 {
-	m_ownedRegions[region.first] = region.second;
+	m_ownedRegions.emplace(region.first, region.second);
 }
 Player::Region Player::ExtractRegion(const Coordinates& coordinates)
 {
-	Region result;
-	result.first = coordinates;
-	result.second = m_ownedRegions[coordinates];
-	m_ownedRegions.erase(coordinates);
-	return result;
-	/*auto region = m_ownedRegions.extract(coordinates);
+	auto region = m_ownedRegions.extract(coordinates);
 	if (region)
-		return { std::move(region.key()), std::move(region.mapped()) };
-	throw "Region not found.";*/
+		return { std::move(region.key()), region.mapped() };
+	throw "Region not found.";
 }
 bool Player::HasRegionOn(const Coordinates& coordinates)
 {
@@ -158,6 +153,15 @@ bool Player::UseAdvantage(Advantage advantage)
 	}
 	m_advantages[static_cast<size_t>(advantage)] = Advantage::UsedAdvantage;
 	return true;
+}
+bool Player::DoIHaveARegionWithScoreGreatherThan(unsigned int gratherThan, const Player::Coordinates& diffrentThanThisAttackedRegion)
+{
+	for (const Region& region : m_ownedRegions) {
+		if (region.second >= gratherThan && region.first != diffrentThanThisAttackedRegion) {
+			return true;
+		}
+	}
+	return false;
 }
 bool Player::DoIHaveARegionWithScoreGreatherThan(unsigned int gratherThan)
 {

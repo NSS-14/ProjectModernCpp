@@ -72,6 +72,7 @@ public:
 	Region ExtractRegion(const Coordinates& coordinates);
 	bool HasRegionOn(const Coordinates& coordinates);
 	bool UseAdvantage(Advantage advantage);
+	bool DoIHaveARegionWithScoreGreatherThan(unsigned int gratherThan, const Player::Coordinates& diffrentThanThisAttackedRegion);
 	bool DoIHaveARegionWithScoreGreatherThan(unsigned int gratherThan);
 
 private:

@@ -282,9 +282,10 @@ int main()
 		return crow::json::wvalue{ jsonAdvantages };
 		});
 
-	CROW_ROUTE(app, "/can_use_my_advantages/<string>")([&game, &gameMutex](const std::string& name) {
+	CROW_ROUTE(app, "/can_use_my_advantages/<string>")([&game, &gameMutex, &attackedRegionCoordiantes, &duelMutex](const std::string& name) {
 		std::lock_guard<std::mutex> lockGame(gameMutex);
-		if (game->GetPlayerWithName(name)->DoIHaveARegionWithScoreGreatherThan(200)) {
+		std::lock_guard<std::mutex> lockDuel(duelMutex);
+		if (game->GetPlayerWithName(name)->DoIHaveARegionWithScoreGreatherThan(200, attackedRegionCoordiantes)) {
 			return crow::response(200);
 		}
 		return crow::response(500);
@@ -359,7 +360,8 @@ int main()
 			}
 			else {
 				if (theAttackedPlayer->GetScore(attackedRegionCoordiantes) == 100) {
-					//winner->InsertRegion(theAttackedPlayer->ExtractRegion(attackedRegionCoordiantes));
+					winner->InsertRegion(theAttackedPlayer->ExtractRegion(attackedRegionCoordiantes));
+					game->GetMap()[attackedRegionCoordiantes] = winner;
 				}
 				else {
 					theAttackedPlayer->DecrementScore(attackedRegionCoordiantes);
