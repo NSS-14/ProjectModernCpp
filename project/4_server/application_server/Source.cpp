@@ -152,6 +152,38 @@ int main()
 		return reply;
 		});
 
+	CROW_ROUTE(app, "/use_choose_answer_advantage/<string>")([&game, &gameMutex,
+		&currentAskedQuestion, &questionMutex](std::string name)
+		{
+			std::lock_guard<std::mutex> lockGame(gameMutex);
+			game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::ChooseAnswer);
+			std::lock_guard<std::mutex> lockQuestion(questionMutex);
+			std::string reply;
+			for (const std::string& possibleAnswer : currentAskedQuestion.GetAnswers()) {
+				reply += possibleAnswer + ", ";
+			}
+			return reply;
+		});
+
+	CROW_ROUTE(app, "/use_fifty_fifty_advantage/<string>")([&game, &gameMutex,
+		&currentAskedQuestion, &questionMutex](std::string name)
+		{
+			std::lock_guard<std::mutex> lockGame(gameMutex);
+			game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::FiftyFifty);
+			std::lock_guard<std::mutex> lockQuestion(questionMutex);
+			std::vector<std::string> fiftyFiftyVector = currentAskedQuestion.GetAnswersFiftyFifty();
+			return fiftyFiftyVector[0] + ", " + fiftyFiftyVector[1];
+		});
+
+	CROW_ROUTE(app, "/use_suggestion_advantage/<string>")([&game, &gameMutex,
+		&currentAskedQuestion, &questionMutex](std::string name)
+		{
+			std::lock_guard<std::mutex> lockGame(gameMutex);
+			game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::Suggestion);
+			std::lock_guard<std::mutex> lockQuestion(questionMutex);
+			return currentAskedQuestion.GetSuggestion();
+		});
+
 	CROW_ROUTE(app, "/is_my_turn/<string>")([&playerInCurrentTurn, &turnMutex, &currentRanking, &answerMutex, &delayTime, &delayMutex](std::string name) {
 		std::lock_guard<std::mutex> lockDelay(delayMutex);
 		std::this_thread::sleep_for(delayTime);
@@ -221,6 +253,19 @@ int main()
 			return std::to_string(freeSpaces);
 		}
 		return std::to_string(currentRanking.Size());
+		});
+
+	CROW_ROUTE(app, "/get_my_advantages/<string>")([&game, &gameMutex](const std::string& name) {
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		std::vector<crow::json::wvalue> jsonAdvantages;
+		const Player::AdvantageArray& advantages = game->GetPlayerWithName(name)->GetAdvantages();
+		for (size_t i = 0; i < advantages.size(); ++i) {
+			jsonAdvantages.push_back(crow::json::wvalue{
+				{ "name", CastToStringAdvantage(static_cast<Player::Advantage>(i))},
+				{ "availlable", CastToStringAdvantage(advantages[i])}
+				});
+		}
+		return crow::json::wvalue{ jsonAdvantages };
 		});
 
 	CROW_ROUTE(app, "/duels_are_done")([&remainedRoundsInDuelPhase, &duelMutex]() {

@@ -56,6 +56,7 @@ public:
 public:
 	unsigned int GetScore() const;
 	unsigned int GetScore(const Coordinates& coordinates) const; // this returns the score of the region from the coordinates
+	const AdvantageArray& GetAdvantages() const;
 	const ColorInGame& GetColorInGame() const;
 
 public:
@@ -82,3 +83,4 @@ private:
 };
 
 bool operator ==(const Player::MapOfRegions& firstMapOfRegions, const Player::MapOfRegions& secondMapOfRegions);
+std::string CastToStringAdvantage(const Player::Advantage& advantage);

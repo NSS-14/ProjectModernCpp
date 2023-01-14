@@ -83,6 +83,10 @@ unsigned int Player::GetScore(const Coordinates& coordinates) const
 {
 	return m_ownedRegions.at(coordinates);
 }
+const Player::AdvantageArray& Player::GetAdvantages() const
+{
+	return m_advantages;
+}
 const Player::ColorInGame& Player::GetColorInGame() const
 {
 	return m_colorInGame;
@@ -177,4 +181,14 @@ bool operator==(const Player::MapOfRegions& firstMapOfRegions, const Player::Map
 		}
 	}
 	return true;
+}
+std::string CastToStringAdvantage(const Player::Advantage& advantage)
+{
+	switch (advantage)
+	{
+	case(Player::Advantage::FiftyFifty): return "FiftyFifty";
+	case(Player::Advantage::ChooseAnswer): return "ChooseAnswer";
+	case(Player::Advantage::Suggestion): return "Suggestion";
+	default: return "UsedAdvantage";
+	}
 }

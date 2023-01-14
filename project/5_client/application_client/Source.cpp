@@ -56,7 +56,7 @@ int main()
 	FillMapPhase(name, mapBorders);
 
 	// Duel phase:
-
+	DuelPhase(name, mapBorders);
 
 	return 0;
 }
@@ -337,7 +337,7 @@ void WaitForTheRestOfThePlayersToSetTheirRegions()
 		}
 	}
 }
-void WaitForMyTurnToChooseMyOponent();
+//void WaitForMyTurnToChooseMyOponent();
 
 bool TestIfFillMapPhaseIsDone()
 {
@@ -415,5 +415,5 @@ void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& ma
 }
 void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
 {
-
+	return;
 }

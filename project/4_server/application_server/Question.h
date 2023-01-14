@@ -52,9 +52,11 @@ public:
 	unsigned int GetId() const;
 	const std::string& GetQuestion() const;
 	std::vector<std::string> GetAnswers() const;
-	std::string GetAnswer() const;
+	const std::string& GetAnswer() const;
 	std::vector<std::string> GetWrongAnswers() const;
 	bool GetType() const;
+	std::vector<std::string> GetAnswersFiftyFifty() const;
+	std::string GetSuggestion() const;
 
 public:
 	void SetId(unsigned int id);

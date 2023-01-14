@@ -144,9 +144,9 @@ std::vector<std::string> Question::GetAnswers() const
 	}
 	return fourAnswers;
 }
-std::string Question::GetAnswer() const
+const std::string& Question::GetAnswer() const
 {
-	return m_answers[0];
+	return m_answers[0];   
 }
 std::vector<std::string> Question::GetWrongAnswers() const
 {
@@ -161,6 +161,44 @@ std::vector<std::string> Question::GetWrongAnswers() const
 bool Question::GetType() const
 {
 	return m_isNumerical;
+}
+std::vector<std::string> Question::GetAnswersFiftyFifty() const
+{
+	std::vector<std::string> result;
+	result.resize(2);
+	size_t randomPosintionForRightAnswer = rand() % 2;
+	result[randomPosintionForRightAnswer] = m_answers[0];
+	result[(randomPosintionForRightAnswer + 1) % 2] = m_answers[1 + rand() % (m_answers.size() - 1)];
+	return result;
+}
+std::string Question::GetSuggestion() const
+{
+	std::string leftAnswer;
+	std::string rightAnswer;
+	int firstDigit;
+
+	leftAnswer.resize(GetAnswer().size(), '0');
+	rightAnswer.resize(GetAnswer().size(), '0');
+
+	firstDigit = GetAnswer()[0] - 48;
+	--firstDigit;
+	if (firstDigit == 0) {
+		leftAnswer[0] = '1';
+	}
+	else {
+		leftAnswer[0] = firstDigit + 48;
+	}
+
+	firstDigit = GetAnswer()[0] - 48;
+	++firstDigit;
+	if (firstDigit == 10) {
+		rightAnswer[0] = '9';
+	}
+	else {
+		rightAnswer[0] = firstDigit + 48;
+	}
+
+	return "[" + leftAnswer + ", " + rightAnswer + "]";
 }
 
 void Question::SetId(unsigned int id)
