@@ -134,14 +134,18 @@ int main()
 		return reply;
 		});
 
-	CROW_ROUTE(app, "/grid_question/<string>")([&game, &gameMutex,
-		&currentAskedQuestion, &replyFormated, &questionReceivers, &questionMutex](std::string name)
+	CROW_ROUTE(app, "/grid_question")([&game, &gameMutex,
+		&currentAskedQuestion, &replyFormated, &questionReceivers, &questionMutex]()
 		{
 		std::lock_guard<std::mutex> lockQuestion(questionMutex);
 		if (questionReceivers == 0) {
 			std::lock_guard<std::mutex> lockGame(gameMutex);
 			currentAskedQuestion = game->GetGridQuestion();
 			replyFormated = currentAskedQuestion.GetQuestion() + "\n";
+			for (const std::string& possibleAnswer : currentAskedQuestion.GetAnswers()) {
+				replyFormated += possibleAnswer + ", ";
+			}
+			replyFormated += "\n";
 		}
 		++questionReceivers;
 		std::string reply = replyFormated;
@@ -156,9 +160,11 @@ int main()
 		&currentAskedQuestion, &questionMutex](std::string name)
 		{
 			std::lock_guard<std::mutex> lockGame(gameMutex);
-			game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::ChooseAnswer);
-			std::lock_guard<std::mutex> lockQuestion(questionMutex);
 			std::string reply;
+			if (!game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::ChooseAnswer)) {
+				return reply;
+			}
+			std::lock_guard<std::mutex> lockQuestion(questionMutex);
 			for (const std::string& possibleAnswer : currentAskedQuestion.GetAnswers()) {
 				reply += possibleAnswer + ", ";
 			}
@@ -169,7 +175,9 @@ int main()
 		&currentAskedQuestion, &questionMutex](std::string name)
 		{
 			std::lock_guard<std::mutex> lockGame(gameMutex);
-			game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::FiftyFifty);
+			if (!game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::FiftyFifty)) {
+				return std::string{};
+			}
 			std::lock_guard<std::mutex> lockQuestion(questionMutex);
 			std::vector<std::string> fiftyFiftyVector = currentAskedQuestion.GetAnswersFiftyFifty();
 			return fiftyFiftyVector[0] + ", " + fiftyFiftyVector[1];
@@ -179,7 +187,9 @@ int main()
 		&currentAskedQuestion, &questionMutex](std::string name)
 		{
 			std::lock_guard<std::mutex> lockGame(gameMutex);
-			game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::Suggestion);
+			if (!game->GetPlayerWithName(name)->UseAdvantage(Player::Advantage::Suggestion)) {
+				return std::string{};
+			}
 			std::lock_guard<std::mutex> lockQuestion(questionMutex);
 			return currentAskedQuestion.GetSuggestion();
 		});
@@ -260,17 +270,47 @@ int main()
 		std::vector<crow::json::wvalue> jsonAdvantages;
 		const Player::AdvantageArray& advantages = game->GetPlayerWithName(name)->GetAdvantages();
 		for (size_t i = 0; i < advantages.size(); ++i) {
+			bool available = true;
+			if (CastToStringAdvantage(advantages[i]) == CastToStringAdvantage(Player::Advantage::UsedAdvantage)) {
+				available = false;
+			}
 			jsonAdvantages.push_back(crow::json::wvalue{
-				{ "name", CastToStringAdvantage(static_cast<Player::Advantage>(i))},
-				{ "availlable", CastToStringAdvantage(advantages[i])}
+				{ "name", CastToStringAdvantage(static_cast<Player::Advantage>(i)) },
+				{ "available", available }
 				});
 		}
 		return crow::json::wvalue{ jsonAdvantages };
 		});
 
+	CROW_ROUTE(app, "/can_use_my_advantages/<string>")([&game, &gameMutex](const std::string& name) {
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		if (game->GetPlayerWithName(name)->DoIHaveARegionWithScoreGreatherThan(200)) {
+			return crow::response(200);
+		}
+		return crow::response(500);
+		});
+
 	CROW_ROUTE(app, "/duels_are_done")([&remainedRoundsInDuelPhase, &duelMutex]() {
 		std::lock_guard<std::mutex> lockDuel(duelMutex);
 		if (!remainedRoundsInDuelPhase) {
+			return crow::response(200);
+		}
+		return crow::response(500);
+		});
+
+	CROW_ROUTE(app, "/test_duel_question_is_answered_by_bouth_of_us")([&answersGived, &answerMutex, &delayTime, &delayMutex]() {
+		std::lock_guard<std::mutex> lockDelay(delayMutex);
+		std::this_thread::sleep_for(delayTime);
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		if (answersGived == 2) {
+			return crow::response(200);
+		}
+		return crow::response(500);
+		});
+
+	CROW_ROUTE(app, "/test_for_draw_in_duel_grid_question")([&drawInGridQuestion, &duelMutex]() {
+		std::lock_guard<std::mutex> lockDuel(duelMutex);
+		if (drawInGridQuestion) {
 			return crow::response(200);
 		}
 		return crow::response(500);
@@ -400,6 +440,22 @@ int main()
 		}
 		std::lock_guard<std::mutex> lockGame(gameMutex);
 		theAttackedPlayer = game->GetMap()[attackedRegionCoordiantes];
+		return crow::response(200);
+		});
+
+	CROW_ROUTE(app, "/decrement_region_becouse_useage_of_advantage/<string>")([&game, &gameMutex](const std::string& input) {
+		uint8_t x = std::stoi(input.substr(0, 1));
+		uint8_t y = std::stoi(input.substr(1, 1));
+		std::string name = input.substr(2);
+		std::lock_guard<std::mutex> lockGame(gameMutex);
+		std::shared_ptr<Player> scoopedPlayer = game->GetPlayerWithName(name);
+		if (game->GetMap()[{x, y}] != scoopedPlayer) {
+			return crow::response(500);
+		}
+		if (scoopedPlayer->GetScore({ x, y }) < 200) {
+			return crow::response(500);
+		}
+		scoopedPlayer->DecrementScore({ x, y });
 		return crow::response(200);
 		});
 

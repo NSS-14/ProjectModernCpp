@@ -12,29 +12,54 @@ enum class LoginState {
 	Wait,
 	Error
 };
+enum class WhatAmI {
+	Attacker,
+	Attacked
+};
+enum class DuelResult {
+	Draw,
+	Win,
+	Lose
+};
 LoginState LoginMenu(std::string& name, std::string& password);
 
 std::string GetMap();
 std::pair<uint8_t, uint8_t> GetMapBorders();
 std::string GetNumericalQuestion(const std::string& name);
+std::string GetGridQuestion();
+WhatAmI GetWhatAmI(const std::string& name);
+void GetAttackableRegionsCoordinates();
 
 void SetGameSize();
 void SetNumericalAnswer(const std::string& name);
+void SetGridAnswer(const std::string& name);
 void SetBase(const std::pair<uint8_t, uint8_t>& borders);
 void SetRegions(const std::pair<uint8_t, uint8_t>& borders);
+void SetTheRegionYouWantToAttack(const std::pair<uint8_t, uint8_t>& borders);
+void SetAdvantageUseRegion(const std::string& name, const std::pair<uint8_t, uint8_t>& borders);
+
+bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestionIsNumerical);
 
 void WaitForAllPlayersToLogin();
 void WaitForMyTurnToPlaceMyBase(const std::string& name);
 void WaitForTheRestOfThePlayersToSetTheirBase();
 void WaitForMyTurnToPlaceMyRegions(const std::string& name);
 void WaitForTheRestOfThePlayersToSetTheirRegions();
+void WaitForBouthDuelPlayersToAnswer();
 
 bool TestIfFillMapPhaseIsDone();
+bool TestIfDuelsAreDone();
+bool TestIfIAmAttacker(const std::string& name);
+bool TestIfIAmAttacked(const std::string& name);
+bool TestIfItWasDrawOnGridQuestion();
 
 bool LoginPhase(std::string& name, std::string& password);
 void ChosingBasePhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
+
+void AttackerBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
+void AttackedBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders);
 
 int main()
 {
@@ -126,6 +151,45 @@ std::string GetNumericalQuestion(const std::string& name)
 	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/numerical_question/" + name });
 	return response.text;
 }
+std::string GetGridQuestion()
+{
+	auto response = cpr::Get(cpr::Url{ "http://localhost:18080/grid_question" });
+	return response.text;
+}
+WhatAmI GetWhatAmI(const std::string& name)
+{
+	std::system("CLS");
+	std::cout << "Wait for your turn to attack or prepare to be attacked!\n";
+	std::string lastMap = GetMap();
+	std::cout << lastMap;
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		if (TestIfIAmAttacked(name)) {
+			return WhatAmI::Attacked;
+		}
+		if (TestIfIAmAttacker(name)) {
+			return WhatAmI::Attacker;
+		}
+		if (lastMap != GetMap()) {
+			std::string lastMap = GetMap();
+			std::system("CLS");
+			std::cout << "Wait for your turn to attack or prepare to be attacked!\n";
+			std::cout << lastMap;
+		}
+	}
+}
+void GetAttackableRegionsCoordinates()
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/show_my_oponents_coordinates" });
+
+	auto regions = crow::json::load(response.text);
+
+	std::cout << "Here are the attackable regions:\n";
+	for (const auto& region : regions) {
+		std::cout << '(' << region["x"] << ", " << region["y"] << ") ";
+	}
+	std::cout << std::endl;
+}
 
 void SetGameSize()
 {
@@ -173,6 +237,24 @@ void SetNumericalAnswer(const std::string& name)
 	}
 	auto response = cpr::Put(
 		cpr::Url{ "http://localhost:18080/numerical_answer" },
+		cpr::Payload{
+			{ "name", name },
+			{ "answer", answer }
+		}
+	);
+	if (response.status_code == 200) {
+		std::cout << "Your answer was succesfuly recevied by the game!\n";
+	}
+}
+void SetGridAnswer(const std::string& name)
+{
+	std::string answer;
+	std::cin.clear();
+	std::cin.seekg(std::ios::end);
+	std::cout << "Your answer: ";
+	std::cin >> answer;
+	auto response = cpr::Put(
+		cpr::Url{ "http://localhost:18080/grid_answer" },
 		cpr::Payload{
 			{ "name", name },
 			{ "answer", answer }
@@ -246,11 +328,157 @@ void SetRegions(const std::pair<uint8_t, uint8_t>& borders)
 	}
 	auto responeNext = cpr::Get(cpr::Url{ "http://localhost:18080/go_next_player" });
 }
+void SetTheRegionYouWantToAttack(const std::pair<uint8_t, uint8_t>& borders)
+{
+	std::pair<std::string, std::string> answer;
+	std::regex number("[0-9]|([1-9][0-9]+)");
+
+	while (true) {
+		std::cin.clear();
+		std::cin.seekg(std::ios::end);
+		std::cout << "Insert the coordinates of the region you want to attack: ";
+		std::cin >> answer.first >> answer.second;
+		if (!std::regex_match(answer.first, number) || !std::regex_match(answer.second, number)) {
+			std::cout << "Your input is not a number. Try again!\n";
+			continue;
+		}
+		if (std::stoi(answer.first) >= borders.first || std::stoi(answer.second) >= borders.second) {
+			std::cout << "Your input is out of bounds. Try again!\n";
+			continue;
+		}
+		auto response = cpr::Get(cpr::Url{ "http://localhost:18080/choose_my_oponent_coordinates/" + answer.first + answer.second });
+		if (response.status_code != 200) {
+			std::cout << "The region you choosed is not your neightbour or it is you and you can't attack yourself. Try another place!\n";
+			continue;
+		}
+		break;
+	}
+}
+void SetAdvantageUseRegion(const std::string& name, const std::pair<uint8_t, uint8_t>& borders)
+{
+	std::pair<std::string, std::string> answer;
+	std::regex number("[0-9]|([1-9][0-9]+)");
+
+	while (true) {
+		std::cin.clear();
+		std::cin.seekg(std::ios::end);
+		std::cout << "Insert the region you want to decrement score: ";
+		std::cin >> answer.first >> answer.second;
+		if (!std::regex_match(answer.first, number) || !std::regex_match(answer.second, number)) {
+			std::cout << "Your input is not a number. Try again!\n";
+			continue;
+		}
+		if (std::stoi(answer.first) >= borders.first || std::stoi(answer.second) >= borders.second) {
+			std::cout << "Your input is out of bounds. Try again!\n";
+			continue;
+		}
+		auto response = cpr::Get(cpr::Url{ "http://localhost:18080/decrement_region_becouse_useage_of_advantage/" + answer.first + answer.second + name});
+		if (response.status_code != 200) {
+			std::cout << "The region is not yours or it has a score below 200! Try again!\n";
+			continue;
+		}
+		break;
+	}
+}
+
+bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestionIsNumerical)
+{
+	std::cout << "Do you want to use any advantage for this question?\n";
+	std::cout << "Type 1 if yes!\n";
+	int inputFromClient;
+	std::cin.clear();
+	std::cin.seekg(std::ios::end);
+	std::cin >> inputFromClient;
+	if (inputFromClient != 1) {
+		return false;
+	}
+
+	cpr::Response responseJsonWithAdvantages = cpr::Get(cpr::Url{ "http://localhost:18080/get_my_advantages/" + name });
+
+	auto advantages = crow::json::load(responseJsonWithAdvantages.text);
+	bool haveAtLeasOne = false;
+	std::cout << "Here are your advantages:\n";
+	for (const auto& advantage : advantages) {
+		std::cout << advantage["name"] << " ";
+		if (advantage["available"]) {
+			std::cout << "available";
+			haveAtLeasOne = true;
+		}
+		else {
+			std::cout << "unavailable";
+		}
+		std::cout << "; ";
+	}
+	std::cout << std::endl;
+	if (!haveAtLeasOne) {
+		std::cout << "You can't use any advantages becouse you don't have any left!\n";
+		return false;
+	}
+	cpr::Response responseCanIuseMyAdvantages = cpr::Get(cpr::Url{ "http://localhost:18080/can_use_my_advantages/" + name });
+	if (responseCanIuseMyAdvantages.status_code != 200) {
+		std::cout << "You can't use any advantages becouse you don't have any region with score greather than 200!\n";
+		return false;
+	}
+
+	while (true) {
+		std::cout << "Type 1 to use the FiftyFifty advantage. Type 2 to use the MakeItGrid advantage. Type 3 to use the Suggestion advantage.\n";
+		std::cin.clear();
+		std::cin.seekg(std::ios::end);
+		std::cin >> inputFromClient;
+		if (inputFromClient < 1 || inputFromClient > 3) {
+			std::cout << "Retry inserting the option in interval [1,3].\n";
+			continue;
+		}
+		if (currentQuestionIsNumerical && inputFromClient == 1) {
+			std::cout << "Retry inserting the option in interval [2,3] Becouse you can't use advantage one on numerical questions.\n";
+			continue;
+		}
+		if (!currentQuestionIsNumerical && (inputFromClient == 2 || inputFromClient == 3)) {
+			std::cout << "Retry inserting the option in interval [1] Becouse you can't use advantages 2 or 3 on grid questions.\n";
+			continue;
+		}
+		cpr::Response advantageResponse;
+		switch (inputFromClient)
+		{
+		case 1: {
+			advantageResponse = cpr::Get(cpr::Url{ "http://localhost:18080/use_fifty_fifty_advantage/" + name });
+			if (!advantageResponse.text.size()) {
+				std::cout << "You used an unavallable advantage.\n";
+			}
+			else {
+				std::cout << advantageResponse.text << std::endl;
+			}
+			break;
+		}
+		case 2: {
+			advantageResponse = cpr::Get(cpr::Url{ "http://localhost:18080/use_choose_answer_advantage/" + name });
+			if (!advantageResponse.text.size()) {
+				std::cout << "You used an unavallable advantage.\n";
+			}
+			else {
+				std::cout << advantageResponse.text << std::endl;
+			}
+			break;
+		}
+		case 3: {
+			advantageResponse = cpr::Get(cpr::Url{ "http://localhost:18080/use_suggestion_advantage/" + name });
+			if (!advantageResponse.text.size()) {
+				std::cout << "You used an unavallable advantage.\n";
+			}
+			else {
+				std::cout << advantageResponse.text << std::endl;
+			}
+			break;
+		}
+		}
+		break;
+	}
+}
 
 void WaitForAllPlayersToLogin()
 {
 	while (true) {
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/ready" });
 		if (response.status_code == 200) {
 			break;
@@ -337,11 +565,52 @@ void WaitForTheRestOfThePlayersToSetTheirRegions()
 		}
 	}
 }
-//void WaitForMyTurnToChooseMyOponent();
+void WaitForBouthDuelPlayersToAnswer()
+{
+	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/test_duel_question_is_answered_by_bouth_of_us" });
+		if (response.status_code == 200) {
+			break;
+		}
+	}
+}
 
 bool TestIfFillMapPhaseIsDone()
 {
 	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/map_is_full" });
+	if (response.status_code == 200) {
+		return true;
+	}
+	return false;
+}
+bool TestIfDuelsAreDone()
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/duels_are_done" });
+	if (response.status_code == 200) {
+		return true;
+	}
+	return false;
+}
+bool TestIfIAmAttacker(const std::string& name)
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/is_my_turn_to_choose_my_oponent/" + name });
+	if (response.status_code == 200) {
+		return true;
+	}
+	return false;
+}
+bool TestIfIAmAttacked(const std::string& name)
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/is_my_turn_to_fight_back_my_oponent/" + name });
+	if (response.status_code == 200) {
+		return true;
+	}
+	return false;
+}
+bool TestIfItWasDrawOnGridQuestion()
+{
+	cpr::Response response = cpr::Get(cpr::Url{ "http://localhost:18080/test_for_draw_in_duel_grid_question" });
 	if (response.status_code == 200) {
 		return true;
 	}
@@ -415,5 +684,71 @@ void FillMapPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& ma
 }
 void DuelPhase(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
 {
-	return;
+	std::system("CLS");
+	std::cout << "This is the duel phase! Get ready to attack or to get attacked by your enemies!\n";
+	std::system("PAUSE");
+
+	while (true) {
+		if (TestIfDuelsAreDone()) {
+			break;
+		}
+		WhatAmI whatAmI = GetWhatAmI(name);
+		if (whatAmI == WhatAmI::Attacker) {
+			AttackerBehaviour(name, mapBorders);
+		}
+		else {
+			AttackedBehaviour(name, mapBorders);
+		}
+	}
+}
+
+void AttackerBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
+{
+	std::system("CLS");
+	std::cout << "You are the attacker! Choose one region to attack!\n";
+	std::cout << GetMap();
+	std::cout << "You can attack one of those regions: ";
+	GetAttackableRegionsCoordinates();
+	SetTheRegionYouWantToAttack(mapBorders);
+	std::system("CLS");
+	std::cout << GetGridQuestion();
+	bool iUsedAdvantage = UseAdvantageForCurrentQuestion(name, false);
+	SetGridAnswer(name);
+	WaitForBouthDuelPlayersToAnswer();
+	if (iUsedAdvantage) {
+		std::system("CLS");
+		std::cout << GetMap();
+		SetAdvantageUseRegion(name, mapBorders);
+	}
+	std::system("CLS");
+	bool drawTest = TestIfItWasDrawOnGridQuestion();
+	if (drawTest) {
+		std::cout << GetNumericalQuestion(name);
+		iUsedAdvantage = UseAdvantageForCurrentQuestion(name, true);
+		SetNumericalAnswer(name);
+	}
+}
+
+void AttackedBehaviour(const std::string& name, const std::pair<uint8_t, uint8_t>& mapBorders)
+{
+	std::system("CLS");
+	std::cout << "You are attacked! Prepare for battle!\n";
+	std::system("PAUSE");
+	std::system("CLS");
+	std::cout << GetGridQuestion();
+	bool iUsedAdvantage = UseAdvantageForCurrentQuestion(name, false);
+	SetGridAnswer(name);
+	WaitForBouthDuelPlayersToAnswer();
+	if (iUsedAdvantage) {
+		std::system("CLS");
+		std::cout << GetMap();
+		SetAdvantageUseRegion(name, mapBorders);
+	}
+	std::system("CLS");
+	bool drawTest = TestIfItWasDrawOnGridQuestion();
+	if (drawTest) {
+		std::cout << GetNumericalQuestion(name);
+		iUsedAdvantage = UseAdvantageForCurrentQuestion(name, true);
+		SetNumericalAnswer(name);
+	}
 }

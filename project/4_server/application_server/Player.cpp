@@ -145,12 +145,19 @@ bool Player::HasRegionOn(const Coordinates& coordinates)
 }
 bool Player::UseAdvantage(Advantage advantage)
 {
-	if (m_advantages[static_cast<size_t>(advantage)] == Advantage::UsedAdvantage)
+	if (m_advantages[static_cast<size_t>(advantage)] == Advantage::UsedAdvantage) {
 		return false;
-
+	}
+	if (!DoIHaveARegionWithScoreGreatherThan(200)) {
+		return false;
+	}
+	m_advantages[static_cast<size_t>(advantage)] = Advantage::UsedAdvantage;
+	return true;
+}
+bool Player::DoIHaveARegionWithScoreGreatherThan(unsigned int gratherThan)
+{
 	for (const Region& region : m_ownedRegions) {
-		if (region.second >= 200) {
-			m_advantages[static_cast<size_t>(advantage)] = Advantage::UsedAdvantage;
+		if (region.second >= gratherThan) {
 			return true;
 		}
 	}
