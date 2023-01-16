@@ -31,19 +31,8 @@ public:
 public:
 	Map& GetMap();
 
-public:
-	//void Start();
-	//std::shared_ptr<Player> GiveQuestionToTwo(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2);
-	//Ranking GiveNumericalQuestionToAll();
-
 private:
 	uint8_t GetRandomPlayerIndex() const;
-
-private:
-	//void ChooseBase(Ranking rank);
-	//void Update();
-	//void FillMap();
-	//void StartDuels();
 
 private:
 	Map m_map;
