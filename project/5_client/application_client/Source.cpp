@@ -457,6 +457,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 			}
 			else {
 				std::cout << advantageResponse.text << std::endl;
+				return true;
 			}
 			break;
 		}
@@ -468,6 +469,7 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 			}
 			else {
 				std::cout << advantageResponse.text << std::endl;
+				return true;
 			}
 			break;
 		}
@@ -479,13 +481,13 @@ bool UseAdvantageForCurrentQuestion(const std::string& name, bool currentQuestio
 			}
 			else {
 				std::cout << advantageResponse.text << std::endl;
+				return true;
 			}
 			break;
 		}
 		}
 		break;
 	}
-	return true;
 }
 
 void WaitForAllPlayersToLogin()

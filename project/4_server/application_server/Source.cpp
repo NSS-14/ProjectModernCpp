@@ -33,6 +33,8 @@ int main()
 	std::mutex questionMutex;
 
 	uint8_t answersGived = 0;
+	bool duelsStarted = false;
+	uint8_t answersGivedInNumericalQuestion = 0;
 	Ranking currentRanking;
 	std::shared_ptr<Player> theGridQuestionWinner;
 	std::mutex answerMutex;
@@ -100,7 +102,7 @@ int main()
 		};
 		});
 
-	CROW_ROUTE(app, "/map_is_full")([&game, &gameMutex, &delayTime, &delayMutex, &currentDuelOreder, &duelMutex]() {
+	CROW_ROUTE(app, "/map_is_full")([&game, &gameMutex, &delayTime, &delayMutex, &currentDuelOreder, &duelMutex, &answerMutex, &duelsStarted]() {
 		std::lock_guard<std::mutex> lockDelay(delayMutex);
 		std::this_thread::sleep_for(delayTime);
 		std::lock_guard<std::mutex> lockGame(gameMutex);
@@ -111,6 +113,8 @@ int main()
 		if (currentDuelOreder.empty()) {
 			currentDuelOreder = game->GetPlayersInRandomOrganizedOrder();
 		}
+		std::lock_guard<std::mutex> lockAnswer(answerMutex);
+		duelsStarted = true;
 		return crow::response(200);
 		});
 
@@ -309,10 +313,11 @@ int main()
 		return crow::response(500);
 		});
 
-	CROW_ROUTE(app, "/test_duel_question_is_answered_by_bouth_of_us_numerical")([&answersGived, &answerMutex, &delayTime, &delayMutex]() {
+	CROW_ROUTE(app, "/test_duel_question_is_answered_by_bouth_of_us_numerical")([&answersGivedInNumericalQuestion, &answerMutex, &delayTime, &delayMutex]() {
 		std::lock_guard<std::mutex> lockDelay(delayMutex);
 		std::this_thread::sleep_for(delayTime);
-		if (answersGived == 2) {
+		std::lock_guard<std::mutex> lockAnswe(answerMutex);
+		if (answersGivedInNumericalQuestion == 2) {
 			return crow::response(200);
 		}
 		return crow::response(500);
@@ -327,7 +332,7 @@ int main()
 		});
 
 	CROW_ROUTE(app, "/duel_result/<string>")([&remainedRoundsInDuelPhase, &currentDuelOreder, &currentPlayerIndex, &drawInGridQuestion, &theAttackedPlayer, &attackedRegionCoordiantes, &duelMutex,
-	&theGridQuestionWinner, &currentRanking, &answersGived, &answerMutex,
+	&theGridQuestionWinner, &currentRanking, &answersGived,&answersGivedInNumericalQuestion, &answerMutex,
 	&game, &gameMutex,
 	&theAnswerGivedByEachPlayer,&questionReceivers, &questionMutex](const std::string& name) {
 		std::lock_guard<std::mutex> lockDuel(duelMutex);
@@ -335,6 +340,7 @@ int main()
 		std::lock_guard<std::mutex> lockGame(gameMutex);
 		if (theAttackedPlayer.get() == nullptr) {
 			answersGived = 0;
+			answersGivedInNumericalQuestion = 0;
 			if (theGridQuestionWinner.get() == nullptr) {
 				return "None of you won!\n";
 			}
@@ -399,7 +405,7 @@ int main()
 	auto& numericalAnswerPut = CROW_ROUTE(app, "/numerical_answer").methods(crow::HTTPMethod::PUT);
 	numericalAnswerPut([&currentAskedQuestion, &beforeQuestionTimes, &questionMutex,
 		&game, &gameMutex,
-		&answersGived, &currentRanking, &answerMutex,
+		&answersGived,&duelsStarted, &answersGivedInNumericalQuestion, &currentRanking, &answerMutex,
 		&playerInCurrentTurn, &turnMutex](const crow::request& request) {
 		auto parsedArguments = ParseUrlArguments(request.body);
 		auto end = parsedArguments.end();
@@ -414,6 +420,9 @@ int main()
 		std::lock_guard<std::mutex> lockAnswer(answerMutex);
 		currentRanking.Push(game->GetPlayerWithName(nameIterator->second), distanceBetweenAnswers, time(0) - beforeQuestionTimes[nameIterator->second]);
 		++answersGived;
+		if (duelsStarted) {
+			++answersGivedInNumericalQuestion;
+		}
 		if (answersGived == game->GetNumberOfPlayers()) {
 			std::lock_guard<std::mutex> lockTurn(turnMutex);
 			answersGived = 0;
